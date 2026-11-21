@@ -133,6 +133,14 @@
 <context>
     <name>ConnectButton</name>
     <message>
+        <source>Disconnected</source>
+        <translation>डिस्कनेक्ट किया गया</translation>
+    </message>
+    <message>
+        <source>Connect</source>
+        <translation>कनेक्ट</translation>
+    </message>
+    <message>
         <location filename="../ui/qml/Components/ConnectButton.qml" line="28"/>
         <source>Unable to disconnect during configuration preparation</source>
         <translation>कॉन्फ़िगरेशन तैयारी के दौरान डिस्कनेक्ट करने में असमर्थ</translation>
@@ -516,8 +524,8 @@
     <name>HomeServerSummary</name>
     <message>
         <location filename="../ui/qml/Components/HomeServerSummary.qml" line="91"/>
-        <source>AmneziaWG 2.0 is outdated and no longer supported. Continued use requires a fresh installation of the AmneziaWG 3.1 container.</source>
-        <translation>AmneziaWG 2.0 पुराना है और अब समर्थित नहीं है। उपयोग जारी रखने के लिए AmneziaWG 3.1 कंटेनर की नई स्थापना आवश्यक है।</translation>
+        <source>AWG 2.0 is outdated and no longer supported. To upgrade, install TP1 on the server.</source>
+        <translation>AWG 2.0 पुराना है और अब समर्थित नहीं है। उपयोग जारी रखने के लिए TP1 कंटेनर की नई स्थापना आवश्यक है।</translation>
     </message>
 </context>
 <context>
@@ -785,12 +793,6 @@ Already installed containers were found on the server. All installed containers 
 <context>
     <name>NotificationHandler</name>
     <message>
-        <location filename="../ui/utils/notificationHandler.cpp" line="57"/>
-        <location filename="../ui/utils/notificationHandler.cpp" line="64"/>
-        <source>AmneziaVPN</source>
-        <translation>AmneziaVPN</translation>
-    </message>
-    <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="58"/>
         <source>VPN Connected</source>
         <translation>VPN कनेक्ट हो गया</translation>
@@ -802,8 +804,8 @@ Already installed containers were found on the server. All installed containers 
     </message>
     <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="88"/>
-        <source>AmneziaVPN notification</source>
-        <translation>AmneziaVPN अधिसूचना</translation>
+        <source>Traceless notification</source>
+        <translation>Traceless अधिसूचना</translation>
     </message>
     <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="89"/>
@@ -907,8 +909,8 @@ Already installed containers were found on the server. All installed containers 
     <name>PageProtocolAwgClientSettings</name>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgClientSettings.qml" line="52"/>
-        <source>AmneziaWG settings</source>
-        <translation>AmneziaWG सेटिंग्स</translation>
+        <source>%1 settings</source>
+        <translation>%1 सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgClientSettings.qml" line="62"/>
@@ -1030,8 +1032,8 @@ Already installed containers were found on the server. All installed containers 
     <name>PageProtocolAwgSettings</name>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgSettings.qml" line="110"/>
-        <source>AmneziaWG settings</source>
-        <translation>AmneziaWG सेटिंग्स</translation>
+        <source>%1 settings</source>
+        <translation>%1 सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgSettings.qml" line="122"/>
@@ -2373,8 +2375,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageServiceDnsSettings.qml" line="60"/>
-        <source>Cannot remove AmneziaDNS from running server</source>
-        <translation>चल रहे सर्वर से Amnezia DNS को नहीं हटाया जा सकता</translation>
+        <source>Cannot remove the DNS service while the VPN is connected</source>
+        <translation>चल रहे सर्वर से DNS को नहीं हटाया जा सकता</translation>
     </message>
 </context>
 <context>
@@ -3368,8 +3370,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettings.qml" line="126"/>
-        <source>About AmneziaVPN</source>
-        <translation>AmneziaVPN के बारे में</translation>
+        <source>About Traceless</source>
+        <translation>Traceless के बारे में</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettings.qml" line="140"/>
@@ -3381,8 +3383,8 @@ Create one from the current settings.</source>
     <name>PageSettingsAbout</name>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="22"/>
-        <source>You have the latest version of AmneziaVPN</source>
-        <translation>आपके पास AmneziaVPN का नवीनतम संस्करण है</translation>
+        <source>You have the latest version of Traceless</source>
+        <translation>आपके पास Traceless का नवीनतम संस्करण है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="26"/>
@@ -3393,11 +3395,6 @@ Create one from the current settings.</source>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="69"/>
         <source>Support Amnezia</source>
         <translation>Amnezia का समर्थन करें</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="80"/>
-        <source>Amnezia is a free and open-source application. You can support the developers if you like it.</source>
-        <translation>Amnezia एक निःशुल्क और ओपन-सोर्स एप्लिकेशन है। यदि आपको यह पसंद है तो आप डेवलपर्स का समर्थन कर सकते हैं।.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="101"/>
@@ -3440,34 +3437,14 @@ Create one from the current settings.</source>
         <translation>सुविधाओं पर चर्चा करना</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="116"/>
-        <source>https://telegram.me/amnezia_vpn_en</source>
-        <translation>https://telegram.me/amnezia_vpn_en</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="122"/>
-        <source>Amnezia Hub Telegram Bot</source>
-        <translation>Amnezia Hub Telegram बॉट</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="123"/>
         <source>Ask us anything</source>
         <translation>हमसे कुछ भी पूछें</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="132"/>
-        <source>support@amnezia.org</source>
-        <translation>support@amnezia.org</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="133"/>
         <source>For reviews and bug reports</source>
         <translation>समीक्षाओं और बग रिपोर्टों के लिए</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="136"/>
-        <source>mailto:support@amnezia.org</source>
-        <translation>mailto:support@amnezia.org</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="142"/>
@@ -3478,11 +3455,6 @@ Create one from the current settings.</source>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="143"/>
         <source>Discover the source code</source>
         <translation>सोर्स कोड देखें</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="146"/>
-        <source>https://github.com/amnezia-vpn/amnezia-client</source>
-        <translation>https://github.com/amnezia-vpn/amnezia-client</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="152"/>
@@ -3604,29 +3576,14 @@ Create one from the current settings.</source>
         <translation>Windows</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="20"/>
-        <source>documentation/instructions/connect-amnezia-premium#windows</source>
-        <translation>documentation/instructions/connect-amnezia-premium#windows</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="21"/>
         <source>macOS</source>
         <translation>macOS</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="21"/>
-        <source>documentation/instructions/connect-amnezia-premium#macos</source>
-        <translation>documentation/instructions/connect-amnezia-premium#macos</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="22"/>
         <source>Android</source>
         <translation>Android</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="22"/>
-        <source>documentation/instructions/connect-amnezia-premium#android</source>
-        <translation>documentation/instructions/connect-amnezia-premium#android</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="23"/>
@@ -3644,19 +3601,9 @@ Create one from the current settings.</source>
         <translation>iOS</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="24"/>
-        <source>documentation/instructions/connect-amnezia-premium#ios</source>
-        <translation>documentation/instructions/connect-amnezia-premium#ios</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="25"/>
         <source>Linux</source>
         <translation>Linux</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="25"/>
-        <source>documentation/instructions/connect-amnezia-premium#linux</source>
-        <translation>documentation/instructions/connect-amnezia-premium#linux</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="26"/>
@@ -3664,32 +3611,22 @@ Create one from the current settings.</source>
         <translation>राउटर</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="26"/>
-        <source>documentation/instructions/connect-amnezia-premium#routers</source>
-        <translation>documentation/instructions/connect-amnezia-premium#routers</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="48"/>
         <source>How to connect on another device</source>
         <translation>दूसरे उपकरण पर कैसे कनेक्ट करें</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="49"/>
-        <source>Setup guides on the Amnezia website</source>
-        <translation>Amnezia वेबसाइट पर सेटअप गाइड</translation>
     </message>
 </context>
 <context>
     <name>PageSettingsApiNativeConfigs</name>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="21"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN कॉन्फ़िगरेशन सहेजें</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless कॉन्फ़िगरेशन सहेजें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="186"/>
-        <source>For router setup or the AmneziaWG app</source>
-        <translation>राउटर सेटअप या AmneziaWG ऐप के लिए</translation>
+        <source>For routers or compatible VPN clients</source>
+        <translation>राउटर सेटअप या AWG ऐप के लिए</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="55"/>
@@ -3984,8 +3921,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="111"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN कॉन्फ़िगरेशन सहेजें</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless कॉन्फ़िगरेशन सहेजें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="112"/>
@@ -4004,8 +3941,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="171"/>
-        <source>To read the QR code in the Amnezia app, tap + in the main menu → &apos;QR code&apos;</source>
-        <translation>Amnezia ऐप में QR कोड पढ़ने के लिए, मुख्य मेनू में + दबाएँ → &apos;QR कोड&apos;</translation>
+        <source>To scan this code in Traceless, tap + in the main menu and choose QR code.</source>
+        <translation>Traceless ऐप में QR कोड पढ़ने के लिए, मुख्य मेनू में + दबाएँ → &apos;QR कोड&apos;</translation>
     </message>
 </context>
 <context>
@@ -4224,8 +4161,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApplication.qml" line="274"/>
-        <source>All settings will be reset to default. All installed AmneziaVPN services will still remain on the server.</source>
-        <translation>सभी सेटिंग्स डिफ़ॉल्ट पर रीसेट हो जाएंगी. सभी स्थापित AmneziaVPN सेवाएँ अभी भी सर्वर पर रहेंगी।.</translation>
+        <source>All settings will be reset to default. All installed Traceless services will still remain on the server.</source>
+        <translation>सभी सेटिंग्स डिफ़ॉल्ट पर रीसेट हो जाएंगी. सभी स्थापित Traceless सेवाएँ अभी भी सर्वर पर रहेंगी।.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApplication.qml" line="275"/>
@@ -4262,8 +4199,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsBackup.qml" line="64"/>
-        <source>The backup will contain your passwords and private keys for all servers added to AmneziaVPN. Keep this information in a secure place.</source>
-        <translation>बैकअप में AmneziaVPN में जोड़े गए सभी सर्वरों के लिए आपके पासवर्ड और निजी कुंजी शामिल होंगी। इस जानकारी को सुरक्षित स्थान पर रखें.</translation>
+        <source>The backup will contain your passwords and private keys for all servers added to Traceless. Keep this information in a secure place.</source>
+        <translation>बैकअप में Traceless में जोड़े गए सभी सर्वरों के लिए आपके पासवर्ड और निजी कुंजी शामिल होंगी। इस जानकारी को सुरक्षित स्थान पर रखें.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsBackup.qml" line="87"/>
@@ -4331,13 +4268,13 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="52"/>
-        <source>Use AmneziaDNS</source>
-        <translation>AmneziaDNS का प्रयोग करें</translation>
+        <source>Use the server DNS service</source>
+        <translation>DNS का प्रयोग करें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="53"/>
-        <source>If AmneziaDNS is installed on the server</source>
-        <translation>यदि AmneziaDNS सर्वर पर स्थापित है</translation>
+        <source>If the DNS service is installed on the server</source>
+        <translation>यदि DNS सर्वर पर स्थापित है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="79"/>
@@ -4346,8 +4283,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="80"/>
-        <source>When AmneziaDNS is not used or installed</source>
-        <translation>जब AmneziaDNS का उपयोग या स्थापित नहीं किया जाता है</translation>
+        <source>When the server DNS service is not used or installed</source>
+        <translation>जब DNS का उपयोग या स्थापित नहीं किया जाता है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="93"/>
@@ -4394,8 +4331,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsDns.qml" line="45"/>
-        <source>If AmneziaDNS is not used or installed</source>
-        <translation>यदि AmneziaDNS का उपयोग या स्थापित नहीं किया गया है</translation>
+        <source>If the server DNS service is not used or installed</source>
+        <translation>यदि DNS का उपयोग या स्थापित नहीं किया गया है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsDns.qml" line="63"/>
@@ -4610,8 +4547,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="83"/>
-        <source>Local proxy is available only for Amnezia Premium</source>
-        <translation>स्थानीय प्रॉक्सी केवल Amnezia Premium के लिए उपलब्ध है</translation>
+        <source>Local proxy is only available with a supported subscription</source>
+        <translation>स्थानीय प्रॉक्सी केवल VPN के लिए उपलब्ध है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="93"/>
@@ -4636,9 +4573,9 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="209"/>
-        <source>Used by specific apps (e.g., CensorTracker extension) via Amnezia Premium.
+        <source>Used by specific apps (e.g., CensorTracker extension) with a supported subscription.
 Only one can be active at a time: VPN or local proxy</source>
-        <translation>Amnezia Premium के माध्यम से विशिष्ट ऐप्स (जैसे CensorTracker एक्सटेंशन) द्वारा उपयोग किया जाता है।
+        <translation>VPN के माध्यम से विशिष्ट ऐप्स (जैसे CensorTracker एक्सटेंशन) द्वारा उपयोग किया जाता है।
 एक समय में केवल एक ही सक्रिय हो सकता है: VPN या स्थानीय प्रॉक्सी</translation>
     </message>
     <message>
@@ -4865,8 +4802,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="101"/>
-        <source>Check the server for previously installed Amnezia services</source>
-        <translation>पहले से स्थापित Amnezia सेवाओं के लिए सर्वर की जाँच करें</translation>
+        <source>Check the server for previously installed VPN services</source>
+        <translation>पहले से स्थापित Traceless सेवाओं के लिए सर्वर की जाँच करें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="102"/>
@@ -4943,8 +4880,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="124"/>
-        <source>The update may take several minutes. Amnezia services on the server may restart briefly. The server will not be rebooted.</source>
-        <translation>अपडेट में कई मिनट लग सकते हैं। सर्वर पर Amnezia सेवाएँ थोड़ी देर के लिए पुनः आरंभ हो सकती हैं। सर्वर रीबूट नहीं किया जाएगा।</translation>
+        <source>The update may take several minutes. VPN services on the server may restart briefly. The server will not be rebooted.</source>
+        <translation>अपडेट में कई मिनट लग सकते हैं। सर्वर पर Traceless सेवाएँ थोड़ी देर के लिए पुनः आरंभ हो सकती हैं। सर्वर रीबूट नहीं किया जाएगा।</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="130"/>
@@ -4968,8 +4905,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="177"/>
-        <source>All installed AmneziaVPN services will still remain on the server.</source>
-        <translation>सभी स्थापित AmneziaVPN सेवाएँ अभी भी सर्वर पर रहेंगी.</translation>
+        <source>All installed Traceless services will still remain on the server.</source>
+        <translation>सभी स्थापित Traceless सेवाएँ अभी भी सर्वर पर रहेंगी.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="183"/>
@@ -4978,13 +4915,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="205"/>
-        <source>Clear server from Amnezia software</source>
-        <translation>Amnezia सॉफ़्टवेयर से सर्वर साफ़ करें</translation>
+        <source>Clear VPN software from the server</source>
+        <translation>Traceless सॉफ़्टवेयर से सर्वर साफ़ करें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="209"/>
-        <source>Do you want to clear server from Amnezia software?</source>
-        <translation>क्या आप Amnezia सॉफ़्टवेयर से सर्वर साफ़ करना चाहते हैं?</translation>
+        <source>Do you want to clear VPN software from the server?</source>
+        <translation>क्या आप Traceless सॉफ़्टवेयर से सर्वर साफ़ करना चाहते हैं?</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="210"/>
@@ -4993,8 +4930,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="216"/>
-        <source>Cannot clear server from Amnezia software during active connection</source>
-        <translation>सक्रिय कनेक्शन के दौरान Amnezia सॉफ़्टवेयर से सर्वर साफ़ नहीं किया जा सकता</translation>
+        <source>Cannot clear VPN software from the server during active connection</source>
+        <translation>सक्रिय कनेक्शन के दौरान Traceless सॉफ़्टवेयर से सर्वर साफ़ नहीं किया जा सकता</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="237"/>
@@ -5044,8 +4981,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="52"/>
-        <source>AmneziaWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Moving to AmneziaWG 3.1 by deploying a new container on the server is recommended for stronger protocol security</source>
-        <translation>AmneziaWG 2.0 पुराना है और इसमें नवीनतम सुरक्षा सुधार शामिल नहीं हैं, लेकिन यह काम करता रहेगा। मज़बूत प्रोटोकॉल सुरक्षा के लिए सर्वर पर नया कंटेनर तैनात कर AmneziaWG 3.1 पर जाने की सलाह दी जाती है</translation>
+        <source>AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP1 on the server to switch to the current profile.</source>
+        <translation>AWG 2.0 पुराना है और इसमें नवीनतम सुरक्षा सुधार शामिल नहीं हैं, लेकिन यह काम करता रहेगा। मज़बूत प्रोटोकॉल सुरक्षा के लिए सर्वर पर नया कंटेनर तैनात कर TP1 पर जाने की सलाह दी जाती है</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="75"/>
@@ -5349,11 +5286,6 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>PageSetupWizardApiServicesList</name>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardApiServicesList.qml" line="34"/>
-        <source>VPN by Amnezia</source>
-        <translation>Amnezia का VPN</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardApiServicesList.qml" line="35"/>
         <source>Choose a VPN service that suits your needs.</source>
         <translation>अपनी आवश्यकताओं के अनुरूप VPN सेवा चुनें।</translation>
@@ -5401,6 +5333,36 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>PageSetupWizardConfigSource</name>
     <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="150"/>
+        <source>Self-hosted VPN</source>
+        <translation>स्व-होस्टेड VPN</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="151"/>
+        <source>Configure Traceless on your own server</source>
+        <translation>अपने सर्वर पर Traceless कॉन्फ़िगर करें</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="168"/>
+        <source>Restore from backup</source>
+        <translation>बैकअप से बहाल करना</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="198"/>
+        <source>File with connection settings</source>
+        <translation>कनेक्शन सेटिंग्स वाली फ़ाइल</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="206"/>
+        <source>Open config file</source>
+        <translation>कॉन्फ़िग फ़ाइल खोलें</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="223"/>
+        <source>QR code</source>
+        <translation>QR कोड</translation>
+    </message>
+    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="52"/>
         <source>Connection</source>
         <translation>कनेक्शन</translation>
@@ -5447,11 +5409,6 @@ Only one can be active at a time: VPN or local proxy</source>
         <translation>कॉपी किया गया</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="53"/>
-        <source>Insert the key, add a configuration file or scan the QR-code</source>
-        <translation>कुंजी डालें, कॉन्फ़िगरेशन फ़ाइल जोड़ें या QR कोड स्कैन करें</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="78"/>
         <source>Insert key</source>
         <translation>कुंजी डालें</translation>
@@ -5477,34 +5434,9 @@ Only one can be active at a time: VPN or local proxy</source>
         <translation>अनुशंसित</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="290"/>
-        <source>Site Amnezia</source>
-        <translation>Amnezia वेबसाइट</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="125"/>
-        <source>VPN by Amnezia</source>
-        <translation>Amnezia का VPN</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="126"/>
         <source>The easiest way to connect to the VPN</source>
         <translation>VPN से जुड़ने का सबसे आसान तरीका</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="150"/>
-        <source>Self-hosted VPN</source>
-        <translation>स्व-होस्टेड VPN</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="151"/>
-        <source>Configure Amnezia VPN on your own server</source>
-        <translation>अपने सर्वर पर Amnezia VPN कॉन्फ़िगर करें</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="168"/>
-        <source>Restore from backup</source>
-        <translation>बैकअप से बहाल करना</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="178"/>
@@ -5515,21 +5447,6 @@ Only one can be active at a time: VPN or local proxy</source>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="179"/>
         <source>Backup files (*.backup)</source>
         <translation>बैकअप फ़ाइलें (*.backup)</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="198"/>
-        <source>File with connection settings</source>
-        <translation>कनेक्शन सेटिंग्स वाली फ़ाइल</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="206"/>
-        <source>Open config file</source>
-        <translation>कॉन्फ़िग फ़ाइल खोलें</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="223"/>
-        <source>QR code</source>
-        <translation>QR कोड</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="245"/>
@@ -5566,18 +5483,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="204"/>
-        <source>All data you enter will remain strictly confidential and will not be shared or disclosed to the Amnezia or any third parties</source>
-        <translation>आपके द्वारा दर्ज किया गया सभी डेटा पूरी तरह से गोपनीय रहेगा और Amnezia या किसी तीसरे पक्ष को साझा या प्रकट नहीं किया जाएगा</translation>
+        <source>Traceless uses these credentials to connect to your server over SSH.</source>
+        <translation>आपके द्वारा दर्ज किया गया सभी डेटा पूरी तरह से गोपनीय रहेगा और Traceless या किसी तीसरे पक्ष को साझा या प्रकट नहीं किया जाएगा</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="131"/>
         <source>Don&apos;t have a server?</source>
         <translation>सर्वर नहीं है?</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="132"/>
-        <source>Amnezia Hosting - VPN servers without complicated settings</source>
-        <translation>Amnezia Hosting - जटिल सेटिंग्स के बिना VPN सर्वर</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="146"/>
@@ -5673,13 +5585,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="63"/>
-        <source>Amnezia has detected that your server is currently </source>
-        <translation>Amnezia ने पता लगाया है कि आपका सर्वर वर्तमान में है </translation>
+        <source>Your server is currently </source>
+        <translation>Traceless ने पता लगाया है कि आपका सर्वर वर्तमान में है </translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="64"/>
-        <source>busy installing other software. Amnezia installation </source>
-        <translation>अन्य सॉफ़्टवेयर स्थापित करने में व्यस्त। Amnezia की स्थापना </translation>
+        <source>busy installing other software. Traceless setup </source>
+        <translation>अन्य सॉफ़्टवेयर स्थापित करने में व्यस्त। Traceless की स्थापना </translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="65"/>
@@ -5880,8 +5792,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="51"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN कॉन्फ़िगरेशन सहेजें</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless कॉन्फ़िगरेशन सहेजें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="58"/>
@@ -5895,8 +5807,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="72"/>
-        <source>Save AmneziaWG config</source>
-        <translation>AmneziaWG कॉन्फ़िगरेशन सहेजें</translation>
+        <source>Save %1 config</source>
+        <translation>%1 कॉन्फ़िगरेशन सहेजें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="79"/>
@@ -5930,8 +5842,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="105"/>
-        <source>AmneziaWG native format</source>
-        <translation>AmneziaWG मूल प्रारूप</translation>
+        <source>%1 native format</source>
+        <translation>%1 मूल प्रारूप</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="106"/>
@@ -6078,8 +5990,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="30"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN कॉन्फ़िगरेशन सहेजें</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless कॉन्फ़िगरेशन सहेजें</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="125"/>
@@ -6098,8 +6010,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="198"/>
-        <source>To read the QR code in the Amnezia app, tap + in the main menu → &apos;QR code&apos;</source>
-        <translation>Amnezia ऐप में QR कोड पढ़ने के लिए, मुख्य मेनू में + दबाएँ → &apos;QR कोड&apos;</translation>
+        <source>To scan this code in Traceless, tap + in the main menu and choose QR code.</source>
+        <translation>Traceless ऐप में QR कोड पढ़ने के लिए, मुख्य मेनू में + दबाएँ → &apos;QR कोड&apos;</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="213"/>
@@ -6200,7 +6112,7 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageUpdate.qml" line="31"/>
-        <source>Download failed. Download manually from amnezia.org</source>
+        <source>Download failed</source>
         <translation>डाउनलोड विफल। amnezia.org से मैन्युअल रूप से डाउनलोड करें</translation>
     </message>
     <message>
@@ -6486,8 +6398,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="110"/>
-        <source>This legacy Amnezia subscription format is no longer supported</source>
-        <translation>यह पुराना Amnezia सदस्यता प्रारूप अब समर्थित नहीं है</translation>
+        <source>This legacy subscription format is no longer supported</source>
+        <translation>यह पुराना Traceless सदस्यता प्रारूप अब समर्थित नहीं है</translation>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="111"/>
@@ -6574,10 +6486,10 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="132"/>
-        <source>Your Amnezia Premium subscription has expired.
+        <source>Your VPN subscription has expired.
  Please check your email for renewal instructions.
- If you haven&apos;t received an email, please contact our support.</source>
-        <translation>आपकी Amnezia Premium सदस्यता समाप्त हो गई है।
+ If you haven't received an email, please contact our support.</source>
+        <translation>आपकी VPN सदस्यता समाप्त हो गई है।
  नवीनीकरण निर्देशों के लिए कृपया अपना ईमेल देखें।
  यदि आपको ईमेल नहीं मिला है, तो कृपया हमारी सहायता टीम से संपर्क करें।</translation>
     </message>
@@ -6648,8 +6560,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="98"/>
-        <source>Amnezia helper service error</source>
-        <translation>Amnezia Amnezia सहायक सेवा त्रुटि</translation>
+        <source>Traceless helper service error</source>
+        <translation>Traceless Traceless सहायक सेवा त्रुटि</translation>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="99"/>
@@ -6789,8 +6701,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="77"/>
-        <source>AmneziaDNS</source>
-        <translation>AmneziaDNS</translation>
+        <source>DNS service</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="78"/>
@@ -6840,14 +6752,14 @@ Only one can be active at a time: VPN or local proxy</source>
         <source>OpenVPN is one of the most popular and reliable VPN protocols. It uses SSL/TLS encryption, supports a wide variety of devices and operating systems, and is continuously improved by the community due to its open-source nature. It provides a good balance between speed and security but is easily recognized by DPI systems, making it susceptible to blocking.
 
 Features:
-* Available on all AmneziaVPN platforms
+* Available on all Traceless platforms
 * Normal battery consumption on mobile devices
 * Flexible customization for various devices and OS
 * Operates over both TCP and UDP protocols</source>
         <translation>OpenVPN सबसे लोकप्रिय और भरोसेमंद VPN प्रोटोकॉल में से एक है। यह SSL/TLS एन्क्रिप्शन का उपयोग करता है, विभिन्न प्रकार के उपकरणों और ऑपरेटिंग सिस्टम का समर्थन करता है, और ओपन-सोर्स होने के कारण समुदाय द्वारा लगातार बेहतर बनाया जाता है। यह गति और सुरक्षा के बीच अच्छा संतुलन देता है, लेकिन DPI सिस्टम इसे आसानी से पहचान लेते हैं, जिससे यह अवरोधन के प्रति संवेदनशील हो जाता है।
 
 विशेषताएँ:
-* सभी AmneziaVPN प्लेटफ़ॉर्म पर उपलब्ध
+* सभी Traceless प्लेटफ़ॉर्म पर उपलब्ध
 * मोबाइल उपकरणों पर सामान्य बैटरी खपत
 * विभिन्न उपकरणों और OS के लिए लचीला अनुकूलन
 * TCP और UDP दोनों प्रोटोकॉल पर काम करता है</translation>
@@ -6857,7 +6769,7 @@ Features:
         <source>WireGuard is a modern, streamlined VPN protocol offering stable connectivity and excellent performance across all devices. It uses fixed encryption settings, delivering lower latency and higher data transfer speeds compared to OpenVPN. However, WireGuard is easily identifiable by DPI systems due to its distinctive packet signatures, making it susceptible to blocking.
 
 Features:
-* Available on all AmneziaVPN platforms
+* Available on all Traceless platforms
 * Low power consumption on mobile devices
 * Minimal configuration required
 * Easily detected by DPI systems (susceptible to blocking)
@@ -6865,7 +6777,7 @@ Features:
         <translation>WireGuard एक आधुनिक और सुव्यवस्थित VPN प्रोटोकॉल है जो सभी उपकरणों पर स्थिर कनेक्टिविटी और उत्कृष्ट प्रदर्शन देता है। यह निश्चित एन्क्रिप्शन सेटिंग्स का उपयोग करता है, जिससे OpenVPN की तुलना में कम विलंबता और अधिक डेटा स्थानांतरण गति मिलती है। हालाँकि, अपने विशिष्ट पैकेट हस्ताक्षरों के कारण WireGuard को DPI सिस्टम आसानी से पहचान लेते हैं, जिससे यह अवरोधन के प्रति संवेदनशील हो जाता है।
 
 विशेषताएँ:
-* सभी AmneziaVPN प्लेटफ़ॉर्म पर उपलब्ध
+* सभी Traceless प्लेटफ़ॉर्म पर उपलब्ध
 * मोबाइल उपकरणों पर कम बिजली खपत
 * न्यूनतम कॉन्फ़िगरेशन की आवश्यकता
 * DPI सिस्टम द्वारा आसानी से पहचाना जाता है (अवरोधन के प्रति संवेदनशील)
@@ -6873,26 +6785,8 @@ Features:
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="151"/>
-        <source>AmneziaWG is a modern VPN protocol based on WireGuard, combining simplified architecture with high performance across all devices. It addresses WireGuard&apos;s main vulnerability (easy detection by DPI systems) through advanced obfuscation techniques, making VPN traffic indistinguishable from regular internet traffic.
-
-AmneziaWG is an excellent choice for those seeking a fast, stealthy VPN connection.
-
-Features:
-* Available on all AmneziaVPN platforms
-* Low battery consumption on mobile devices
-* Minimal settings required
-* Undetectable by traffic analysis systems (DPI)
-* Operates over UDP protocol</source>
-        <translation>AmneziaWG, WireGuard पर आधारित एक आधुनिक VPN प्रोटोकॉल है, जो सरल आर्किटेक्चर को सभी उपकरणों पर उच्च प्रदर्शन के साथ जोड़ता है। यह उन्नत ऑब्फ़सकेशन तकनीकों के माध्यम से WireGuard की मुख्य कमज़ोरी (DPI सिस्टम द्वारा आसान पहचान) को दूर करता है, जिससे VPN ट्रैफ़िक सामान्य इंटरनेट ट्रैफ़िक से अलग नहीं दिखता।
-
-जो लोग तेज़ और अदृश्य VPN कनेक्शन चाहते हैं, उनके लिए AmneziaWG एक उत्कृष्ट विकल्प है।
-
-विशेषताएँ:
-* सभी AmneziaVPN प्लेटफ़ॉर्म पर उपलब्ध
-* मोबाइल उपकरणों पर कम बैटरी खपत
-* न्यूनतम सेटिंग्स की आवश्यकता
-* ट्रैफ़िक विश्लेषण सिस्टम (DPI) द्वारा पता नहीं लगाया जा सकता
-* UDP प्रोटोकॉल पर काम करता है</translation>
+        <source>TP1 is the Traceless profile based on AWG 3.1. It uses UDP with header protection, per-server header ranges and bounded payload padding. TCP fallback on Windows uses a configured XRay REALITY profile on the same server.</source>
+        <translation>TP1, AWG 3.1 पर आधारित Traceless प्रोफ़ाइल है। यह हेडर सुरक्षा, हर सर्वर की अलग हेडर रेंज और सीमित पेलोड पैडिंग के साथ UDP का इस्तेमाल करती है। Windows पर TCP बैकअप उसी सर्वर पर कॉन्फ़िगर की गई XRay REALITY प्रोफ़ाइल का इस्तेमाल करता है।</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="163"/>
@@ -6955,11 +6849,6 @@ Features:
         <translation>स्वचालित</translation>
     </message>
     <message>
-        <location filename="../core/utils/containers/containerUtils.cpp" line="348"/>
-        <source>AmneziaWG protocol will be installed. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
-        <translation>AmneziaWG प्रोटोकॉल स्थापित किया जाएगा। यह उच्च कनेक्शन गति प्रदान करता है और सबसे कठिन नेटवर्क परिस्थितियों में भी स्थिर संचालन सुनिश्चित करता है।</translation>
-    </message>
-    <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="96"/>
         <source>WireGuard - popular VPN protocol with high performance, high speed and low power consumption.</source>
         <translation>WireGuard — उच्च प्रदर्शन, तेज़ गति और कम बिजली खपत वाला लोकप्रिय VPN प्रोटोकॉल।</translation>
@@ -6968,8 +6857,8 @@ Features:
         <location filename="../core/utils/containers/containerUtils.cpp" line="99"/>
         <location filename="../core/utils/containers/containerUtils.cpp" line="102"/>
         <location filename="../ui/models/containersModel.cpp" line="41"/>
-        <source>AmneziaWG is a special protocol from Amnezia based on WireGuard. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
-        <translation>AmneziaWG, WireGuard पर आधारित Amnezia का एक विशेष प्रोटोकॉल है। यह उच्च कनेक्शन गति प्रदान करता है और सबसे कठिन नेटवर्क परिस्थितियों में भी स्थिर संचालन सुनिश्चित करता है।</translation>
+        <source>AWG is a VPN protocol based on WireGuard. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
+        <translation>AWG, WireGuard पर आधारित Traceless का एक विशेष प्रोटोकॉल है। यह उच्च कनेक्शन गति प्रदान करता है और सबसे कठिन नेटवर्क परिस्थितियों में भी स्थिर संचालन सुनिश्चित करता है।</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="105"/>
@@ -6988,15 +6877,15 @@ Features:
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="189"/>
-        <source>After installation, Amnezia will create a
+        <source>After installation, Traceless will create a
 
  file storage on your server. You will be able to access it using
  FileZilla or other SFTP clients, as well as mount the disk on your device to access
  it directly from your device.
 
 For more detailed information, you can
- find it in the support section under &quot;Create SFTP file storage.&quot; </source>
-        <translation>इंस्टालेशन के बाद, Amnezia एक बनाएगा
+ find it in the support section under "Create SFTP file storage." </source>
+        <translation>इंस्टालेशन के बाद, Traceless एक बनाएगा
 
  आपके सर्वर पर फ़ाइल भंडारण। आप इसका उपयोग करके इसे एक्सेस कर पाएंगे
  FileZilla या अन्य SFTP क्लाइंट, साथ ही एक्सेस करने के लिए अपने डिवाइस पर डिस्क को माउंट करें
@@ -7483,29 +7372,9 @@ For more detailed information, you can
         <translation>हम चैट में जवाब देंगे</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="50"/>
-        <source>https://t.me/amnezia_vpn_en</source>
-        <translation>https://t.me/amnezia_vpn_en</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="59"/>
-        <source>support@amnezia.org</source>
-        <translation>support@amnezia.org</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="60"/>
         <source>Support email</source>
         <translation>सहायता ईमेल</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="65"/>
-        <source>mailto:support@amnezia.org</source>
-        <translation>mailto:support@amnezia.org</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="75"/>
-        <source>amnezia.org</source>
-        <translation>amnezia.org</translation>
     </message>
     <message>
         <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="76"/>
@@ -7639,9 +7508,9 @@ For more detailed information, you can
     </message>
     <message>
         <location filename="../ui/qml/main2.qml" line="280"/>
-        <source>This legacy Amnezia subscription type can no longer be used to connect in this application version.
+        <source>This legacy subscription type can no longer be used to connect in this application version.
 Remove the server from the app to continue.</source>
-        <translation>इस पुराने Amnezia सदस्यता प्रकार का उपयोग इस एप्लिकेशन संस्करण में कनेक्ट करने के लिए नहीं किया जा सकता।
+        <translation>इस पुराने Traceless सदस्यता प्रकार का उपयोग इस एप्लिकेशन संस्करण में कनेक्ट करने के लिए नहीं किया जा सकता।
 जारी रखने के लिए सर्वर को ऐप से हटाएँ।</translation>
     </message>
     <message>

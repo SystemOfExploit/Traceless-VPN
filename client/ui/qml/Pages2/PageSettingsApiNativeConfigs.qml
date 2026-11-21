@@ -18,7 +18,7 @@ PageType {
     isTabBarHidden: true
 
     property string configExtension: ".conf"
-    property string configCaption: qsTr("Save AmneziaVPN config")
+    property string configCaption: qsTr("Save Traceless config")
 
     Component.onCompleted: {
         ApiConfigsCountryListModel.applyDefaultState(false)
@@ -183,7 +183,7 @@ PageType {
                 Layout.topMargin: 16
                 Layout.bottomMargin: 8
 
-                text: qsTr("For router setup or the AmneziaWG app")
+                text: qsTr("For routers or compatible VPN clients")
                 color: AmneziaStyle.color.textSecondary
             }
         }

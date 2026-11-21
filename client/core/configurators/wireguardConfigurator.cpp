@@ -8,10 +8,12 @@
 #include <QTemporaryDir>
 #include <QTemporaryFile>
 
-#include <openssl/pem.h>
+#include <array>
+#include <memory>
+
+#include <openssl/crypto.h>
+#include <openssl/evp.h>
 #include <openssl/rand.h>
-#include <openssl/rsa.h>
-#include <openssl/x509.h>
 
 #include "core/utils/containerEnum.h"
 #include "core/utils/containers/containerUtils.h"
@@ -48,33 +50,40 @@ WireguardConfigurator::WireguardConfigurator(SshSession* sshSession, bool isAwg,
 
 WireguardConfigurator::ConnectionData WireguardConfigurator::genClientKeys()
 {
-    // TODO review
-    constexpr size_t EDDSA_KEY_LENGTH = 32;
+    constexpr int keyLength = 32;
+    std::array<unsigned char, keyLength> privateKey{};
+    if (RAND_priv_bytes(privateKey.data(), keyLength) != 1) {
+        return {};
+    }
 
-    ConnectionData connData;
+    const std::unique_ptr<EVP_PKEY, decltype(&EVP_PKEY_free)> key(
+            EVP_PKEY_new_raw_private_key(EVP_PKEY_X25519, nullptr, privateKey.data(), privateKey.size()), EVP_PKEY_free);
+    std::array<unsigned char, keyLength> publicKey{};
+    size_t publicKeyLength = publicKey.size();
 
-    unsigned char buff[EDDSA_KEY_LENGTH];
-    int ret = RAND_priv_bytes(buff, EDDSA_KEY_LENGTH);
-    if (ret <= 0)
-        return connData;
+    ConnectionData data;
+    if (key && EVP_PKEY_get_raw_public_key(key.get(), publicKey.data(), &publicKeyLength) == 1
+        && publicKeyLength == publicKey.size()) {
+        data.clientPrivKey = QString::fromLatin1(QByteArray::fromRawData(
+                reinterpret_cast<const char *>(privateKey.data()), keyLength).toBase64());
+        data.clientPubKey = QString::fromLatin1(QByteArray::fromRawData(
+                reinterpret_cast<const char *>(publicKey.data()), keyLength).toBase64());
+    }
+    OPENSSL_cleanse(privateKey.data(), privateKey.size());
+    return data;
+}
 
-    EVP_PKEY *pKey = EVP_PKEY_new();
-    q_check_ptr(pKey);
-    pKey = EVP_PKEY_new_raw_private_key(EVP_PKEY_X25519, NULL, &buff[0], EDDSA_KEY_LENGTH);
-
-    size_t keySize = EDDSA_KEY_LENGTH;
-
-    // save private key
-    unsigned char priv[EDDSA_KEY_LENGTH];
-    EVP_PKEY_get_raw_private_key(pKey, priv, &keySize);
-    connData.clientPrivKey = QByteArray::fromRawData((char *)priv, keySize).toBase64();
-
-    // save public key
-    unsigned char pub[EDDSA_KEY_LENGTH];
-    EVP_PKEY_get_raw_public_key(pKey, pub, &keySize);
-    connData.clientPubKey = QByteArray::fromRawData((char *)pub, keySize).toBase64();
-
-    return connData;
+QString WireguardConfigurator::generatePresharedKey()
+{
+    constexpr int keyLength = 32;
+    std::array<unsigned char, keyLength> secret{};
+    if (RAND_priv_bytes(secret.data(), keyLength) != 1) {
+        return {};
+    }
+    const QString key = QString::fromLatin1(QByteArray::fromRawData(
+            reinterpret_cast<const char *>(secret.data()), keyLength).toBase64());
+    OPENSSL_cleanse(secret.data(), secret.size());
+    return key;
 }
 
 QList<QHostAddress> WireguardConfigurator::getIpsFromConf(const QString &input)
@@ -172,11 +181,17 @@ WireguardConfigurator::ConnectionData WireguardConfigurator::prepareWireguardCon
         return connData;
     }
 
-    connData.pskKey = m_sshSession->getTextFileFromContainer(container, credentials, m_serverPskKeyPath, errorCode);
-    connData.pskKey.replace("\n", "");
-
-    if (errorCode != ErrorCode::NoError) {
-        return connData;
+    if (container == DockerContainer::Awg2 && awgServerConfig && awgServerConfig->isTp1()) {
+        connData.pskKey = generatePresharedKey();
+        if (connData.pskKey.isEmpty()) {
+            errorCode = ErrorCode::InternalError;
+            return connData;
+        }
+    } else {
+        connData.pskKey = m_sshSession->getTextFileFromContainer(container, credentials, m_serverPskKeyPath, errorCode).trimmed();
+        if (errorCode != ErrorCode::NoError) {
+            return connData;
+        }
     }
 
     // Add client to config
@@ -278,9 +293,13 @@ ProtocolConfig WireguardConfigurator::createConfig(const ServerCredentials &cred
     clientConfig.presharedKey = connData.pskKey;
     clientConfig.clientId = connData.clientPubKey;
     clientConfig.allowedIps = QStringList { "0.0.0.0/0", "::/0" };
-    const bool useKeepAliveRange = awgServerConfig && awgServerConfig->hasAwg3Params();
-    clientConfig.persistentKeepAlive = useKeepAliveRange ? protocols::awg::defaultPersistentKeepAlive
-                                                         : protocols::wireguard::defaultPersistentKeepAlive;
+    if (awgServerConfig && awgServerConfig->isTp1()) {
+        clientConfig.persistentKeepAlive = protocols::awg::tp1PersistentKeepAlive;
+    } else if (awgServerConfig && awgServerConfig->hasAwg3Params()) {
+        clientConfig.persistentKeepAlive = protocols::awg::defaultPersistentKeepAlive;
+    } else {
+        clientConfig.persistentKeepAlive = protocols::wireguard::defaultPersistentKeepAlive;
+    }
     clientConfig.mtu = mtu;
     clientConfig.isObfuscationEnabled = false;
     

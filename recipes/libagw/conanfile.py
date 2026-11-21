@@ -73,9 +73,6 @@ class Libagw(ConanFile):
     def build_requirements(self):
         self.tool_requires("go/1.27.1")
         if self._is_windows:
-            self.win_bash = True
-            if not self.conf.get("tools.microsoft.bash:path", check_type=str):
-                self.tool_requires("msys2/cci.latest")
             self.tool_requires("mingw-builds/15.1.0")
 
     def validate(self):
@@ -102,6 +99,7 @@ class Libagw(ConanFile):
         env.define("GOMODCACHE", os.path.join(self.build_folder, "gopath", "pkg", "mod"))
         env.define("GOCACHE", os.path.join(self.build_folder, "gocache"))
         env.define("GOOS", self._goos)
+        env.define("GOTELEMETRY", "off")
         env.define("CGO_ENABLED", "1")
         self._ldflags = tc.ldflags
         self._cflags = tc.cflags
@@ -113,9 +111,10 @@ class Libagw(ConanFile):
         env.define("CGO_CFLAGS", " ".join(cflags))
         env.define("CGO_LDFLAGS", " ".join(ldflags))
         go_ldflags = " ".join(filter(None, ["-s -w", goldflags]))
+        output_arg = f'"{output}"' if self._is_windows else shlex.quote(output)
         with env.vars(self).apply():
             self.run(f'go build -buildmode={buildmode} -ldflags="{go_ldflags}" '
-                     f'-o {shlex.quote(output)} ./archive')
+                     f'-o {output_arg} ./archive')
 
     def build(self):
         with chdir(self, self.source_folder):

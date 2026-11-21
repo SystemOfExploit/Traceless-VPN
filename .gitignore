@@ -87,6 +87,8 @@ deploy/data/macos/pf/amn.400.allowPIA.conf
 
 # tmp files
 *.*~
+__pycache__/
+*.pyc
 
 #########################  Android
 # Built application files

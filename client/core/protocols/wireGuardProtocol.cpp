@@ -39,6 +39,12 @@ WireguardProtocol::WireguardProtocol(const QJsonObject &configuration, QObject *
 
     connect(m_impl.get(), &ControllerImpl::disconnected, this,
             [this]() { setConnectionState(Vpn::ConnectionState::Disconnected); });
+    connect(m_impl.get(), &LocalSocketController::fallbackDeactivated, this, [this](bool success) {
+        if (success) {
+            guardStop();
+        }
+        emit fallbackDeactivated(success);
+    });
     m_impl->initialize(nullptr, nullptr);
 }
 
@@ -54,6 +60,11 @@ void WireguardProtocol::stop()
         return;
     }
     stopMzImpl();
+}
+
+void WireguardProtocol::deactivateForFallback()
+{
+    m_impl->deactivateForFallback();
 }
 
 ErrorCode WireguardProtocol::startMzImpl()

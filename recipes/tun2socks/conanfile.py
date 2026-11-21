@@ -67,11 +67,6 @@ class Tun2Socks(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("go/1.27.1")
-        if self._is_windows:
-            self.win_bash = True
-            if not self.conf.get("tools.microsoft.bash:path", check_type=str):
-                self.tool_requires("msys2/cci.latest")
-            self.tool_requires("mingw-builds/15.1.0")
 
     def requirements(self):
         if self._is_windows:
@@ -92,6 +87,8 @@ class Tun2Socks(ConanFile):
         env.define("GOTELEMETRY", "off")
         env.define("LDFLAGS", "")
         env.define("GOOS", self._goos)
+        if self._is_windows:
+            env.define("CGO_ENABLED", "0")
         self._ldflags = tc.ldflags
         self._cflags = tc.cflags
         tc.generate(env)
@@ -113,16 +110,12 @@ class Tun2Socks(ConanFile):
                 env.define("CGO_LDFLAGS", " ".join(ldflags))
                 env.define("CGO_CFLAGS", " ".join(cflags))
                 with env.vars(self).apply():
-                    at = Autotools(self)
-                    make_build_dir = build_dir.replace("\\", "/") if self._is_windows else build_dir
-                    at.make("tun2socks", args=[
-                        f"BUILD_DIR={make_build_dir}"
-                    ])
                     if self._is_windows:
-                        os.rename(
-                            os.path.join(build_dir, self._binary_name),
-                            os.path.join(build_dir, self._binary_name_ext)
-                        )
+                        output = os.path.join(build_dir, self._binary_name_ext)
+                        version = f"github.com/xjasonlyu/tun2socks/v2/internal/version.Version=v{self.version}"
+                        self.run(f'go build -ldflags="-w -s -buildid= -X {version}" -trimpath -o "{output}"')
+                    else:
+                        Autotools(self).make("tun2socks", args=[f"BUILD_DIR={build_dir}"])
 
         if self._is_multiarch:
             lipo = XCRun(self).find('lipo')

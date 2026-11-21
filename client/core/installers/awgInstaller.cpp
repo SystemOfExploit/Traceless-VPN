@@ -8,7 +8,6 @@
 #include "core/utils/containerEnum.h"
 #include "core/utils/containers/containerUtils.h"
 #include "core/utils/protocolEnum.h"
-#include "core/utils/protocolEnum.h"
 #include "core/protocols/protocolUtils.h"
 #include "core/utils/constants/configKeys.h"
 #include "core/utils/constants/protocolConstants.h"
@@ -30,6 +29,27 @@ ContainerConfig AwgInstaller::generateConfig(DockerContainer container, int port
     if (auto* awgConfig = config.getAwgProtocolConfig()) {
         generateAwgParameters(awgConfig->serverConfig);
         awgConfig->serverConfig.protocolVersion = protocols::awg::awgV3;
+        if (container == DockerContainer::Awg2) {
+            auto &server = awgConfig->serverConfig;
+            const auto makeHeaderRange = [](int slot) {
+                constexpr int slotSize = 500000000;
+                constexpr int rangeWidth = 1024;
+                const int first = slot * slotSize + QRandomGenerator::system()->bounded(5, slotSize - rangeWidth);
+                return QString::number(first) + QLatin1Char('-') + QString::number(first + rangeWidth - 1);
+            };
+            server.initPacketMagicHeader = makeHeaderRange(0);
+            server.responsePacketMagicHeader = makeHeaderRange(1);
+            server.underloadPacketMagicHeader = makeHeaderRange(2);
+            server.transportPacketMagicHeader = makeHeaderRange(3);
+            server.junkPacketCount = protocols::awg::tp1JunkPacketCount;
+            server.junkPacketMinSize = QString::number(16);
+            server.contentPaddingAddition = protocols::awg::tp1ContentPadding;
+            server.rekeyTimeout = protocols::awg::tp1RekeyTimeout;
+            server.maxHandshakeAttempts = protocols::awg::tp1MaxHandshakeAttempts;
+            server.specialJunk1 = protocols::awg::tp1HandshakeCamouflage;
+            server.randomTrailers.clear();
+            server.disableCookies.clear();
+        }
     }
     return config;
 }
@@ -53,7 +73,7 @@ void AwgInstaller::generateAwgParameters(AwgServerConfig &serverConfig)
     serverConfig.underloadPacketMagicHeader = protocols::awg::defaultUnderloadPacketMagicHeader;
     serverConfig.transportPacketMagicHeader = protocols::awg::defaultTransportPacketMagicHeader;
 
-    serverConfig.headerProtectionKey = WireguardConfigurator::genClientKeys().clientPrivKey;
+    serverConfig.headerProtectionKey = WireguardConfigurator::generatePresharedKey();
     serverConfig.rekeyAfterTime = protocols::awg::defaultRekeyAfterTime;
     serverConfig.rekeyTimeout = protocols::awg::defaultRekeyTimeout;
     serverConfig.rejectAfterTime = protocols::awg::defaultRejectAfterTime;
@@ -79,19 +99,7 @@ ErrorCode AwgInstaller::extractConfigFromContainer(DockerContainer container, co
         return errorCode;
     }
 
-    QMap<QString, QString> serverConfigMap;
-    auto serverConfigLines = serverConfig.split("\n");
-    for (auto &line : serverConfigLines) {
-        auto trimmedLine = line.trimmed();
-        if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
-            continue;
-        } else {
-            QStringList parts = trimmedLine.split(" = ");
-            if (parts.count() == 2) {
-                serverConfigMap.insert(parts[0].trimmed(), parts[1].trimmed());
-            }
-        }
-    }
+    const auto serverConfigMap = parseWireGuardConfig(serverConfig);
 
     if (auto* awgConfig = config.getAwgProtocolConfig()) {
         QString addressValue = serverConfigMap.value("Address");
@@ -110,12 +118,14 @@ ErrorCode AwgInstaller::extractConfigFromContainer(DockerContainer container, co
         awgConfig->serverConfig.underloadPacketMagicHeader = serverConfigMap.value(configKey::underloadPacketMagicHeader);
         awgConfig->serverConfig.transportPacketMagicHeader = serverConfigMap.value(configKey::transportPacketMagicHeader);
 
-        // hack to parse i1-i5 from commented lines in server config
-        awgConfig->serverConfig.specialJunk1 = serverConfigMap.value(QString("# ") + configKey::specialJunk1);
-        awgConfig->serverConfig.specialJunk2 = serverConfigMap.value(QString("# ") + configKey::specialJunk2);
-        awgConfig->serverConfig.specialJunk3 = serverConfigMap.value(QString("# ") + configKey::specialJunk3);
-        awgConfig->serverConfig.specialJunk4 = serverConfigMap.value(QString("# ") + configKey::specialJunk4);
-        awgConfig->serverConfig.specialJunk5 = serverConfigMap.value(QString("# ") + configKey::specialJunk5);
+        const auto specialJunk = [&serverConfigMap](const QString &key) {
+            return serverConfigMap.value(key, serverConfigMap.value(QStringLiteral("# ") + key));
+        };
+        awgConfig->serverConfig.specialJunk1 = specialJunk(configKey::specialJunk1);
+        awgConfig->serverConfig.specialJunk2 = specialJunk(configKey::specialJunk2);
+        awgConfig->serverConfig.specialJunk3 = specialJunk(configKey::specialJunk3);
+        awgConfig->serverConfig.specialJunk4 = specialJunk(configKey::specialJunk4);
+        awgConfig->serverConfig.specialJunk5 = specialJunk(configKey::specialJunk5);
 
         awgConfig->serverConfig.cookieReplyPacketJunkSize = serverConfigMap.value(configKey::cookieReplyPacketJunkSize);
         awgConfig->serverConfig.transportPacketJunkSize = serverConfigMap.value(configKey::transportPacketJunkSize);

@@ -47,10 +47,10 @@ QString getBaseDescription(const QMap<DockerContainer, ContainerConfig> &contain
     if (hasWriteAccess) {
         const bool isDnsInstalled = containers.contains(DockerContainer::Dns);
         if (isAmneziaDnsEnabled && isDnsInstalled) {
-            description += QStringLiteral("Amnezia DNS | ");
+            description += QStringLiteral("DNS | ");
         }
     } else if (primaryDnsIsAmnezia) {
-        description += QStringLiteral("Amnezia DNS | ");
+        description += QStringLiteral("DNS | ");
     }
     return description;
 }
@@ -60,7 +60,7 @@ QString getProtocolName(DockerContainer defaultContainer, const QMap<DockerConta
     QString containerName = ContainerUtils::containerHumanNames().value(defaultContainer);
     QString protocolVersion;
 
-    if (ContainerUtils::isAwgContainer(defaultContainer)) {
+    if (defaultContainer == DockerContainer::Awg) {
         const auto it = containers.constFind(defaultContainer);
         if (it != containers.cend()) {
             if (const AwgProtocolConfig *awg = it->getAwgProtocolConfig()) {
@@ -69,8 +69,8 @@ QString getProtocolName(DockerContainer defaultContainer, const QMap<DockerConta
                     version = awg->serverProtocolVersion();
                 }
                 protocolVersion = AwgProtocolConfig::protocolVersionString(version);
-                if (defaultContainer == DockerContainer::Awg && !awg->serverConfig.isThirdPartyConfig) {
-                    containerName = QStringLiteral("AmneziaWG Legacy");
+                if (!awg->serverConfig.isThirdPartyConfig) {
+                    containerName = QStringLiteral("AWG Legacy");
                 }
             }
         }

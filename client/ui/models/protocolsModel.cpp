@@ -58,9 +58,11 @@ QVariant ProtocolsModel::data(const QModelIndex &index, int role) const
     Proto proto = getProtocolType();
     
     switch (role) {
-    case ProtocolNameRole: {
+    case ProtocolNameRole:
+        if (m_containerConfig.container == DockerContainer::Awg2) {
+            return ContainerUtils::containerHumanNames().value(m_containerConfig.container);
+        }
         return ProtocolUtils::protocolHumanNames().value(proto);
-    }
     case ServerProtocolPageRole:
         return static_cast<int>(serverProtocolPage(proto));
     case ClientProtocolPageRole:

@@ -2,6 +2,7 @@
 
 #include <QRandomGenerator>
 #include <QRegularExpression>
+#include <QStringView>
 #include <QJsonObject>
 #include <QObject>
 
@@ -61,7 +62,7 @@ QMap<Proto, QString> ProtocolUtils::protocolHumanNames()
 {
     return { { Proto::OpenVpn, "OpenVPN" },
              { Proto::WireGuard, "WireGuard" },
-             { Proto::Awg, "AmneziaWG" },
+             { Proto::Awg, "AWG" },
              { Proto::Ikev2, "IKEv2" },
              { Proto::Xray, "XRay" },
              { Proto::SSXray, "Shadowsocks"},
@@ -215,6 +216,19 @@ QString ProtocolUtils::key_proto_config_data(Proto p)
 QString ProtocolUtils::key_proto_config_path(Proto p)
 {
     return protoToString(p) + "_config_path";
+}
+
+QMap<QString, QString> ProtocolUtils::parseWireGuardConfig(const QString &config)
+{
+    QMap<QString, QString> values;
+    for (QStringView line : QStringView(config).split(u'\n')) {
+        line = line.trimmed();
+        const qsizetype separator = line.indexOf(u'=');
+        if (separator > 0 && !line.startsWith(u'[')) {
+            values.insert(line.first(separator).trimmed().toString(), line.sliced(separator + 1).trimmed().toString());
+        }
+    }
+    return values;
 }
 
 QString ProtocolUtils::replaceWireGuardEndpoint(QString nativeConfig, const QString &host, int port)

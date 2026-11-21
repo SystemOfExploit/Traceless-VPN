@@ -172,10 +172,6 @@ PageType {
                         text: qsTr("Charged to your Apple ID at confirmation. Renews automatically unless auto-renew is turned off at least 24 hours before period end. Manage in Apple ID settings.")
                     }
 
-                    TermsAndPrivacyText {
-                        termsUrl: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-                        privacyUrl: LanguageUiController.getCurrentSiteUrl("policy")
-                    }
                 }
 
                 TermsAndPrivacyText {

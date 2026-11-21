@@ -133,6 +133,14 @@
 <context>
     <name>ConnectButton</name>
     <message>
+        <source>Disconnected</source>
+        <translation>연결 해제됨</translation>
+    </message>
+    <message>
+        <source>Connect</source>
+        <translation>연결</translation>
+    </message>
+    <message>
         <location filename="../ui/qml/Components/ConnectButton.qml" line="28"/>
         <source>Unable to disconnect during configuration preparation</source>
         <translation>구성을 준비하는 동안에는 연결을 해제할 수 없습니다</translation>
@@ -516,8 +524,8 @@
     <name>HomeServerSummary</name>
     <message>
         <location filename="../ui/qml/Components/HomeServerSummary.qml" line="91"/>
-        <source>AmneziaWG 2.0 is outdated and no longer supported. Continued use requires a fresh installation of the AmneziaWG 3.1 container.</source>
-        <translation>AmneziaWG 2.0은 오래되어 더 이상 지원되지 않습니다. 계속 사용하려면 AmneziaWG 3.1 컨테이너를 새로 설치해야 합니다.</translation>
+        <source>AWG 2.0 is outdated and no longer supported. To upgrade, install TP1 on the server.</source>
+        <translation>AWG 2.0은 오래되어 더 이상 지원되지 않습니다. 계속 사용하려면 TP1 컨테이너를 새로 설치해야 합니다.</translation>
     </message>
 </context>
 <context>
@@ -785,12 +793,6 @@ Already installed containers were found on the server. All installed containers 
 <context>
     <name>NotificationHandler</name>
     <message>
-        <location filename="../ui/utils/notificationHandler.cpp" line="57"/>
-        <location filename="../ui/utils/notificationHandler.cpp" line="64"/>
-        <source>AmneziaVPN</source>
-        <translation>AmneziaVPN</translation>
-    </message>
-    <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="58"/>
         <source>VPN Connected</source>
         <translation>VPN 연결됨</translation>
@@ -802,8 +804,8 @@ Already installed containers were found on the server. All installed containers 
     </message>
     <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="88"/>
-        <source>AmneziaVPN notification</source>
-        <translation>AmneziaVPN 알림</translation>
+        <source>Traceless notification</source>
+        <translation>Traceless 알림</translation>
     </message>
     <message>
         <location filename="../ui/utils/notificationHandler.cpp" line="89"/>
@@ -907,8 +909,8 @@ Already installed containers were found on the server. All installed containers 
     <name>PageProtocolAwgClientSettings</name>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgClientSettings.qml" line="52"/>
-        <source>AmneziaWG settings</source>
-        <translation>AmneziaWG 설정</translation>
+        <source>%1 settings</source>
+        <translation>%1 설정</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgClientSettings.qml" line="62"/>
@@ -1030,8 +1032,8 @@ Already installed containers were found on the server. All installed containers 
     <name>PageProtocolAwgSettings</name>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgSettings.qml" line="110"/>
-        <source>AmneziaWG settings</source>
-        <translation>AmneziaWG 설정</translation>
+        <source>%1 settings</source>
+        <translation>%1 설정</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageProtocolAwgSettings.qml" line="122"/>
@@ -2373,8 +2375,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageServiceDnsSettings.qml" line="60"/>
-        <source>Cannot remove AmneziaDNS from running server</source>
-        <translation>실행 중인 서버에서는 AmneziaDNS를 삭제할 수 없습니다</translation>
+        <source>Cannot remove the DNS service while the VPN is connected</source>
+        <translation>실행 중인 서버에서는 DNS를 삭제할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -3368,8 +3370,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettings.qml" line="126"/>
-        <source>About AmneziaVPN</source>
-        <translation>AmneziaVPN 정보</translation>
+        <source>About Traceless</source>
+        <translation>Traceless 정보</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettings.qml" line="140"/>
@@ -3381,8 +3383,8 @@ Create one from the current settings.</source>
     <name>PageSettingsAbout</name>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="22"/>
-        <source>You have the latest version of AmneziaVPN</source>
-        <translation>최신 버전의 AmneziaVPN을 사용 중입니다</translation>
+        <source>You have the latest version of Traceless</source>
+        <translation>최신 버전의 Traceless을 사용 중입니다</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="26"/>
@@ -3393,11 +3395,6 @@ Create one from the current settings.</source>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="69"/>
         <source>Support Amnezia</source>
         <translation>Amnezia 후원하기</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="80"/>
-        <source>Amnezia is a free and open-source application. You can support the developers if you like it.</source>
-        <translation>Amnezia는 무료 오픈 소스 애플리케이션입니다. 마음에 드신다면 개발자들을 후원해 주세요.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="101"/>
@@ -3440,34 +3437,14 @@ Create one from the current settings.</source>
         <translation>기능에 대해 논의하기</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="116"/>
-        <source>https://telegram.me/amnezia_vpn_en</source>
-        <translation>https://telegram.me/amnezia_vpn_en</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="122"/>
-        <source>Amnezia Hub Telegram Bot</source>
-        <translation>Amnezia Hub Telegram 봇</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="123"/>
         <source>Ask us anything</source>
         <translation>무엇이든 물어보세요</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="132"/>
-        <source>support@amnezia.org</source>
-        <translation>support@amnezia.org</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="133"/>
         <source>For reviews and bug reports</source>
         <translation>의견 및 버그 신고</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="136"/>
-        <source>mailto:support@amnezia.org</source>
-        <translation>mailto:support@amnezia.org</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="142"/>
@@ -3478,11 +3455,6 @@ Create one from the current settings.</source>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="143"/>
         <source>Discover the source code</source>
         <translation>소스 코드 살펴보기</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="146"/>
-        <source>https://github.com/amnezia-vpn/amnezia-client</source>
-        <translation>https://github.com/amnezia-vpn/amnezia-client</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsAbout.qml" line="152"/>
@@ -3604,29 +3576,14 @@ Create one from the current settings.</source>
         <translation>Windows</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="20"/>
-        <source>documentation/instructions/connect-amnezia-premium#windows</source>
-        <translation>documentation/instructions/connect-amnezia-premium#windows</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="21"/>
         <source>macOS</source>
         <translation>macOS</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="21"/>
-        <source>documentation/instructions/connect-amnezia-premium#macos</source>
-        <translation>documentation/instructions/connect-amnezia-premium#macos</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="22"/>
         <source>Android</source>
         <translation>Android</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="22"/>
-        <source>documentation/instructions/connect-amnezia-premium#android</source>
-        <translation>documentation/instructions/connect-amnezia-premium#android</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="23"/>
@@ -3644,19 +3601,9 @@ Create one from the current settings.</source>
         <translation>iOS</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="24"/>
-        <source>documentation/instructions/connect-amnezia-premium#ios</source>
-        <translation>documentation/instructions/connect-amnezia-premium#ios</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="25"/>
         <source>Linux</source>
         <translation>Linux</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="25"/>
-        <source>documentation/instructions/connect-amnezia-premium#linux</source>
-        <translation>documentation/instructions/connect-amnezia-premium#linux</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="26"/>
@@ -3664,32 +3611,22 @@ Create one from the current settings.</source>
         <translation>라우터</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="26"/>
-        <source>documentation/instructions/connect-amnezia-premium#routers</source>
-        <translation>documentation/instructions/connect-amnezia-premium#routers</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="48"/>
         <source>How to connect on another device</source>
         <translation>다른 기기에서 연결하는 방법</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSettingsApiInstructions.qml" line="49"/>
-        <source>Setup guides on the Amnezia website</source>
-        <translation>Amnezia 웹사이트의 설정 가이드</translation>
     </message>
 </context>
 <context>
     <name>PageSettingsApiNativeConfigs</name>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="21"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN 구성 저장</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless 구성 저장</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="186"/>
-        <source>For router setup or the AmneziaWG app</source>
-        <translation>라우터 설정 또는 AmneziaWG 앱용</translation>
+        <source>For routers or compatible VPN clients</source>
+        <translation>라우터 설정 또는 AWG 앱용</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiNativeConfigs.qml" line="55"/>
@@ -3984,8 +3921,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="111"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN 구성 저장</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless 구성 저장</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="112"/>
@@ -4004,8 +3941,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApiSubscriptionKey.qml" line="171"/>
-        <source>To read the QR code in the Amnezia app, tap + in the main menu → &apos;QR code&apos;</source>
-        <translation>Amnezia 앱에서 QR 코드를 읽으려면 기본 메뉴에서 +를 누른 다음 &apos;QR 코드&apos;를 누르세요</translation>
+        <source>To scan this code in Traceless, tap + in the main menu and choose QR code.</source>
+        <translation>Traceless 앱에서 QR 코드를 읽으려면 기본 메뉴에서 +를 누른 다음 &apos;QR 코드&apos;를 누르세요</translation>
     </message>
 </context>
 <context>
@@ -4224,8 +4161,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApplication.qml" line="274"/>
-        <source>All settings will be reset to default. All installed AmneziaVPN services will still remain on the server.</source>
-        <translation>모든 설정이 기본값으로 초기화됩니다. 설치된 AmneziaVPN 서비스는 서버에 그대로 유지됩니다.</translation>
+        <source>All settings will be reset to default. All installed Traceless services will still remain on the server.</source>
+        <translation>모든 설정이 기본값으로 초기화됩니다. 설치된 Traceless 서비스는 서버에 그대로 유지됩니다.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsApplication.qml" line="275"/>
@@ -4262,8 +4199,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsBackup.qml" line="64"/>
-        <source>The backup will contain your passwords and private keys for all servers added to AmneziaVPN. Keep this information in a secure place.</source>
-        <translation>백업에는 AmneziaVPN에 추가된 모든 서버의 비밀번호와 개인 키가 포함됩니다. 이 정보를 안전한 곳에 보관하세요.</translation>
+        <source>The backup will contain your passwords and private keys for all servers added to Traceless. Keep this information in a secure place.</source>
+        <translation>백업에는 Traceless에 추가된 모든 서버의 비밀번호와 개인 키가 포함됩니다. 이 정보를 안전한 곳에 보관하세요.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsBackup.qml" line="87"/>
@@ -4331,13 +4268,13 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="52"/>
-        <source>Use AmneziaDNS</source>
-        <translation>AmneziaDNS 사용</translation>
+        <source>Use the server DNS service</source>
+        <translation>DNS 사용</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="53"/>
-        <source>If AmneziaDNS is installed on the server</source>
-        <translation>서버에 AmneziaDNS가 설치된 경우</translation>
+        <source>If the DNS service is installed on the server</source>
+        <translation>서버에 DNS가 설치된 경우</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="79"/>
@@ -4346,8 +4283,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="80"/>
-        <source>When AmneziaDNS is not used or installed</source>
-        <translation>AmneziaDNS를 사용하지 않거나 설치하지 않은 경우</translation>
+        <source>When the server DNS service is not used or installed</source>
+        <translation>DNS를 사용하지 않거나 설치하지 않은 경우</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsConnection.qml" line="93"/>
@@ -4394,8 +4331,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsDns.qml" line="45"/>
-        <source>If AmneziaDNS is not used or installed</source>
-        <translation>AmneziaDNS를 사용하지 않거나 설치하지 않은 경우</translation>
+        <source>If the server DNS service is not used or installed</source>
+        <translation>DNS를 사용하지 않거나 설치하지 않은 경우</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsDns.qml" line="63"/>
@@ -4610,8 +4547,8 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="83"/>
-        <source>Local proxy is available only for Amnezia Premium</source>
-        <translation>로컬 프록시는 Amnezia Premium에서만 사용할 수 있습니다</translation>
+        <source>Local proxy is only available with a supported subscription</source>
+        <translation>로컬 프록시는 VPN에서만 사용할 수 있습니다</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="93"/>
@@ -4636,9 +4573,9 @@ Create one from the current settings.</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsLocalProxy.qml" line="209"/>
-        <source>Used by specific apps (e.g., CensorTracker extension) via Amnezia Premium.
+        <source>Used by specific apps (e.g., CensorTracker extension) with a supported subscription.
 Only one can be active at a time: VPN or local proxy</source>
-        <translation>특정 앱(예: CensorTracker 확장 프로그램)이 Amnezia Premium을 통해 사용합니다.
+        <translation>특정 앱(예: CensorTracker 확장 프로그램)이 VPN을 통해 사용합니다.
 한 번에 하나만 활성화할 수 있습니다: VPN 또는 로컬 프록시</translation>
     </message>
     <message>
@@ -4865,8 +4802,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="101"/>
-        <source>Check the server for previously installed Amnezia services</source>
-        <translation>서버에서 이전에 설치된 Amnezia 서비스 확인</translation>
+        <source>Check the server for previously installed VPN services</source>
+        <translation>서버에서 이전에 설치된 Traceless 서비스 확인</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="102"/>
@@ -4943,8 +4880,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="124"/>
-        <source>The update may take several minutes. Amnezia services on the server may restart briefly. The server will not be rebooted.</source>
-        <translation>업데이트에는 몇 분이 걸릴 수 있습니다. 서버의 Amnezia 서비스가 잠시 다시 시작될 수 있습니다. 서버는 재부팅되지 않습니다.</translation>
+        <source>The update may take several minutes. VPN services on the server may restart briefly. The server will not be rebooted.</source>
+        <translation>업데이트에는 몇 분이 걸릴 수 있습니다. 서버의 Traceless 서비스가 잠시 다시 시작될 수 있습니다. 서버는 재부팅되지 않습니다.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="130"/>
@@ -4968,8 +4905,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="177"/>
-        <source>All installed AmneziaVPN services will still remain on the server.</source>
-        <translation>설치된 모든 AmneziaVPN 서비스는 서버에 그대로 유지됩니다.</translation>
+        <source>All installed Traceless services will still remain on the server.</source>
+        <translation>설치된 모든 Traceless 서비스는 서버에 그대로 유지됩니다.</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="183"/>
@@ -4978,13 +4915,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="205"/>
-        <source>Clear server from Amnezia software</source>
-        <translation>서버에서 Amnezia 소프트웨어 제거</translation>
+        <source>Clear VPN software from the server</source>
+        <translation>서버에서 Traceless 소프트웨어 제거</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="209"/>
-        <source>Do you want to clear server from Amnezia software?</source>
-        <translation>서버에서 Amnezia 소프트웨어를 제거하시겠습니까?</translation>
+        <source>Do you want to clear VPN software from the server?</source>
+        <translation>서버에서 Traceless 소프트웨어를 제거하시겠습니까?</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="210"/>
@@ -4993,8 +4930,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="216"/>
-        <source>Cannot clear server from Amnezia software during active connection</source>
-        <translation>연결된 상태에서는 서버에서 Amnezia 소프트웨어를 제거할 수 없습니다</translation>
+        <source>Cannot clear VPN software from the server during active connection</source>
+        <translation>연결된 상태에서는 서버에서 Traceless 소프트웨어를 제거할 수 없습니다</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerData.qml" line="237"/>
@@ -5044,8 +4981,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="52"/>
-        <source>AmneziaWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Moving to AmneziaWG 3.1 by deploying a new container on the server is recommended for stronger protocol security</source>
-        <translation>AmneziaWG 2.0은 오래되어 최신 보안 개선 사항이 포함되어 있지 않지만 계속 작동합니다. 더 강력한 프로토콜 보안을 위해 서버에 새 컨테이너를 배포하여 AmneziaWG 3.1로 이전하는 것을 권장합니다</translation>
+        <source>AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP1 on the server to switch to the current profile.</source>
+        <translation>AWG 2.0은 오래되어 최신 보안 개선 사항이 포함되어 있지 않지만 계속 작동합니다. 더 강력한 프로토콜 보안을 위해 서버에 새 컨테이너를 배포하여 TP1로 이전하는 것을 권장합니다</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="75"/>
@@ -5346,11 +5283,6 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>PageSetupWizardApiServicesList</name>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardApiServicesList.qml" line="34"/>
-        <source>VPN by Amnezia</source>
-        <translation>Amnezia VPN</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardApiServicesList.qml" line="35"/>
         <source>Choose a VPN service that suits your needs.</source>
         <translation>필요에 맞는 VPN 서비스를 선택하세요.</translation>
@@ -5398,6 +5330,36 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>PageSetupWizardConfigSource</name>
     <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="150"/>
+        <source>Self-hosted VPN</source>
+        <translation>자체 호스팅 VPN</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="151"/>
+        <source>Configure Traceless on your own server</source>
+        <translation>자체 서버에 Traceless 설정</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="168"/>
+        <source>Restore from backup</source>
+        <translation>백업에서 복원</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="198"/>
+        <source>File with connection settings</source>
+        <translation>연결 설정 파일</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="206"/>
+        <source>Open config file</source>
+        <translation>구성 파일 열기</translation>
+    </message>
+    <message>
+        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="223"/>
+        <source>QR code</source>
+        <translation>QR 코드</translation>
+    </message>
+    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="52"/>
         <source>Connection</source>
         <translation>연결</translation>
@@ -5444,11 +5406,6 @@ Only one can be active at a time: VPN or local proxy</source>
         <translation>복사되었습니다</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="53"/>
-        <source>Insert the key, add a configuration file or scan the QR-code</source>
-        <translation>키를 붙여넣거나 구성 파일을 추가하거나 QR 코드를 스캔하세요</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="78"/>
         <source>Insert key</source>
         <translation>키 붙여넣기</translation>
@@ -5474,34 +5431,9 @@ Only one can be active at a time: VPN or local proxy</source>
         <translation>추천</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="290"/>
-        <source>Site Amnezia</source>
-        <translation>Amnezia 웹사이트</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="125"/>
-        <source>VPN by Amnezia</source>
-        <translation>Amnezia VPN</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="126"/>
         <source>The easiest way to connect to the VPN</source>
         <translation>VPN에 연결하는 가장 쉬운 방법</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="150"/>
-        <source>Self-hosted VPN</source>
-        <translation>자체 호스팅 VPN</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="151"/>
-        <source>Configure Amnezia VPN on your own server</source>
-        <translation>자체 서버에 Amnezia VPN 설정</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="168"/>
-        <source>Restore from backup</source>
-        <translation>백업에서 복원</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="178"/>
@@ -5512,21 +5444,6 @@ Only one can be active at a time: VPN or local proxy</source>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="179"/>
         <source>Backup files (*.backup)</source>
         <translation>백업 파일 (*.backup)</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="198"/>
-        <source>File with connection settings</source>
-        <translation>연결 설정 파일</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="206"/>
-        <source>Open config file</source>
-        <translation>구성 파일 열기</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="223"/>
-        <source>QR code</source>
-        <translation>QR 코드</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardConfigSource.qml" line="245"/>
@@ -5563,18 +5480,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="204"/>
-        <source>All data you enter will remain strictly confidential and will not be shared or disclosed to the Amnezia or any third parties</source>
-        <translation>입력한 모든 데이터는 엄격하게 기밀로 유지되며 Amnezia 또는 제3자에게 공유되거나 공개되지 않습니다</translation>
+        <source>Traceless uses these credentials to connect to your server over SSH.</source>
+        <translation>입력한 모든 데이터는 엄격하게 기밀로 유지되며 Traceless 또는 제3자에게 공유되거나 공개되지 않습니다</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="131"/>
         <source>Don&apos;t have a server?</source>
         <translation>서버가 없으신가요?</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="132"/>
-        <source>Amnezia Hosting - VPN servers without complicated settings</source>
-        <translation>Amnezia Hosting - 복잡한 설정 없는 VPN 서버</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardCredentials.qml" line="146"/>
@@ -5670,13 +5582,13 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="63"/>
-        <source>Amnezia has detected that your server is currently </source>
-        <translation>Amnezia가 서버에서 현재 </translation>
+        <source>Your server is currently </source>
+        <translation>Traceless가 서버에서 현재 </translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="64"/>
-        <source>busy installing other software. Amnezia installation </source>
-        <translation>다른 소프트웨어가 설치 중임을 감지했습니다. Amnezia 설치는 </translation>
+        <source>busy installing other software. Traceless setup </source>
+        <translation>다른 소프트웨어가 설치 중임을 감지했습니다. Traceless 설치는 </translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSetupWizardInstalling.qml" line="65"/>
@@ -5877,8 +5789,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="51"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN 구성 저장</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless 구성 저장</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="58"/>
@@ -5892,8 +5804,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="72"/>
-        <source>Save AmneziaWG config</source>
-        <translation>AmneziaWG 구성 저장</translation>
+        <source>Save %1 config</source>
+        <translation>%1 구성 저장</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="79"/>
@@ -5927,8 +5839,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="105"/>
-        <source>AmneziaWG native format</source>
-        <translation>AmneziaWG 기본 형식</translation>
+        <source>%1 native format</source>
+        <translation>%1 기본 형식</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShare.qml" line="106"/>
@@ -6075,8 +5987,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="30"/>
-        <source>Save AmneziaVPN config</source>
-        <translation>AmneziaVPN 구성 저장</translation>
+        <source>Save Traceless config</source>
+        <translation>Traceless 구성 저장</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="125"/>
@@ -6095,8 +6007,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="198"/>
-        <source>To read the QR code in the Amnezia app, tap + in the main menu → &apos;QR code&apos;</source>
-        <translation>Amnezia 앱에서 QR 코드를 읽으려면 기본 메뉴에서 +를 누른 다음 &apos;QR 코드&apos;를 누르세요</translation>
+        <source>To scan this code in Traceless, tap + in the main menu and choose QR code.</source>
+        <translation>Traceless 앱에서 QR 코드를 읽으려면 기본 메뉴에서 +를 누른 다음 &apos;QR 코드&apos;를 누르세요</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageShareConnection.qml" line="213"/>
@@ -6197,7 +6109,7 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageUpdate.qml" line="31"/>
-        <source>Download failed. Download manually from amnezia.org</source>
+        <source>Download failed</source>
         <translation>다운로드에 실패했습니다. amnezia.org에서 직접 다운로드하세요</translation>
     </message>
     <message>
@@ -6470,8 +6382,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="110"/>
-        <source>This legacy Amnezia subscription format is no longer supported</source>
-        <translation>이전 Amnezia 구독 형식은 더 이상 지원되지 않습니다</translation>
+        <source>This legacy subscription format is no longer supported</source>
+        <translation>이전 Traceless 구독 형식은 더 이상 지원되지 않습니다</translation>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="111"/>
@@ -6513,10 +6425,10 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="132"/>
-        <source>Your Amnezia Premium subscription has expired.
+        <source>Your VPN subscription has expired.
  Please check your email for renewal instructions.
- If you haven&apos;t received an email, please contact our support.</source>
-        <translation>Amnezia Premium 구독이 만료되었습니다.
+ If you haven't received an email, please contact our support.</source>
+        <translation>VPN 구독이 만료되었습니다.
 갱신 안내를 이메일에서 확인하세요.
 이메일을 받지 못했다면 지원팀에 문의하세요.</translation>
     </message>
@@ -6582,8 +6494,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="98"/>
-        <source>Amnezia helper service error</source>
-        <translation>Amnezia 보조 서비스 오류</translation>
+        <source>Traceless helper service error</source>
+        <translation>Traceless 보조 서비스 오류</translation>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="99"/>
@@ -6825,11 +6737,6 @@ Only one can be active at a time: VPN or local proxy</source>
         <translation>자동</translation>
     </message>
     <message>
-        <location filename="../core/utils/containers/containerUtils.cpp" line="348"/>
-        <source>AmneziaWG protocol will be installed. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
-        <translation>AmneziaWG 프로토콜이 설치됩니다. 높은 연결 속도를 제공하며 가장 까다로운 네트워크 환경에서도 안정적인 작동을 보장합니다.</translation>
-    </message>
-    <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="78"/>
         <source>SFTP file sharing service</source>
         <translation>SFTP 파일 공유 서비스</translation>
@@ -6842,8 +6749,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="77"/>
-        <source>AmneziaDNS</source>
-        <translation>AmneziaDNS</translation>
+        <source>DNS service</source>
+        <translation>DNS</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="89"/>
@@ -6859,8 +6766,8 @@ Only one can be active at a time: VPN or local proxy</source>
         <location filename="../core/utils/containers/containerUtils.cpp" line="99"/>
         <location filename="../core/utils/containers/containerUtils.cpp" line="102"/>
         <location filename="../ui/models/containersModel.cpp" line="41"/>
-        <source>AmneziaWG is a special protocol from Amnezia based on WireGuard. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
-        <translation>AmneziaWG는 WireGuard를 기반으로 한 Amnezia의 특수 프로토콜입니다. 높은 연결 속도를 제공하며 가장 까다로운 네트워크 환경에서도 안정적인 작동을 보장합니다.</translation>
+        <source>AWG is a VPN protocol based on WireGuard. It provides high connection speed and ensures stable operation even in the most challenging network conditions.</source>
+        <translation>AWG는 WireGuard를 기반으로 한 Traceless의 특수 프로토콜입니다. 높은 연결 속도를 제공하며 가장 까다로운 네트워크 환경에서도 안정적인 작동을 보장합니다.</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="105"/>
@@ -6877,14 +6784,14 @@ Only one can be active at a time: VPN or local proxy</source>
         <source>OpenVPN is one of the most popular and reliable VPN protocols. It uses SSL/TLS encryption, supports a wide variety of devices and operating systems, and is continuously improved by the community due to its open-source nature. It provides a good balance between speed and security but is easily recognized by DPI systems, making it susceptible to blocking.
 
 Features:
-* Available on all AmneziaVPN platforms
+* Available on all Traceless platforms
 * Normal battery consumption on mobile devices
 * Flexible customization for various devices and OS
 * Operates over both TCP and UDP protocols</source>
         <translation>OpenVPN은 가장 인기 있고 신뢰할 수 있는 VPN 프로토콜 중 하나입니다. SSL/TLS 암호화를 사용하고 다양한 장치와 운영 체제를 지원하며 오픈 소스 특성 덕분에 커뮤니티를 통해 지속적으로 개선됩니다. 속도와 보안의 균형이 좋지만 DPI 시스템에서 쉽게 식별되어 차단에 취약합니다.
 
 특징:
-* 모든 AmneziaVPN 플랫폼에서 사용 가능
+* 모든 Traceless 플랫폼에서 사용 가능
 * 모바일 장치에서 보통 수준의 배터리 소비
 * 다양한 장치와 OS를 위한 유연한 설정
 * TCP 및 UDP 프로토콜 모두에서 작동</translation>
@@ -6894,7 +6801,7 @@ Features:
         <source>WireGuard is a modern, streamlined VPN protocol offering stable connectivity and excellent performance across all devices. It uses fixed encryption settings, delivering lower latency and higher data transfer speeds compared to OpenVPN. However, WireGuard is easily identifiable by DPI systems due to its distinctive packet signatures, making it susceptible to blocking.
 
 Features:
-* Available on all AmneziaVPN platforms
+* Available on all Traceless platforms
 * Low power consumption on mobile devices
 * Minimal configuration required
 * Easily detected by DPI systems (susceptible to blocking)
@@ -6902,7 +6809,7 @@ Features:
         <translation>WireGuard는 모든 장치에서 안정적인 연결과 뛰어난 성능을 제공하는 현대적이고 간결한 VPN 프로토콜입니다. 고정된 암호화 설정을 사용하여 OpenVPN보다 지연 시간이 짧고 데이터 전송 속도가 빠릅니다. 그러나 고유한 패킷 특성으로 인해 DPI 시스템에서 쉽게 식별되어 차단에 취약합니다.
 
 특징:
-* 모든 AmneziaVPN 플랫폼에서 사용 가능
+* 모든 Traceless 플랫폼에서 사용 가능
 * 모바일 장치에서 낮은 전력 소비
 * 최소한의 설정만 필요
 * DPI 시스템에서 쉽게 탐지됨(차단에 취약)
@@ -6910,26 +6817,8 @@ Features:
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="151"/>
-        <source>AmneziaWG is a modern VPN protocol based on WireGuard, combining simplified architecture with high performance across all devices. It addresses WireGuard&apos;s main vulnerability (easy detection by DPI systems) through advanced obfuscation techniques, making VPN traffic indistinguishable from regular internet traffic.
-
-AmneziaWG is an excellent choice for those seeking a fast, stealthy VPN connection.
-
-Features:
-* Available on all AmneziaVPN platforms
-* Low battery consumption on mobile devices
-* Minimal settings required
-* Undetectable by traffic analysis systems (DPI)
-* Operates over UDP protocol</source>
-        <translation>AmneziaWG는 WireGuard를 기반으로 한 현대적인 VPN 프로토콜로, 단순한 구조와 모든 장치에서의 높은 성능을 제공합니다. 고급 난독화 기술을 통해 WireGuard의 주요 취약점(DPI 시스템에서 쉽게 탐지되는 점)을 해결하여 VPN 트래픽을 일반 인터넷 트래픽과 구별할 수 없게 합니다.
-
-빠르고 은밀한 VPN 연결을 원하는 사용자에게 AmneziaWG는 탁월한 선택입니다.
-
-특징:
-* 모든 AmneziaVPN 플랫폼에서 사용 가능
-* 모바일 장치에서 낮은 배터리 소비
-* 최소한의 설정만 필요
-* 트래픽 분석 시스템(DPI)에서 탐지되지 않음
-* UDP 프로토콜에서 작동</translation>
+        <source>TP1 is the Traceless profile based on AWG 3.1. It uses UDP with header protection, per-server header ranges and bounded payload padding. TCP fallback on Windows uses a configured XRay REALITY profile on the same server.</source>
+        <translation>TP1은 AWG 3.1 기반의 Traceless 프로필입니다. 헤더 보호, 서버별 헤더 범위, 제한된 페이로드 패딩과 함께 UDP를 사용합니다. Windows의 TCP 대체 연결은 같은 서버에 구성된 XRay REALITY 프로필을 사용합니다.</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="163"/>
@@ -6973,15 +6862,15 @@ Features:
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="189"/>
-        <source>After installation, Amnezia will create a
+        <source>After installation, Traceless will create a
 
  file storage on your server. You will be able to access it using
  FileZilla or other SFTP clients, as well as mount the disk on your device to access
  it directly from your device.
 
 For more detailed information, you can
- find it in the support section under &quot;Create SFTP file storage.&quot; </source>
-        <translation>설치 후 Amnezia가 서버에
+ find it in the support section under "Create SFTP file storage." </source>
+        <translation>설치 후 Traceless가 서버에
 
 파일 저장소를 만듭니다. FileZilla 또는 다른 SFTP 클라이언트로
 접근할 수 있으며, 장치에 디스크를 마운트하여
@@ -7480,29 +7369,9 @@ For more detailed information, you can
         <translation>채팅으로 답변해 드립니다</translation>
     </message>
     <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="50"/>
-        <source>https://t.me/amnezia_vpn_en</source>
-        <translation>https://t.me/amnezia_vpn_en</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="59"/>
-        <source>support@amnezia.org</source>
-        <translation>support@amnezia.org</translation>
-    </message>
-    <message>
         <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="60"/>
         <source>Support email</source>
         <translation>지원 이메일</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="65"/>
-        <source>mailto:support@amnezia.org</source>
-        <translation>mailto:support@amnezia.org</translation>
-    </message>
-    <message>
-        <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="75"/>
-        <source>amnezia.org</source>
-        <translation>amnezia.org</translation>
     </message>
     <message>
         <location filename="../ui/qml/Components/UpdateSupportDrawer.qml" line="76"/>
@@ -7636,9 +7505,9 @@ For more detailed information, you can
     </message>
     <message>
         <location filename="../ui/qml/main2.qml" line="280"/>
-        <source>This legacy Amnezia subscription type can no longer be used to connect in this application version.
+        <source>This legacy subscription type can no longer be used to connect in this application version.
 Remove the server from the app to continue.</source>
-        <translation>이 애플리케이션 버전에서는 기존 Amnezia 구독 유형으로 더 이상 연결할 수 없습니다.
+        <translation>이 애플리케이션 버전에서는 기존 Traceless 구독 유형으로 더 이상 연결할 수 없습니다.
 계속하려면 앱에서 서버를 제거하세요.</translation>
     </message>
     <message>

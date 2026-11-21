@@ -23,22 +23,19 @@ QVariant ContainersModel::data(const QModelIndex &index, int role) const
     }
 
     DockerContainer container = ContainerUtils::allContainers().at(index.row());
-    bool isThirdPartyConfig = false;
-    if (m_containers.contains(container)) {
-        const ContainerConfig& config = m_containers.value(container);
-        isThirdPartyConfig = config.protocolConfig.isThirdPartyConfig();
-    }
+    const auto installed = m_containers.constFind(container);
+    const bool isThirdPartyConfig = installed != m_containers.cend() && installed->protocolConfig.isThirdPartyConfig();
 
     switch (role) {
     case NameRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return "AmneziaWG Legacy";
+            return "AWG Legacy";
         }
         return ContainerUtils::containerHumanNames().value(container);
     }
     case DescriptionRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return QObject::tr("AmneziaWG is a special protocol from Amnezia based on WireGuard. "
+            return QObject::tr("AWG is a VPN protocol based on WireGuard. "
                            "It provides high connection speed and ensures stable operation even in the most challenging network conditions.");
         }
 

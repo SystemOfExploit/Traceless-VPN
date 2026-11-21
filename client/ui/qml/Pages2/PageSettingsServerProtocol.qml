@@ -49,7 +49,7 @@ PageType {
                 visible: root.isOutdatedAwgContainer
 
                 variant: NotificationType.Warning
-                text: qsTr("AmneziaWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Moving to AmneziaWG 3.1 by deploying a new container on the server is recommended for stronger protocol security")
+                text: qsTr("AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP1 on the server to switch to the current profile.")
             }
         }
 

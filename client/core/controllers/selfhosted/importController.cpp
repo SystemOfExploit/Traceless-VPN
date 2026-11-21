@@ -535,20 +535,7 @@ QJsonObject ImportController::extractOpenVpnConfig(const QString &data) const
 
 QJsonObject ImportController::extractWireGuardConfig(const QString &data, ConfigTypes &configType) const
 {
-    QMap<QString, QString> configMap;
-    auto configByLines = data.split("\n");
-    for (const QString &line : configByLines) {
-        QString trimmedLine = line.trimmed();
-        if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
-            continue;
-        } else {
-            const qsizetype separatorIndex = trimmedLine.indexOf('=');
-            if (separatorIndex > 0) {
-                configMap[trimmedLine.left(separatorIndex).trimmed()] =
-                        trimmedLine.mid(separatorIndex + 1).trimmed();
-            }
-        }
-    }
+    const auto configMap = ProtocolUtils::parseWireGuardConfig(data);
 
     QJsonObject lastConfig;
     lastConfig[configKey::config] = data;

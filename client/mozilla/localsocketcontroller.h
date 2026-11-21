@@ -16,6 +16,7 @@
 class QJsonObject;
 
 class LocalSocketController final : public ControllerImpl {
+  Q_OBJECT
   Q_DISABLE_COPY_MOVE(LocalSocketController)
 
  public:
@@ -27,6 +28,12 @@ class LocalSocketController final : public ControllerImpl {
   void activate(const QJsonObject& rawConfig) override;
 
   void deactivate() override;
+  void deactivateForFallback();
+
+ signals:
+  void fallbackDeactivated(bool success);
+
+ public:
 
   void checkStatus() override;
 

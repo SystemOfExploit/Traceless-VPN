@@ -58,9 +58,6 @@ class AmneziaXrayBindings(ConanFile):
     def build_requirements(self):
         self.tool_requires("go/1.27.1")
         if self._is_windows:
-            self.win_bash = True
-            if not self.conf.get("tools.microsoft.bash:path", check_type=str):
-                self.tool_requires("msys2/cci.latest")
             self.tool_requires("mingw-builds/15.1.0")
 
     def validate(self):
@@ -86,8 +83,9 @@ class AmneziaXrayBindings(ConanFile):
         env.define("GOMODCACHE", os.path.join(self.build_folder, "gopath", "pkg", "mod"))
         env.define("GOCACHE", os.path.join(self.build_folder, "gocache"))
         env.define("GOOS", self._goos)
+        env.define("GOTELEMETRY", "off")
         if self._is_windows:
-            env.define("OS", "windows")
+            env.define("CGO_ENABLED", "1")
         self._ldflags = tc.ldflags
         self._cflags = tc.cflags
         tc.generate(env)
@@ -109,11 +107,10 @@ class AmneziaXrayBindings(ConanFile):
                 env.define("CGO_CFLAGS", " ".join(cflags))
                 env.define("CGO_LDFLAGS", " ".join(ldflags))
                 with env.vars(self).apply():
-                    at = Autotools(self)
-                    make_build_dir = build_dir.replace("\\", "/") if self._is_windows else build_dir
-                    at.make(args=[
-                        f"BUILD_DIR={make_build_dir}"
-                    ])
+                    if self._is_windows:
+                        self._build_windows(build_dir, goarch)
+                    else:
+                        Autotools(self).make(args=[f"BUILD_DIR={build_dir}"])
 
             if is_apple_os(self) and self._is_multiarch:
                 lipo = XCRun(self).find('lipo')
@@ -126,6 +123,16 @@ class AmneziaXrayBindings(ConanFile):
                 ))
 
                 copy(self, "*.h", os.path.join(self.build_folder, self._archs[0]), self.build_folder)
+
+    def _build_windows(self, build_dir, goarch):
+        output = os.path.join(build_dir, "amnezia_xray.dll")
+        env = Environment()
+        env.define("GOARCH", goarch)
+        with env.vars(self).apply():
+            self.run(f'go build -ldflags=-w -buildmode=c-shared -o "{output}"')
+        with chdir(self, build_dir):
+            self.run("gendef amnezia_xray.dll")
+            self.run("dlltool -d amnezia_xray.def -l amnezia_xray.lib -D amnezia_xray.dll")
 
     def _rename_header(self):
         if not self._is_windows:

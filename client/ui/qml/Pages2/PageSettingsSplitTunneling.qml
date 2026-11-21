@@ -258,11 +258,11 @@ PageType {
                 moreActionsMenu.close()
                 var fileName = ""
                 if (GC.isMobile()) {
-                    fileName = "amnezia_sites.json"
+                    fileName = "traceless_sites.json"
                 } else {
                     fileName = SystemController.getFileName(qsTr("Save sites"),
                                                             qsTr("Sites files (*.json)"),
-                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/amnezia_sites",
+                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/traceless_sites",
                                                             true,
                                                             ".json")
                 }

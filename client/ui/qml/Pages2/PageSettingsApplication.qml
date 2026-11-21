@@ -206,6 +206,7 @@ PageType {
 
                 ListItemType {
                     id: switcherAutoUpdateCheckRow
+                    visible: AppUpdatesEnabled
 
                     Layout.fillWidth: true
 
@@ -271,7 +272,7 @@ PageType {
 
                     onClicked: {
                         var headerText = qsTr("Reset settings and remove all data from the application?")
-                        var descriptionText = qsTr("All settings will be reset to default. All installed AmneziaVPN services will still remain on the server.")
+                        var descriptionText = qsTr("All settings will be reset to default. All installed Traceless services will still remain on the server.")
                         var yesButtonText = qsTr("Continue")
                         var noButtonText = qsTr("Cancel")
 

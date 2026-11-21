@@ -450,9 +450,67 @@ QString AwgProtocolConfig::clientProtocolVersion() const
 
 bool AwgProtocolConfig::isToggleEnabled(const QString &value)
 {
-    const QString trimmedValue = value.trimmed();
-    return !trimmedValue.isEmpty()
-            && trimmedValue.compare(QLatin1String(protocols::awg::awgBoolOff), Qt::CaseInsensitive) != 0;
+    const QString toggle = value.trimmed().toLower();
+    return toggle == QLatin1String("on") || toggle == QLatin1String("1")
+           || toggle == QLatin1String("true") || toggle == QLatin1String("yes") || toggle == QLatin1String("t");
+}
+
+int AwgProtocolConfig::tp1TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endpoint)
+{
+    constexpr int minIpv6Mtu = 1280;
+    constexpr int udpHeader = 8;
+    constexpr int awgTransportOverhead = AwgConstant::messageTransportSize + 12 + 8;
+    const int ipHeader = ipv6Endpoint ? 40 : 20;
+    const int budget = std::max(minIpv6Mtu, linkMtu - ipHeader - udpHeader - awgTransportOverhead);
+    return requestedMtu > 0 ? std::min(requestedMtu, budget) : budget;
+}
+
+void AwgProtocolConfig::tuneTp1Session(QJsonObject &client)
+{
+    const auto text = [&client](QLatin1String key) {
+        return client.value(key).toString().trimmed();
+    };
+    const auto leading = [](const QString &value) {
+        const int dash = value.indexOf(QLatin1Char('-'));
+        bool ok = false;
+        const int number = (dash > 0 ? value.left(dash) : value).trimmed().toInt(&ok);
+        return ok ? number : -1;
+    };
+
+    if (leading(text(configKey::junkPacketCount)) < 4) {
+        client[configKey::junkPacketCount] = QLatin1String(protocols::awg::tp1JunkPacketCount);
+    }
+    if (text(configKey::junkPacketMinSize).isEmpty()) {
+        client[configKey::junkPacketMinSize] = QStringLiteral("16");
+    }
+    if (text(configKey::junkPacketMaxSize).isEmpty()) {
+        client[configKey::junkPacketMaxSize] = QStringLiteral("50");
+    }
+
+    const bool noSignature = text(configKey::specialJunk1).isEmpty() && text(configKey::specialJunk2).isEmpty()
+            && text(configKey::specialJunk3).isEmpty() && text(configKey::specialJunk4).isEmpty()
+            && text(configKey::specialJunk5).isEmpty();
+    if (noSignature) {
+        client[configKey::specialJunk1] = QLatin1String(protocols::awg::tp1HandshakeCamouflage);
+    }
+
+    client[configKey::rekeyTimeout] = QLatin1String(protocols::awg::tp1RekeyTimeout);
+    client[configKey::maxHandshakeAttempts] = QLatin1String(protocols::awg::tp1MaxHandshakeAttempts);
+    client[configKey::persistentKeepAlive] = QLatin1String(protocols::awg::tp1PersistentKeepAlive);
+    if (text(configKey::contentPaddingAddition).isEmpty()) {
+        client[configKey::contentPaddingAddition] = QLatin1String(protocols::awg::tp1ContentPadding);
+    }
+}
+
+bool AwgProtocolConfig::isTp1() const
+{
+    if (serverConfig.isThirdPartyConfig) {
+        return false;
+    }
+    return serverConfig.isTp1() || (clientConfig
+            && clientConfig->transportPacketJunkSize == QLatin1String(protocols::awg::defaultPadding)
+            && clientConfig->contentPaddingAddition == QLatin1String(protocols::awg::tp1ContentPadding)
+            && !clientConfig->headerProtectionKey.isEmpty() && !isToggleEnabled(clientConfig->disableCookies));
 }
 
 QString AwgProtocolConfig::protocolVersionString(const QString &version)
@@ -508,6 +566,16 @@ bool AwgServerConfig::hasEqualServerSettings(const AwgServerConfig& other) const
 bool AwgServerConfig::hasAwg3Params() const
 {
     return hasAwg3Markers(*this);
+}
+
+bool AwgServerConfig::isTp1() const
+{
+    namespace awg = protocols::awg;
+    return !isThirdPartyConfig
+           && transportPacketJunkSize == QLatin1String(awg::defaultPadding)
+           && contentPaddingAddition == QLatin1String(awg::tp1ContentPadding)
+           && !headerProtectionKey.isEmpty()
+           && !AwgProtocolConfig::isToggleEnabled(disableCookies);
 }
 
 bool AwgProtocolConfig::isHeadersEqual(const QString &h1, const QString &h2, const QString &h3, const QString &h4)

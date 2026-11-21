@@ -8,6 +8,39 @@
 ### [English](https://github.com/amnezia-vpn/amnezia-client/blob/dev/README.md) | Русский
 [AmneziaVPN](https://amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-ru) — это open source VPN-клиент, ключевая особенность которого заключается в возможности развернуть собственный VPN на вашем сервере.
 
+## TP1
+
+TP1 — профиль Traceless поверх AmneziaWG 3.1. Шифр тот же, что у AWG: Curve25519 и ChaCha20-Poly1305. Отличается то, как канал прячется и как устроены ключи.
+
+![Главный экран](metadata/img-readme/home.png)
+
+![TP1 и AWG](metadata/img-readme/tp1-vs-awg.svg)
+
+| | AWG | TP1 |
+| --- | --- | --- |
+| Заголовки H1–H4 | Общие значения 1, 2, 3, 4 | Свои диапазоны на каждый сервер |
+| Пакет перед рукопожатием | Постоянный публичный шаблон | 40 случайных байт, без постоянного отпечатка |
+| Защита заголовка | Есть у новых конфигов 3.1, нет у AWG 1.5/2 | Обязательна |
+| PSK | Один на весь сервер | Отдельный на каждого клиента |
+| Cookies | Выключены в профиле 3.1 | Включены, сервер отсекает флуд рукопожатий |
+| Добавка длины | 10–100 байт | 1–8 байт, пакет не дробится |
+| Повтор рукопожатия | 3–7 с, 15–20 попыток | 2–3 с, 30–40 попыток |
+| Если UDP не проходит | Канал не поднимается | Через 8 с переход на XRay REALITY по TCP |
+
+Уже выданные ключи остаются рабочими: ключ защиты заголовка, диапазоны H1–H4, S1–S4 и PSK не перевыпускаются.
+
+![Путь подключения TP1](metadata/img-readme/tp1-path.svg)
+
+```mermaid
+flowchart LR
+  click[Подключение] --> udp[UDP AWG 3.1]
+  udp -->|рукопожатие за 8 с| up[Канал поднят]
+  udp -->|UDP не поднялся| reality[XRay REALITY по TCP]
+  reality --> up
+```
+
+На главном экране статус «Подключено» и «Не подключено» набран Inter. При выключении кольцо кнопки раскручивается в обратную сторону, а надпись проявляется, а не появляется сразу.
+
 [![Image](https://github.com/amnezia-vpn/amnezia-client/blob/dev/metadata/img-readme/uipic4.png)](https://amnezia.org)
 
 ### [Сайт](https://amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-ru) | [Зеркало сайта](https://storage.googleapis.com/amnezia/amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-ru-mirror) | [Документация](https://docs.amnezia.org) | [Решение проблем](https://docs.amnezia.org/troubleshooting)

@@ -28,7 +28,7 @@ PageType {
             if (UpdateController.updateState === UpdateState.ReadyToInstall) {
                 PageController.showNotificationMessage(qsTr("Done. Install the update"))
             } else if (UpdateController.updateState === UpdateState.DownloadError) {
-                PageController.showNotificationMessage(qsTr("Download failed. Download manually from amnezia.org"))
+                PageController.showNotificationMessage(qsTr("Download failed"))
             }
         }
     }
@@ -45,13 +45,6 @@ PageType {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        IconButtonType {
-            id: supportButton
-
-            icon.source: "qrc:/images/controls/headphones.svg"
-
-            onClicked: supportDrawer.open()
-        }
     }
 
     FlickableType {
@@ -255,9 +248,4 @@ PageType {
         }
     }
 
-    UpdateSupportDrawer {
-        id: supportDrawer
-
-        parent: root
-    }
 }

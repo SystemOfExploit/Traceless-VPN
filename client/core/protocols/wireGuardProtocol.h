@@ -11,6 +11,8 @@
 
 #include "mozilla/controllerimpl.h"
 
+class LocalSocketController;
+
 class WireguardProtocol : public VpnProtocol
 {
     Q_OBJECT
@@ -24,10 +26,14 @@ public:
 
     ErrorCode startMzImpl();
     ErrorCode stopMzImpl();
+    void deactivateForFallback();
+
+signals:
+    void fallbackDeactivated(bool success);
 
 private:
 
-    QScopedPointer<ControllerImpl> m_impl;
+    QScopedPointer<LocalSocketController> m_impl;
 };
 
 #endif // WIREGUARDPROTOCOL_H

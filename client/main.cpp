@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QIcon>
 #include <QTimer>
 #include <libssh/libssh.h>
 #include <openssl/ssl.h>
@@ -79,6 +80,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(APPLICATION_NAME);
     app.setOrganizationName(ORGANIZATION_NAME);
     app.setApplicationDisplayName(APPLICATION_NAME);
+    app.setWindowIcon(QIcon(QStringLiteral(":/images/traceless.svg")));
 
     app.loadFonts();
 

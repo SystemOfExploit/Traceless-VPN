@@ -88,7 +88,7 @@ PageType {
 
                         Layout.fillWidth: true
 
-                        showSeparator: index > 0
+                        showSeparator: false
 
                         text: easySetupHeader
                         subtitle: easySetupDescription
@@ -108,6 +108,7 @@ PageType {
                 SelectableListItemType {
                     Layout.fillWidth: true
 
+                    showSeparator: false
                     text: qsTr("Manual")
                     subtitle: qsTr("Choose a VPN protocol")
 

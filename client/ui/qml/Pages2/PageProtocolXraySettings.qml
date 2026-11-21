@@ -114,19 +114,6 @@ PageType {
                 }
             }
 
-            LinkButtonType {
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-
-                size: LinkButtonType.Medium
-                horizontalPadding: 14
-                verticalPadding: 8
-
-                text: qsTr("More about settings")
-
-                onClicked: Qt.openUrlExternally("https://docs.amnezia.org")
-            }
-
             TextFieldType {
                 id: portField
 

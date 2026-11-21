@@ -1,0 +1,23 @@
+--- a/src/openvpn/options.c
++++ b/src/openvpn/options.c
+@@ -4177,7 +4177,7 @@
+     errs |= check_file_access_inline(options->cert_file_inline, CHKACC_FILE | CHKACC_ACCEPT_URI,
+                                      options->cert_file, R_OK, "--cert");
+ 
+-    errs |= check_file_access_inline(options->extra_certs_file, CHKACC_FILE,
++    errs |= check_file_access_inline(options->extra_certs_file_inline, CHKACC_FILE,
+                                      options->extra_certs_file, R_OK, "--extra-certs");
+ 
+     if (!(options->management_flags & MF_EXTERNAL_KEY))
+--- a/src/openvpn/ssl.c
++++ b/src/openvpn/ssl.c
+@@ -2264,7 +2264,7 @@
+ 
+     free(multi->remote_ciphername);
+     multi->remote_ciphername = options_string_extract_option(options, "cipher", NULL);
+-    multi->remote_usescomp = strstr(options, ",comp-lzo,");
++    multi->remote_usescomp = strstr(options, ",comp-lzo,") != NULL;
+ 
+     /* In OCC we send '[null-cipher]' instead 'none' */
+     if (multi->remote_ciphername && strcmp(multi->remote_ciphername, "[null-cipher]") == 0)
+

@@ -1,3 +1,5 @@
+umask 077
+
 mkdir -p /opt/amnezia/awg
 cd /opt/amnezia/awg
 WIREGUARD_SERVER_PRIVATE_KEY=$(awg genkey)

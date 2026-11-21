@@ -42,7 +42,7 @@ PageType {
                 Layout.fillWidth: true
 
                 title: qsTr("DNS servers")
-                description: qsTr("If AmneziaDNS is not used or installed")
+                description: qsTr("If the server DNS service is not used or installed")
             }
 
             ColumnLayout {

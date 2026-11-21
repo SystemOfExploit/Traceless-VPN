@@ -80,7 +80,7 @@ PageType {
     function handleLocalProxyToggle(checked) {
         if (checked) {
             if (!ServersUiController.processedServerIsPremium) {
-                PageController.showNotificationMessage(qsTr("Local proxy is available only for Amnezia Premium"))
+                PageController.showNotificationMessage(qsTr("Local proxy is only available with a supported subscription"))
                 return
             }
             const wasVpnActive = ConnectionController.isConnected || ConnectionController.isConnectionInProgress
@@ -206,7 +206,7 @@ PageType {
                 BodyTextType {
                     Layout.fillWidth: true
 
-                    text: qsTr("Used by specific apps (e.g., CensorTracker extension) via Amnezia Premium.\nOnly one can be active at a time: VPN or local proxy")
+                    text: qsTr("Used by specific apps (e.g., CensorTracker extension) with a supported subscription.\nOnly one can be active at a time: VPN or local proxy")
                     color: AmneziaStyle.color.textSecondary
                 }
             }
@@ -222,23 +222,6 @@ PageType {
                 variant: NotificationType.Warning
                 text: qsTr("Local proxy is already running for \"%1\". Turn it off there to use it with this server")
                     .arg(ServersUiController.serverName(LocalProxyController.ownerId))
-            }
-
-            ButtonType {
-                Layout.topMargin: 24
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-
-                variant: ButtonType.Text
-                size: ButtonType.Medium
-                text: qsTr("Learn more")
-
-                onClicked: {
-                    const path = LanguageUiController.currentLanguageName === "Русский"
-                        ? "ru/documentation/instructions/local-proxy"
-                        : "documentation/instructions/local-proxy"
-                    Qt.openUrlExternally(LanguageUiController.getCurrentDocsUrl(path))
-                }
             }
 
             TextFieldType {

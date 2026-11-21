@@ -123,8 +123,8 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                text: qsTr("About AmneziaVPN")
-                icon.source: "qrc:/images/controls/amnezia.svg"
+                text: qsTr("About Traceless")
+                icon.source: "qrc:/images/controls/traceless-mark.svg"
                 trailingIconSource: "qrc:/images/controls/chevron-right.svg"
 
                 onClicked: PageController.goToPage(PageEnum.PageSettingsAbout)

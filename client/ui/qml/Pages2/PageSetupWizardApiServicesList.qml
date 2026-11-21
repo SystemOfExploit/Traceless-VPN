@@ -31,7 +31,7 @@ PageType {
             NavigationBarType {
                 Layout.fillWidth: true
 
-                title: qsTr("VPN by Amnezia")
+                title: qsTr("VPN subscriptions")
                 description: qsTr("Choose a VPN service that suits your needs.")
             }
         }

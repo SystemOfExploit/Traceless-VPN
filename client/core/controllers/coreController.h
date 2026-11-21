@@ -111,7 +111,6 @@ public:
 
 signals:
     void translationsUpdated();
-    void websiteUrlChanged(const QString &newUrl);
 
 protected:
     SecureServersRepository* serversRepositoryProtected() const { return m_serversRepository; }

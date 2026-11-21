@@ -354,18 +354,6 @@ PageType {
                     }
                 }
 
-                ListItemType {
-                    Layout.fillWidth: true
-
-                    visible: root.isVisibleForAmneziaFree
-
-                    text: qsTr("How to connect on another device")
-                    trailingIconSource: "qrc:/images/controls/chevron-right.svg"
-
-                    onClicked: {
-                        PageController.goToPage(PageEnum.PageSettingsApiInstructions)
-                    }
-                }
             }
 
             Item {

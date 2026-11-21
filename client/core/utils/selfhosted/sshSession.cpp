@@ -1,5 +1,7 @@
 #include "sshSession.h"
 
+#include <QScopeGuard>
+
 #include <QCryptographicHash>
 #include <QDir>
 #include <QEventLoop>
@@ -122,6 +124,10 @@ ErrorCode SshSession::uploadTextFileToContainer(DockerContainer container, const
     e = uploadFileToHost(credentials, file.toUtf8(), tmpFileName);
     if (e)
         return e;
+    const auto vars = amnezia::genBaseVars(credentials, container, QString(), QString());
+    const auto removeHostFile = qScopeGuard([&] {
+        runScript(credentials, replaceVars(QStringLiteral("sudo shred -u %1").arg(tmpFileName), vars));
+    });
 
     QString stdOut;
     auto cbReadStd = [&](const QString &data, libssh::Client &) {
@@ -154,8 +160,9 @@ ErrorCode SshSession::uploadTextFileToContainer(DockerContainer container, const
             return e;
 
         e = runScript(credentials,
-                      replaceVars(QStringLiteral("sudo docker exec -i $CONTAINER_NAME sh -c \"cat %1 >> %2\"").arg(tmpFileName, path),
-                                  amnezia::genBaseVars(credentials, container, QString(), QString())),
+                      replaceVars(QStringLiteral("sudo docker exec -i $CONTAINER_NAME sh -c "
+                                                 "'cat \"$1\" >> \"$2\"; result=$?; rm -f -- \"$1\" || exit 1; exit \"$result\"' "
+                                                 "sh \"%1\" \"%2\"").arg(tmpFileName, path), vars),
                       cbReadStd, cbReadStd);
 
         if (e)
@@ -167,7 +174,6 @@ ErrorCode SshSession::uploadTextFileToContainer(DockerContainer container, const
         return ErrorCode::ServerContainerMissingError;
     }
 
-    runScript(credentials, replaceVars(QString("sudo shred -u %1").arg(tmpFileName), amnezia::genBaseVars(credentials, container, QString(), QString())));
     return e;
 }
 

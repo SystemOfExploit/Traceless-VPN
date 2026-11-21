@@ -48,37 +48,38 @@ PageType {
             switch (type) {
             case PageShare.ConfigType.AmneziaConnection: {
                 ExportController.generateConnectionConfig(serverId, containerIndex, clientNameTextField.textField.text);
-                configCaption = qsTr("Save AmneziaVPN config")
+                configCaption = qsTr("Save Traceless config")
                 configExtension = ".vpn"
-                configFileName = "amnezia_config"
+                configFileName = "traceless_config"
                 break;
             }
             case PageShare.ConfigType.OpenVpn: {
                 ExportController.generateOpenVpnConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save OpenVPN config")
                 configExtension = ".ovpn"
-                configFileName = "amnezia_for_openvpn"
+                configFileName = "traceless_for_openvpn"
                 break
             }
             case PageShare.ConfigType.WireGuard: {
                 ExportController.generateWireGuardConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save WireGuard config")
                 configExtension = ".conf"
-                configFileName = "amnezia_for_wireguard"
+                configFileName = "traceless_for_wireguard"
                 break
             }
             case PageShare.ConfigType.Awg: {
                 ExportController.generateAwgConfig(serverId, containerIndex, clientNameTextField.textField.text)
-                configCaption = qsTr("Save AmneziaWG config")
+                configCaption = qsTr("Save %1 config").arg(ContainersModel.getProcessedContainerName())
                 configExtension = ".conf"
-                configFileName = "amnezia_for_awg"
+                configFileName = containerIndex === ContainerProps.containerFromString("amnezia-awg2")
+                                 ? "traceless_for_tp1" : "traceless_for_awg"
                 break
             }
             case PageShare.ConfigType.Xray: {
                 ExportController.generateXrayConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save XRay config")
                 configExtension = ".json"
-                configFileName = "amnezia_for_xray"
+                configFileName = "traceless_for_xray"
                 break
             }
             }
@@ -99,10 +100,9 @@ PageType {
     property bool isSearchBarVisible: false
     property bool showContent: false
     property bool shareButtonEnabled: true
-    readonly property var amneziaConnectionFormat: ({ name: qsTr("For the AmneziaVPN app"), type: PageShare.ConfigType.AmneziaConnection })
+    readonly property var amneziaConnectionFormat: ({ name: qsTr("Traceless connection key"), type: PageShare.ConfigType.AmneziaConnection })
     readonly property var openVpnConnectionFormat: ({ name: qsTr("OpenVPN native format"), type: PageShare.ConfigType.OpenVpn })
     readonly property var wireGuardConnectionFormat: ({ name: qsTr("WireGuard native format"), type: PageShare.ConfigType.WireGuard })
-    readonly property var awgConnectionFormat: ({ name: qsTr("AmneziaWG native format"), type: PageShare.ConfigType.Awg })
     readonly property var xrayConnectionFormat: ({ name: qsTr("XRay native format"), type: PageShare.ConfigType.Xray })
 
     property var connectionTypesModel: [root.amneziaConnectionFormat]
@@ -451,7 +451,8 @@ PageType {
                             formats.push(root.wireGuardConnectionFormat)
                         } else if (index === ContainerProps.containerFromString("amnezia-awg")
                                    || index === ContainerProps.containerFromString("amnezia-awg2")) {
-                            formats.push(root.awgConnectionFormat)
+                            formats.push({ name: qsTr("%1 native format").arg(ContainersModel.getProcessedContainerName()),
+                                           type: PageShare.ConfigType.Awg })
                         } else if (index === ContainerProps.containerFromString("amnezia-xray")) {
                             formats.push(root.xrayConnectionFormat)
                         }

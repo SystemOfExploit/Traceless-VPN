@@ -310,10 +310,6 @@ void CoreController::initSignalHandlers()
 
     // Trigger initial update after handlers are connected
     m_serversUiController->updateModel();
-    if (m_serversUiController->hasServersFromGatewayApi()) {
-        m_apiNewsUiController->fetchNews(false);
-    }
-
 }
 
 void CoreController::checkForAppUpdates()
@@ -360,9 +356,6 @@ void CoreController::updateTranslator(const QLocale &locale)
     }
 
     emit translationsUpdated();
-    if (m_languageUiController) {
-        emit websiteUrlChanged(m_languageUiController->getCurrentSiteUrl());
-    }
 }
 
 void CoreController::setQmlRoot()

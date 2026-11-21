@@ -118,6 +118,12 @@ void DaemonLocalServerConnection::parseCommand(const QByteArray& data) {
     return;
   }
 
+  if (type == "deactivateForFallback") {
+    const bool success = Daemon::instance()->deactivate(false);
+    write(QJsonObject{{"type", "fallbackDeactivated"}, {"success", success}});
+    return;
+  }
+
   if (type == "deactivate") {
     Daemon::instance()->deactivate(true);
     return;

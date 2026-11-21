@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="220" viewBox="0 0 1100 220" fill="none">
+  <rect width="1100" height="220" rx="28" fill="#101010"/>
+  <text x="48" y="52" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="20">How TP1 brings the tunnel up</text>
+
+  <rect x="48" y="84" width="210" height="88" rx="16" fill="#181818" stroke="#E4E4E4"/>
+  <text x="68" y="122" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="16">UDP</text>
+  <text x="68" y="146" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="13">AWG 3.1, up to 8 s</text>
+
+  <path d="M274 128 H330" stroke="#525252" stroke-width="2"/>
+  <path d="M322 122 L334 128 L322 134" stroke="#525252" stroke-width="2" fill="none"/>
+
+  <rect x="346" y="84" width="250" height="88" rx="16" fill="#181818" stroke="#3F3F3F"/>
+  <text x="366" y="122" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="16">Handshake</text>
+  <text x="366" y="146" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="13">retry every 2–3 s</text>
+
+  <path d="M612 128 H668" stroke="#525252" stroke-width="2"/>
+  <path d="M660 122 L672 128 L660 134" stroke="#525252" stroke-width="2" fill="none"/>
+
+  <rect x="684" y="84" width="368" height="88" rx="16" fill="#181818" stroke="#E4E4E4"/>
+  <text x="704" y="122" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="16">REALITY over TCP</text>
+  <text x="704" y="146" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="13">only if UDP did not come up</text>
+</svg>

@@ -57,6 +57,7 @@ struct AwgServerConfig {
 
     bool hasEqualServerSettings(const AwgServerConfig& other) const;
     bool hasAwg3Params() const;
+    bool isTp1() const;
 };
 
 struct AwgClientConfig {
@@ -117,6 +118,9 @@ struct AwgProtocolConfig {
     QString clientProtocolVersion() const;
     static QString protocolVersionString(const QString &version);
     static bool isToggleEnabled(const QString &value);
+    static int tp1TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endpoint);
+    static void tuneTp1Session(QJsonObject &client);
+    bool isTp1() const;
 
     bool hasClientConfig() const;
     void setClientConfig(const AwgClientConfig& config);

@@ -49,7 +49,7 @@ PageType {
                 Layout.fillWidth: true
                 Layout.bottomMargin: -content.spacing
 
-                title: qsTr("AmneziaWG settings")
+                title: qsTr("%1 settings").arg(ContainersModel.getProcessedContainerName())
             }
 
             TextFieldType {

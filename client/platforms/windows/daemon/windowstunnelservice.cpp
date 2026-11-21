@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 
-#include <QDateTime>
+#include <QDeadlineTimer>
 #include <QScopeGuard>
 
 #include "leakdetector.h"
@@ -17,7 +17,7 @@
 
 #define TUNNEL_NAMED_PIPE \
   "\\\\."                 \
-  "\\pipe\\ProtectedPrefix\\Administrators\\AmneziaWG\\AmneziaVPN"
+  "\\pipe\\ProtectedPrefix\\Administrators\\AmneziaWG\\Traceless"
 
 constexpr uint32_t WINDOWS_TUNNEL_MONITOR_TIMEOUT_MSEC = 2000;
 
@@ -124,7 +124,6 @@ bool WindowsTunnelService::start(const QString& configData) {
     }
     m_logthread.quit();
     m_logthread.wait();
-    delete m_logworker;
     m_logworker = nullptr;
   });
 
@@ -148,7 +147,7 @@ bool WindowsTunnelService::start(const QString& configData) {
 
   logger.debug() << "Service:" << qApp->applicationFilePath();
 
-  service = CreateService(scm, TUNNEL_SERVICE_NAME, L"Amnezia VPN (tunnel)",
+  service = CreateService(scm, TUNNEL_SERVICE_NAME, L"Traceless VPN (tunnel)",
                           SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
                           SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL,
                           (const wchar_t*)serviceCmdline.utf16(), nullptr, 0,
@@ -158,8 +157,10 @@ bool WindowsTunnelService::start(const QString& configData) {
     return false;
   }
 
+  auto tunnelGuard = qScopeGuard([&] { stopAndDeleteTunnelService(service); });
+
   SERVICE_DESCRIPTION sd = {
-      (wchar_t*)L"Manages the Amnezia VPN tunnel connection"};
+      (wchar_t*)L"Manages the Traceless VPN tunnel connection"};
 
   if (!ChangeServiceConfig2(service, SERVICE_CONFIG_DESCRIPTION, &sd)) {
     WindowsUtils::windowsLog(
@@ -181,6 +182,7 @@ bool WindowsTunnelService::start(const QString& configData) {
 
   if (waitForServiceStatus(service, SERVICE_RUNNING)) {
     logger.debug() << "The tunnel service is up and running";
+    tunnelGuard.dismiss();
     guard.dismiss();
     m_service = service;
     m_timer.start(WINDOWS_TUNNEL_MONITOR_TIMEOUT_MSEC);
@@ -236,57 +238,88 @@ static bool stopAndDeleteTunnelService(SC_HANDLE service) {
 }
 
 QString WindowsTunnelService::uapiCommand(const QString& command) {
-  // Create a pipe to the tunnel service.
-  LPTSTR tunnelName = (LPTSTR)TEXT(TUNNEL_NAMED_PIPE);
-  HANDLE pipe = CreateFile(tunnelName, GENERIC_READ | GENERIC_WRITE, 0, nullptr,
-                           OPEN_EXISTING, 0, nullptr);
-  if (pipe == INVALID_HANDLE_VALUE) {
-    return QString();
-  }
-
-  auto guard = qScopeGuard([&] { CloseHandle(pipe); });
-  if (!WaitNamedPipe(tunnelName, 1000)) {
-    WindowsUtils::windowsLog("Failed to wait for named pipes");
-    return QString();
-  }
-
-  DWORD mode = PIPE_READMODE_BYTE;
-  if (!SetNamedPipeHandleState(pipe, &mode, nullptr, nullptr)) {
-    WindowsUtils::windowsLog("Failed to set the read-mode on pipe");
-    return QString();
-  }
-
-  // Write the UAPI command into the pipe.
-  QByteArray message = command.toLocal8Bit();
-  DWORD written;
-  while (!message.endsWith("\n\n")) {
-    message.append('\n');
-  }
-  if (!WriteFile(pipe, message.constData(), message.length(), &written,
-                 nullptr)) {
-    WindowsUtils::windowsLog("Failed to write into the pipe");
-    return QString();
-  }
-
-  // Receive the response from the pipe.
-  QByteArray reply;
-  while (!reply.contains("\n\n")) {
-    char buffer[512];
-    DWORD read = 0;
-    if (!ReadFile(pipe, buffer, sizeof(buffer), &read, nullptr)) {
+  QDeadlineTimer deadline(2000, Qt::PreciseTimer);
+  HANDLE pipe = INVALID_HANDLE_VALUE;
+  while (!deadline.hasExpired()) {
+    pipe = CreateFileW(TEXT(TUNNEL_NAMED_PIPE), GENERIC_READ | GENERIC_WRITE, 0,
+                       nullptr, OPEN_EXISTING, FILE_FLAG_OVERLAPPED, nullptr);
+    if (pipe != INVALID_HANDLE_VALUE) {
       break;
     }
 
-    reply.append(buffer, read);
+    const DWORD error = GetLastError();
+    if (error == ERROR_PIPE_BUSY) {
+      if (!WaitNamedPipeW(TEXT(TUNNEL_NAMED_PIPE),
+                          static_cast<DWORD>(qMax<qint64>(1, deadline.remainingTime())))
+          && GetLastError() != ERROR_FILE_NOT_FOUND) {
+        return {};
+      }
+    } else if (error != ERROR_FILE_NOT_FOUND) {
+      return {};
+    } else {
+      Sleep(20);
+    }
+  }
+  if (pipe == INVALID_HANDLE_VALUE) {
+    return {};
+  }
+  auto pipeGuard = qScopeGuard([&] { CloseHandle(pipe); });
+
+  HANDLE event = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+  if (!event) {
+    return {};
+  }
+  auto eventGuard = qScopeGuard([&] { CloseHandle(event); });
+
+  const auto transfer = [&](bool reading, char* data, DWORD size, DWORD& count) {
+    if (deadline.hasExpired() || !ResetEvent(event)) {
+      return false;
+    }
+    OVERLAPPED operation{};
+    operation.hEvent = event;
+    const BOOL completed = reading ? ReadFile(pipe, data, size, nullptr, &operation)
+                                  : WriteFile(pipe, data, size, nullptr, &operation);
+    if (!completed) {
+      if (GetLastError() != ERROR_IO_PENDING) {
+        return false;
+      }
+      if (WaitForSingleObject(event, static_cast<DWORD>(deadline.remainingTime())) != WAIT_OBJECT_0) {
+        CancelIoEx(pipe, &operation);
+        GetOverlappedResult(pipe, &operation, &count, TRUE);
+        return false;
+      }
+    }
+    return GetOverlappedResult(pipe, &operation, &count, FALSE) != FALSE;
+  };
+
+  QByteArray message = command.toUtf8();
+  while (!message.endsWith("\n\n")) {
+    message.append('\n');
+  }
+  DWORD count = 0;
+  const DWORD messageSize = static_cast<DWORD>(message.size());
+  if (!transfer(false, message.data(), messageSize, count) || count != messageSize) {
+    return {};
   }
 
-  return QString::fromUtf8(reply).trimmed();
+  QByteArray reply;
+  while (reply.size() < 1024 * 1024) {
+    char buffer[4096];
+    if (!transfer(true, buffer, sizeof(buffer), count) || count == 0) {
+      return {};
+    }
+    reply.append(buffer, count);
+    if (reply.endsWith("\n\n")) {
+      return QString::fromUtf8(reply).trimmed();
+    }
+  }
+  return {};
 }
 
 // static
 static bool waitForServiceStatus(SC_HANDLE service, DWORD expectedStatus) {
-  int tries = 0;
-  while (tries < 30) {
+  QDeadlineTimer deadline(30000, Qt::PreciseTimer);
+  for (;;) {
     SERVICE_STATUS status;
     if (!QueryServiceStatus(service, &status)) {
       WindowsUtils::windowsLog("Failed to retrieve the service status");
@@ -297,12 +330,14 @@ static bool waitForServiceStatus(SC_HANDLE service, DWORD expectedStatus) {
       return true;
     }
 
-    logger.warning() << "The service is not in the right status yet.";
-
-    Sleep(1000);
-    ++tries;
+    const auto delay = qMin<qint64>(100, deadline.remainingTime());
+    if (delay <= 0) {
+      break;
+    }
+    Sleep(static_cast<DWORD>(delay));
   }
 
+  logger.warning() << "Timed out waiting for tunnel service state" << expectedStatus;
   return false;
 }
 

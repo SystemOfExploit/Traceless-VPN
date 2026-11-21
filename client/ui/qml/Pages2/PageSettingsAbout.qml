@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
 
 import PageEnum 1.0
 import Style 1.0
@@ -19,7 +18,7 @@ PageType {
         target: UpdateController
 
         function onUpdateNotFound() {
-            PageController.showNotificationMessage(qsTr("You have the latest version of AmneziaVPN"))
+            PageController.showNotificationMessage(qsTr("You have the latest version of Traceless"))
         }
 
         function onUpdateCheckFailed() {
@@ -48,36 +47,19 @@ PageType {
             }
 
             Image {
-                id: image
-
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 153
-                Layout.preferredHeight: 131
-
-                source: "qrc:/images/amneziaLogo.svg"
-                sourceSize: Qt.size(153 * Screen.devicePixelRatio, 131 * Screen.devicePixelRatio)
-                fillMode: Image.PreserveAspectFit
+                Layout.topMargin: 24
+                Layout.preferredWidth: 72
+                Layout.preferredHeight: 72
+                source: "qrc:/images/traceless.svg"
+                sourceSize: Qt.size(144, 144)
             }
 
             H1TextType {
-                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: 12
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
 
-                horizontalAlignment: Text.AlignHCenter
-                text: qsTr("Support Amnezia")
-            }
-
-            BodyTextType {
-                Layout.fillWidth: true
-                Layout.topMargin: 8
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-
-                horizontalAlignment: Text.AlignHCenter
-                color: AmneziaStyle.color.textSecondary
-                text: qsTr("Amnezia is a free and open-source application. You can support the developers if you like it.")
+                text: Qt.application.name
             }
 
             ColumnLayout {
@@ -88,75 +70,6 @@ PageType {
                 Layout.bottomMargin: 24 + PageController.safeAreaBottomMargin
 
                 spacing: 24
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-
-                    spacing: 12
-
-                    BodyTextType {
-                        Layout.fillWidth: true
-
-                        color: AmneziaStyle.color.textTertiary
-                        text: qsTr("Contacts")
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-
-                        spacing: 0
-
-                        ListItemType {
-                            Layout.fillWidth: true
-
-                            text: qsTr("Telegram group")
-                            subtitle: qsTr("To discuss features")
-                            icon.source: "qrc:/images/controls/telegram.svg"
-
-                            onClicked: Qt.openUrlExternally(qsTr("https://telegram.me/amnezia_vpn_en"))
-                        }
-
-                        ListItemType {
-                            Layout.fillWidth: true
-
-                            text: qsTr("Amnezia Hub Telegram Bot")
-                            subtitle: qsTr("Ask us anything")
-                            icon.source: "qrc:/images/controls/telegram.svg"
-
-                            onClicked: Qt.openUrlExternally("https://telegram.me/amneziahub_bot?start=utm_ioIdiSEUDN")
-                        }
-
-                        ListItemType {
-                            Layout.fillWidth: true
-
-                            text: qsTr("support@amnezia.org")
-                            subtitle: qsTr("For reviews and bug reports")
-                            icon.source: "qrc:/images/controls/mail.svg"
-
-                            onClicked: Qt.openUrlExternally(qsTr("mailto:support@amnezia.org"))
-                        }
-
-                        ListItemType {
-                            Layout.fillWidth: true
-
-                            text: qsTr("GitHub")
-                            subtitle: qsTr("Discover the source code")
-                            icon.source: "qrc:/images/controls/github.svg"
-
-                            onClicked: Qt.openUrlExternally(qsTr("https://github.com/amnezia-vpn/amnezia-client"))
-                        }
-
-                        ListItemType {
-                            Layout.fillWidth: true
-
-                            text: qsTr("Website")
-                            subtitle: qsTr("Visit official website")
-                            icon.source: "qrc:/images/controls/amnezia.svg"
-
-                            onClicked: Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl())
-                        }
-                    }
-                }
 
                 ColumnLayout {
                     Layout.alignment: Qt.AlignHCenter
@@ -199,6 +112,7 @@ PageType {
 
                     ButtonType {
                         id: checkUpdatesButton
+                        visible: AppUpdatesEnabled
 
                         Layout.alignment: Qt.AlignHCenter
                         Layout.maximumWidth: content.width - 32
@@ -215,19 +129,6 @@ PageType {
                         }
                     }
 
-                    ButtonType {
-                        id: privacyPolicyButton
-
-                        Layout.alignment: Qt.AlignHCenter
-
-                        variant: ButtonType.Text
-                        size: ButtonType.Medium
-                        text: qsTr("Privacy Policy")
-
-                        onClicked: {
-                            Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl("policy"))
-                        }
-                    }
                 }
             }
         }

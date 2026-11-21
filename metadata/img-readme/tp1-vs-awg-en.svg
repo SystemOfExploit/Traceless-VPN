@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640" fill="none">
+  <rect width="1100" height="640" rx="28" fill="#101010"/>
+  <text x="48" y="64" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="28" font-weight="500">TP1 and AWG</text>
+  <text x="48" y="98" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="16">Same WireGuard cipher. Different masking and keys.</text>
+
+  <rect x="48" y="132" width="488" height="360" rx="20" fill="#181818" stroke="#3F3F3F"/>
+  <rect x="564" y="132" width="488" height="360" rx="20" fill="#181818" stroke="#E4E4E4"/>
+  <text x="76" y="176" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="14">AWG</text>
+  <text x="592" y="176" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="14">TP1</text>
+
+  <g font-family="Inter, Segoe UI, sans-serif" font-size="16">
+    <text x="76" y="224" fill="#868686">Headers</text>
+    <text x="76" y="252" fill="#E4E4E4">1, 2, 3, 4 on every server</text>
+    <text x="76" y="292" fill="#868686">Signature</text>
+    <text x="76" y="320" fill="#E4E4E4">One public template</text>
+    <text x="76" y="360" fill="#868686">PSK</text>
+    <text x="76" y="388" fill="#E4E4E4">One key for the whole server</text>
+    <text x="76" y="428" fill="#868686">If UDP is blocked</text>
+    <text x="76" y="456" fill="#E4E4E4">The tunnel stays down</text>
+
+    <text x="592" y="224" fill="#868686">Headers</text>
+    <text x="592" y="252" fill="#FAFAFA">Private ranges on each server</text>
+    <text x="592" y="292" fill="#868686">Signature</text>
+    <text x="592" y="320" fill="#FAFAFA">40 random bytes, new every time</text>
+    <text x="592" y="360" fill="#868686">PSK</text>
+    <text x="592" y="388" fill="#FAFAFA">A separate key for each client</text>
+    <text x="592" y="428" fill="#868686">If UDP is blocked</text>
+    <text x="592" y="456" fill="#FAFAFA">After 8 s, REALITY over TCP</text>
+  </g>
+
+  <rect x="48" y="516" width="1004" height="76" rx="18" fill="#181818" stroke="#3F3F3F"/>
+  <text x="76" y="548" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="16">Same cipher: Curve25519 and ChaCha20-Poly1305</text>
+  <text x="76" y="572" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="14">TP1 recovers faster, is harder to fingerprint, and does not share one PSK across clients.</text>
+</svg>

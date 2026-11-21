@@ -1436,6 +1436,12 @@ ErrorCode InstallController::installContainer(const ServerCredentials &credentia
                                               TransportProto transportProto, ContainerConfig &config)
 {
     config = generateConfig(container, port, transportProto);
+    if (container == DockerContainer::Awg2) {
+        const auto *awgConfig = config.getAwgProtocolConfig();
+        if (!awgConfig || awgConfig->serverConfig.headerProtectionKey.isEmpty()) {
+            return ErrorCode::InternalError;
+        }
+    }
     if (container == DockerContainer::TProxy) {
         auto *tProxyConfig = config.getTProxyProtocolConfig();
         if (tProxyConfig) {

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.25.0 FATAL_ERROR)
 
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/clientBrandingDefaults.cmake)
-
 set(PROJECT ${CLIENT_TARGET_NAME})
 project(${PROJECT})
 

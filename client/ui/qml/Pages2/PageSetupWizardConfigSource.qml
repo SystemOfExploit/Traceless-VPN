@@ -18,6 +18,26 @@ PageType {
 
     property bool isRestoringBackup: false
 
+    function restoreBackup() {
+        if (root.isRestoringBackup) {
+            return
+        }
+        const path = SystemController.getFileName(qsTr("Open backup file"), qsTr("Backup files (*.backup)"))
+        if (path === "") {
+            return
+        }
+        root.isRestoringBackup = true
+        PageController.showBusyIndicator(true)
+        Qt.callLater(function() {
+            try {
+                SettingsController.restoreAppConfig(path)
+            } finally {
+                root.isRestoringBackup = false
+                PageController.showBusyIndicator(false)
+            }
+        })
+    }
+
     Connections {
         target: ImportController
 
@@ -34,7 +54,7 @@ PageType {
 
         anchors.top: parent.top
 
-        contentHeight: Math.max(content.implicitHeight, flickable.height)
+        contentHeight: content.implicitHeight + 16 + PageController.safeAreaBottomMargin
 
         ColumnLayout {
             id: content
@@ -42,7 +62,6 @@ PageType {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: flickable.contentHeight
 
             spacing: 0
 
@@ -50,7 +69,6 @@ PageType {
                 Layout.fillWidth: true
 
                 title: qsTr("Connection")
-                description: qsTr("Insert the key, add a configuration file or scan the QR-code")
                 backButtonVisible: !PageController.isStartPageVisible() && root.stackView !== null && root.stackView.depth > 1
 
                 IconButtonType {
@@ -68,7 +86,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                spacing: 12
+                spacing: 8
 
                 TextFieldType {
                     id: textKey
@@ -109,7 +127,7 @@ PageType {
 
             SmallTextType {
                 Layout.fillWidth: true
-                Layout.topMargin: 24
+                Layout.topMargin: 14
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
@@ -122,33 +140,8 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.leftMargin: 16
 
-                text: qsTr("VPN by Amnezia")
-                subtitle: qsTr("The easiest way to connect to the VPN")
-
-                badgeText: qsTr("Recommended")
-
-                icon.source: "qrc:/images/controls/amnezia.svg"
-
-                enabled: !root.isRestoringBackup
-
-                onClicked: {
-                    PageController.showBusyIndicator(true)
-                    var result = SubscriptionUiController.fillAvailableServices()
-                    PageController.showBusyIndicator(false)
-                    if (result) {
-                        PageController.goToPage(PageEnum.PageSetupWizardApiServicesList)
-                    }
-                }
-            }
-
-            BasicCardType {
-                Layout.fillWidth: true
-                Layout.topMargin: 12
-                Layout.rightMargin: 16
-                Layout.leftMargin: 16
-
                 text: qsTr("Self-hosted VPN")
-                subtitle: qsTr("Configure Amnezia VPN on your own server")
+                subtitle: qsTr("Configure Traceless on your own server")
 
                 icon.source: "qrc:/images/controls/server.svg"
 
@@ -171,22 +164,7 @@ PageType {
 
                 enabled: !root.isRestoringBackup
 
-                onClicked: {
-                    if (root.isRestoringBackup) {
-                        return
-                    }
-                    var filePath = SystemController.getFileName(qsTr("Open backup file"),
-                                                                qsTr("Backup files (*.backup)"))
-                    if (filePath !== "") {
-                        root.isRestoringBackup = true
-                        PageController.showBusyIndicator(true)
-                        Qt.callLater(function() {
-                            SettingsController.restoreAppConfig(filePath)
-                            PageController.showBusyIndicator(false)
-                            root.isRestoringBackup = false
-                        })
-                    }
-                }
+                onClicked: root.restoreBackup()
             }
 
             BasicCardType {
@@ -231,68 +209,6 @@ PageType {
                     if (Qt.platform.os === "ios") {
                         PageController.goToPage(PageEnum.PageSetupWizardQrReader)
                     }
-                }
-            }
-
-            BasicCardType {
-                Layout.fillWidth: true
-                Layout.topMargin: 12
-                Layout.rightMargin: 16
-                Layout.leftMargin: 16
-
-                visible: Qt.platform.os === "ios" || IsMacOsNeBuild || IsPlayBuild
-
-                text: qsTr("Restore purchases")
-
-                icon.source: "qrc:/images/controls/refresh-cw.svg"
-
-                enabled: !root.isRestoringBackup
-
-                onClicked: {
-                    PageController.showBusyIndicator(true)
-                    SubscriptionUiController.restoreServiceFromStore()
-                    PageController.showBusyIndicator(false)
-                }
-            }
-
-            BasicCardType {
-                Layout.fillWidth: true
-                Layout.topMargin: 12
-                Layout.rightMargin: 16
-                Layout.leftMargin: 16
-
-                visible: PageController.isStartPageVisible() && Qt.platform.os !== "ios" && !IsMacOsNeBuild
-
-                text: qsTr("I have nothing")
-
-                icon.source: "qrc:/images/controls/help-circle.svg"
-
-                enabled: !root.isRestoringBackup
-
-                onClicked: Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl())
-            }
-
-            Item {
-                Layout.fillHeight: true
-            }
-
-            LinkButtonType {
-                id: siteLink2
-
-                Layout.topMargin: 24
-                Layout.bottomMargin: 24 + PageController.safeAreaBottomMargin
-                Layout.alignment: Qt.AlignHCenter
-
-                size: LinkButtonType.Medium
-
-                visible: Qt.platform.os !== "ios" && !IsMacOsNeBuild
-
-                text: qsTr("Site Amnezia")
-
-                rightImageSource: "qrc:/images/controls/external-link.svg"
-
-                onClicked: {
-                    Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl())
                 }
             }
         }
@@ -365,11 +281,11 @@ PageType {
                 onClicked: {
                     var fileName = ""
                     if (GC.isMobile()) {
-                        fileName = "AmneziaVPN.log"
+                        fileName = "Traceless.log"
                     } else {
                         fileName = SystemController.getFileName(qsTr("Save"),
                                                                 qsTr("Logs files (*.log)"),
-                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/AmneziaVPN",
+                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/Traceless",
                                                                 true,
                                                                 ".log")
                     }

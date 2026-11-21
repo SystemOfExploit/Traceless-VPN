@@ -1,18 +1,18 @@
 <RCC>
     <qresource prefix="/">
         <file>../fonts/pt-root-ui_vf.ttf</file>
+        <file>../fonts/Inter-Regular.ttf</file>
     </qresource>
     <qresource prefix="/images">
-        <file>amneziaLogo.svg</file>
-        <file>AmneziaVPN.png</file>
+        <file>traceless.svg</file>
         <file>controls/alert-circle.svg</file>
+        <file>controls/traceless-mark.svg</file>
         <file>controls/alert-triangle.svg</file>
         <file>update/updateHeroDark.jpg</file>
         <file>update/plus-circle.svg</file>
         <file>update/arrow-up-circle.svg</file>
         <file>update/wrench.svg</file>
         <file>update/arrow-down-circle.svg</file>
-        <file>controls/amnezia.svg</file>
         <file>controls/app.svg</file>
         <file>controls/archive-restore.svg</file>
         <file>controls/arrow-left.svg</file>

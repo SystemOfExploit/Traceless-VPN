@@ -11,6 +11,39 @@
 
 [Amnezia](https://amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-en) is an open-source VPN client, with a key feature that enables you to deploy your own VPN server on your server.
 
+## TP1
+
+TP1 is the Traceless profile on top of AmneziaWG 3.1. The cipher is the same as AWG: Curve25519 and ChaCha20-Poly1305. What changes is how the tunnel is hidden and how keys are issued.
+
+![Home](metadata/img-readme/home.png)
+
+![TP1 and AWG](metadata/img-readme/tp1-vs-awg-en.svg)
+
+| | AWG | TP1 |
+| --- | --- | --- |
+| Headers H1–H4 | Shared values 1, 2, 3, 4 | Private ranges per server |
+| Pre-handshake packet | A fixed public template | 40 random bytes, no stable fingerprint |
+| Header protection | Present on new 3.1 configs, absent on AWG 1.5/2 | Required |
+| PSK | One key for the whole server | A separate key for each client |
+| Cookies | Off in the 3.1 profile | On, so the server can drop handshake floods |
+| Length padding | 10–100 bytes | 1–8 bytes, so packets stay unfragmented |
+| Handshake retry | 3–7 s, 15–20 attempts | 2–3 s, 30–40 attempts |
+| When UDP fails | The tunnel does not come up | After 8 s, switch to XRay REALITY over TCP |
+
+Keys that are already issued stay valid. The header-protection key, H1–H4 ranges, S1–S4 padding and the PSK are not rotated.
+
+![TP1 connection path](metadata/img-readme/tp1-path-en.svg)
+
+```mermaid
+flowchart LR
+  click[Connect] --> udp[UDP AWG 3.1]
+  udp -->|handshake within 8 s| up[Tunnel up]
+  udp -->|UDP did not come up| reality[XRay REALITY over TCP]
+  reality --> up
+```
+
+The home-screen labels use Inter. Disconnect plays the connect ring backwards, and the idle label fades in.
+
 [![Image](https://github.com/amnezia-vpn/amnezia-client/blob/dev/metadata/img-readme/uipic4.png)](https://amnezia.org)
 
 ### [Website](https://amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-en) | [Alt website link](https://storage.googleapis.com/amnezia/amnezia.org?utm_source=github&utm_campaign=amnezia_website-readme-en-mirror) | [Documentation](https://docs.amnezia.org) | [Troubleshooting](https://docs.amnezia.org/troubleshooting)

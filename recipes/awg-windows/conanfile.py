@@ -81,6 +81,7 @@ class AwgWindows(ConanFile):
         ]
         env = tc.environment()
         env.define("GOOS", "windows")
+        env.define("GOTELEMETRY", "off")
         if self._goarm:
             env.define("GOARM", self._goarm)
         env.define("GOARCH", self._goarch)

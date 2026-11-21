@@ -16,6 +16,26 @@ class Openvpn(ConanFile):
     def _is_windows(self):
         return str(self.settings.os).startswith("Windows")
 
+    def _message_compiler(self):
+        arch = {"x86_64": "x64", "x86": "x86", "armv8": "arm64"}.get(str(self.settings.arch), "x64")
+        roots = []
+        sdk_ver_bin = os.environ.get("WindowsSdkVerBinPath")
+        if sdk_ver_bin:
+            roots.append(sdk_ver_bin)
+        sdk_dir = os.environ.get("WindowsSdkDir")
+        sdk_ver = os.environ.get("WindowsSDKVersion", "").strip("\\/")
+        if sdk_dir and sdk_ver:
+            roots.append(os.path.join(sdk_dir, "bin", sdk_ver))
+        kits = os.path.join(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)"), "Windows Kits", "10", "bin")
+        if os.path.isdir(kits):
+            for version in sorted(os.listdir(kits), reverse=True):
+                roots.append(os.path.join(kits, version))
+        for root in roots:
+            for name in (os.path.join(root, arch, "mc.exe"), os.path.join(root, "mc.exe")):
+                if os.path.isfile(name):
+                    return name.replace("\\", "/")
+        return None
+
     def export_sources(self):
         export_conandata_patches(self)
         copy(self, "*applink.c", src=self.recipe_folder, dst=self.export_sources_folder)
@@ -73,6 +93,9 @@ class Openvpn(ConanFile):
             tc.extra_cxxflags = [ f"-I{tap_include_path}", f"-I{applink_include_path}" ]
             tc.cache_variables["BUILD_TESTING"] = False
             tc.cache_variables["ENABLE_PKCS11"] = False
+            message_compiler = self._message_compiler()
+            if message_compiler:
+                tc.cache_variables["MC_COMPILER"] = message_compiler
             tc.generate()
             deps = CMakeDeps(self)
             deps.generate()

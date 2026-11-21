@@ -49,8 +49,8 @@ PageType {
 
                     Layout.fillWidth: true
 
-                    text: qsTr("Use AmneziaDNS")
-                    subtitle: qsTr("If AmneziaDNS is installed on the server")
+                    text: qsTr("Use the server DNS service")
+                    subtitle: qsTr("If the DNS service is installed on the server")
 
                     onClicked: {
                         amneziaDnsSwitch.toggle()
@@ -77,7 +77,7 @@ PageType {
                     Layout.fillWidth: true
 
                     text: qsTr("DNS servers")
-                    subtitle: qsTr("When AmneziaDNS is not used or installed")
+                    subtitle: qsTr("When the server DNS service is not used or installed")
                     trailingIconSource: "qrc:/images/controls/chevron-right.svg"
 
                     onClicked: {

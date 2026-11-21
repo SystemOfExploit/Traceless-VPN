@@ -30,6 +30,7 @@
     #include "platforms/ios/ios_controller.h"
 #endif
 
+#include "core/utils/constants/protocolConstants.h"
 #include "core/utils/networkUtilities.h"
 #include "core/utils/serverConfigUtils.h"
 #include "vpnConnection.h"
@@ -43,6 +44,11 @@ VpnConnection::VpnConnection(SecureServersRepository* serversRepository, SecureA
       m_checkTimer(this),
       m_connectionState(Vpn::ConnectionState::Disconnected)
 {
+#ifdef AMNEZIA_DESKTOP
+    m_tp1Timeout.setParent(this);
+    m_tp1Timeout.setSingleShot(true);
+    connect(&m_tp1Timeout, &QTimer::timeout, this, &VpnConnection::switchTp1Transport);
+#endif
 #if defined(Q_OS_IOS) || defined(MACOS_NE)
     m_checkTimer.setInterval(1000);
     connect(IosController::Instance(), &IosController::connectionStateChanged, this, &VpnConnection::setConnectionState);
@@ -80,46 +86,7 @@ void VpnConnection::onConnectionStateChanged(Vpn::ConnectionState state)
         return;
     }
 
-    const QString defaultServerId = m_serversRepository->defaultServerId();
-    DockerContainer container = DockerContainer::None;
-    switch (m_serversRepository->serverKind(defaultServerId)) {
-    case serverConfigUtils::ConfigType::SelfHostedAdmin: {
-        const auto cfg = m_serversRepository->selfHostedAdminConfig(defaultServerId);
-        if (cfg.has_value()) {
-            container = cfg->defaultContainer;
-        }
-        break;
-    }
-    case serverConfigUtils::ConfigType::SelfHostedUser: {
-        const auto cfg = m_serversRepository->selfHostedUserConfig(defaultServerId);
-        if (cfg.has_value()) {
-            container = cfg->defaultContainer;
-        }
-        break;
-    }
-    case serverConfigUtils::ConfigType::Native: {
-        const auto cfg = m_serversRepository->nativeConfig(defaultServerId);
-        if (cfg.has_value()) {
-            container = cfg->defaultContainer;
-        }
-        break;
-    }
-    case serverConfigUtils::ConfigType::AmneziaPremiumV2:
-    case serverConfigUtils::ConfigType::AmneziaFreeV3:
-    case serverConfigUtils::ConfigType::ExternalPremium: {
-        const auto cfg = m_serversRepository->apiV2Config(defaultServerId);
-        if (cfg.has_value()) {
-            container = cfg->defaultContainer;
-        }
-        break;
-    }
-    case serverConfigUtils::ConfigType::AmneziaPremiumV1:
-    case serverConfigUtils::ConfigType::AmneziaFreeV2:
-        break;
-    case serverConfigUtils::ConfigType::Invalid:
-    default:
-        break;
-    }
+    const DockerContainer container = m_activeContainer;
 
     IpcClient::withInterface([&](QSharedPointer<IpcInterfaceReplica> iface) {
         switch (state) {
@@ -335,19 +302,25 @@ void VpnConnection::connectToVpn(const QString &serverId, DockerContainer contai
              << m_appSettingsRepository->routeMode();
 
     m_remoteAddress = NetworkUtilities::getIPAddress(vpnConfiguration.value(configKey::hostName).toString());
-    setConnectionState(Vpn::ConnectionState::Connecting);
-
     m_vpnConfiguration = vpnConfiguration;
 
 #ifdef AMNEZIA_DESKTOP
+    clearTp1Fallback();
+    m_activeContainer = container;
+    m_tp1Fallback = m_vpnConfiguration.take(QStringLiteral("tp1TcpFallback")).toObject();
+    if (!m_tp1Fallback.isEmpty()) {
+        m_tp1ServerId = serverId;
+        m_tp1Timeout.start(amnezia::protocols::awg::tp1UdpAttemptMs);
+    }
     if (m_vpnProtocol) {
-        disconnect(m_vpnProtocol.data(), &VpnProtocol::protocolError, this, &VpnConnection::vpnProtocolError);
+        disconnect(m_vpnProtocol.data(), nullptr, this, nullptr);
         m_vpnProtocol->stop();
         m_vpnProtocol.reset();
     }
     appendKillSwitchConfig();
 #endif
 
+    setConnectionState(Vpn::ConnectionState::Connecting);
     appendSplitTunnelingConfig();
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(MACOS_NE)
@@ -575,8 +548,53 @@ void VpnConnection::reconnectToVpn() {
     }
 }
 
+#ifdef AMNEZIA_DESKTOP
+void VpnConnection::clearTp1Fallback()
+{
+    m_tp1Timeout.stop();
+    m_tp1Fallback = {};
+    m_tp1ServerId.clear();
+    m_tp1Switching = false;
+}
+
+void VpnConnection::switchTp1Transport()
+{
+    auto *awg = qobject_cast<WireguardProtocol *>(m_vpnProtocol.data());
+    if (m_tp1Switching || !awg) {
+        clearTp1Fallback();
+        setConnectionState(Vpn::ConnectionState::Error);
+        return;
+    }
+    if (m_appSettingsRepository->isKillSwitchEnabled() || m_appSettingsRepository->isStrictKillSwitchEnabled()) {
+        clearTp1Fallback();
+        return;
+    }
+
+    m_tp1Switching = true;
+    setConnectionState(Vpn::ConnectionState::Reconnecting);
+    connect(awg, &WireguardProtocol::fallbackDeactivated, this, [this, awg](bool success) {
+        if (!m_tp1Switching || m_vpnProtocol.data() != awg) {
+            return;
+        }
+        const auto config = m_tp1Fallback;
+        const auto serverId = m_tp1ServerId;
+        clearTp1Fallback();
+        if (success && !m_appSettingsRepository->isKillSwitchEnabled() && !m_appSettingsRepository->isStrictKillSwitchEnabled()) {
+            connectToVpn(serverId, DockerContainer::Xray, config);
+        } else {
+            setConnectionState(Vpn::ConnectionState::Error);
+        }
+    }, Qt::ConnectionType(Qt::QueuedConnection | Qt::SingleShotConnection));
+    m_tp1Timeout.start(5000);
+    awg->deactivateForFallback();
+}
+#endif
+
 void VpnConnection::disconnectFromVpn()
 {
+#ifdef AMNEZIA_DESKTOP
+    clearTp1Fallback();
+#endif
 #if defined(Q_OS_IOS) || defined(MACOS_NE)
     // iOS/macOS NE use IosController directly; m_vpnProtocol is not set there.
     IosController::Instance()->disconnectVpn();
@@ -612,6 +630,20 @@ void VpnConnection::disconnectFromVpn()
 }
 
 void VpnConnection::setConnectionState(Vpn::ConnectionState state) {
+#ifdef AMNEZIA_DESKTOP
+    if (!m_tp1Fallback.isEmpty()) {
+        if (state == Vpn::ConnectionState::Connected && !m_tp1Switching) {
+            clearTp1Fallback();
+        } else if (state == Vpn::ConnectionState::Connected && m_tp1Switching) {
+            return;
+        } else if (state == Vpn::ConnectionState::Error || state == Vpn::ConnectionState::Disconnected) {
+            if (!m_tp1Switching) {
+                m_tp1Timeout.start(0);
+            }
+            return;
+        }
+    }
+#endif
     onConnectionStateChanged(state);
 
     if (state == Vpn::Disconnected && m_connectionState == Vpn::Reconnecting)

@@ -39,6 +39,7 @@ namespace amnezia
         QString key_proto_config_data(Proto p);
         QString key_proto_config_path(Proto p);
 
+        QMap<QString, QString> parseWireGuardConfig(const QString &config);
         QString replaceWireGuardEndpoint(QString nativeConfig, const QString &host, int port);
 
     }

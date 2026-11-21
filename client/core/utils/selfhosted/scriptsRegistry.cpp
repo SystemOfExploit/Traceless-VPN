@@ -257,8 +257,11 @@ amnezia::ScriptVars amnezia::genAwgVars(const ContainerConfig &containerConfig)
         vars.append({ { "$SPECIAL_JUNK_4", config.specialJunk4 } });
         vars.append({ { "$SPECIAL_JUNK_5", config.specialJunk5 } });
 
-        vars.append({ { "$PERSISTENT_KEEPALIVE", config.hasAwg3Params() ? QString(protocols::awg::defaultPersistentKeepAlive)
-                                                                        : QString(protocols::wireguard::defaultPersistentKeepAlive) } });
+        const QString keepAlive = config.isTp1()
+                ? QString(protocols::awg::tp1PersistentKeepAlive)
+                : (config.hasAwg3Params() ? QString(protocols::awg::defaultPersistentKeepAlive)
+                                          : QString(protocols::wireguard::defaultPersistentKeepAlive));
+        vars.append({ { "$PERSISTENT_KEEPALIVE", keepAlive } });
 
         vars.append({ { "$HEADER_PROTECTION_KEY", config.headerProtectionKey } });
         vars.append({ { "$CONTENT_PADDING_ADDITION", config.contentPaddingAddition } });

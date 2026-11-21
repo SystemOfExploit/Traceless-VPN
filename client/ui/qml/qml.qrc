@@ -8,7 +8,6 @@
         <file>Components/CountryListItem.qml</file>
         <file>Components/FavoriteButton.qml</file>
         <file>Components/ServerListItem.qml</file>
-        <file>Components/UpdateSupportDrawer.qml</file>
         <file>Components/PromoBanner.qml</file>
         <file>Components/ConnectButton.qml</file>
         <file>Components/CountryListStickyHeader.qml</file>
@@ -186,7 +185,6 @@
         <file>Controls2/LinkButtonType.qml</file>
         <file>Controls2/SpinnerType.qml</file>
         <file>Pages2/PageSettingsApiSupport.qml</file>
-        <file>Pages2/PageSettingsApiInstructions.qml</file>
         <file>Pages2/PageSettingsApiNativeConfigs.qml</file>
         <file>Pages2/PageSettingsApiDevices.qml</file>
         <file>Components/AwgTextField.qml</file>

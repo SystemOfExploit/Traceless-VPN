@@ -168,6 +168,11 @@ bool ConnectionUiController::isConnectionInProgress() const
     return m_isConnectionInProgress;
 }
 
+int ConnectionUiController::connectionState() const
+{
+    return static_cast<int>(m_state);
+}
+
 bool ConnectionUiController::isConnected() const
 {
     return m_isConnected;

@@ -282,7 +282,7 @@ void SettingsUiController::requestNotificationPermission()
 
 QString SettingsUiController::getInstallationUuid()
 {
-    return m_settingsController->getInstallationUuid();
+    return m_settingsController->getInstallationUuid(false);
 }
 
 void SettingsUiController::enableDevMode()

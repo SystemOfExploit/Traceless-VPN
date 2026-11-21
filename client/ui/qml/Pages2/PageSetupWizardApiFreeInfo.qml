@@ -86,14 +86,6 @@ PageType {
                     privacyUrl: String(ApiServicesModel.getSelectedServiceData("privacyPolicyUrl"))
                 }
 
-                TermsAndPrivacyText {
-                    Layout.fillWidth: true
-
-                    visible: (Qt.platform.os === "ios" || IsMacOsNeBuild)
-
-                    termsUrl: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-                    privacyUrl: LanguageUiController.getCurrentSiteUrl("policy")
-                }
             }
         }
     }

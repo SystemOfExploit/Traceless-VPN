@@ -76,20 +76,6 @@ PageType {
             }
 
             ListItemType {
-                Layout.fillWidth: true
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-
-                visible: ApiAccountInfoModel.getFullSiteLink() !== ""
-
-                text: qsTr("Website")
-                subtitle: ApiAccountInfoModel.getSiteLink()
-                trailingIconSource: "qrc:/images/controls/external-link.svg"
-
-                onClicked: Qt.openUrlExternally(ApiAccountInfoModel.getFullSiteLink())
-            }
-
-            ListItemType {
                 id: supportUuid
                 Layout.fillWidth: true
                 Layout.leftMargin: 16

@@ -69,7 +69,7 @@ PageType {
 
     function protocolDisplayName(protocol) {
         switch (protocol) {
-        case "awg": return "AmneziaWG"
+        case "awg": return "AWG"
         case "vless": return "VLESS"
         default: return protocol || ""
         }
@@ -184,20 +184,6 @@ PageType {
                 }
             }
 
-            PromoBanner {
-                id: promoBanner
-
-                Layout.fillWidth: true
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-                Layout.topMargin: 12
-
-                visible: ServersUiController.isAdVisible
-                text: ServersUiController.adHeader
-                subtitle: ServersUiController.adDescription
-
-                onClicked: Qt.openUrlExternally(ServersUiController.serverAdEndpoint(ServersUiController.defaultServerId))
-            }
         }
     }
 

@@ -149,11 +149,11 @@ PageType {
                 moreActionsMenu.close()
                 var fileName = ""
                 if (GC.isMobile()) {
-                    fileName = "amnezia_killswitch_exceptions.json"
+                    fileName = "traceless_killswitch_exceptions.json"
                 } else {
                     fileName = SystemController.getFileName(qsTr("Save addresses"),
                                                             qsTr("Address files (*.json)"),
-                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/amnezia_killswitch_exceptions",
+                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/traceless_killswitch_exceptions",
                                                             true,
                                                             ".json")
                 }

@@ -279,6 +279,14 @@ void LocalSocketController::deactivate() {
   emit disconnected();
 }
 
+void LocalSocketController::deactivateForFallback() {
+  if (m_daemonState != eReady) {
+    emit fallbackDeactivated(false);
+    return;
+  }
+  write(QJsonObject{{"type", "deactivateForFallback"}});
+}
+
 void LocalSocketController::checkStatus() {
   logger.debug() << "Check status";
 
@@ -437,6 +445,11 @@ void LocalSocketController::parseCommand(const QByteArray& command) {
     emit statusUpdated(serverIpv4Gateway.toString(),
                        deviceIpv4Address.toString(), txBytes.toDouble(),
                        rxBytes.toDouble());
+    return;
+  }
+
+  if (type == "fallbackDeactivated") {
+    emit fallbackDeactivated(obj.value("success").toBool());
     return;
   }
 

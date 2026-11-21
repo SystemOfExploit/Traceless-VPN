@@ -80,6 +80,17 @@ private:
     QJsonObject m_routeMode;
     QString m_remoteAddress;
 
+#ifdef AMNEZIA_DESKTOP
+    DockerContainer m_activeContainer = DockerContainer::None;
+    QTimer m_tp1Timeout;
+    QJsonObject m_tp1Fallback;
+    QString m_tp1ServerId;
+    bool m_tp1Switching = false;
+
+    void switchTp1Transport();
+    void clearTp1Fallback();
+#endif
+
     // Only for iOS for now, check counters
     QTimer m_checkTimer;
 

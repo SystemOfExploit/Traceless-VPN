@@ -1,6 +1,9 @@
 #include "connectionController.h"
 
+#include <QHostAddress>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QNetworkInterface>
 
 #include "core/configurators/configuratorBase.h"
 #include "core/utils/protocolEnum.h"
@@ -15,6 +18,9 @@
 #include "core/utils/protocolEnum.h"
 #include "core/models/containerConfig.h"
 #include "core/models/protocolConfig.h"
+#include "core/models/protocols/awgProtocolConfig.h"
+#include "core/models/protocols/xrayProtocolConfig.h"
+#include "core/utils/networkUtilities.h"
 
 using namespace amnezia;
 using namespace ProtocolUtils;
@@ -203,6 +209,35 @@ ErrorCode ConnectionController::prepareConnection(const QString &serverId,
     vpnConfiguration = createConnectionConfiguration(dns, isApiConfig, hostName, description, configVersion,
                                                      containerConfigModel, container);
 
+#ifdef AMNEZIA_DESKTOP
+    const auto *awg = containerConfigModel.getAwgProtocolConfig();
+    if (container == DockerContainer::Awg2 && awg && awg->isTp1()
+        && !m_appSettingsRepository->isKillSwitchEnabled() && !m_appSettingsRepository->isStrictKillSwitchEnabled()
+        && isContainerSupported(DockerContainer::Xray)) {
+        ContainerConfig fallback;
+        if (const auto admin = m_serversRepository->selfHostedAdminConfig(serverId); admin) {
+            fallback = admin->containerConfig(DockerContainer::Xray);
+        } else if (const auto user = m_serversRepository->selfHostedUserConfig(serverId); user) {
+            fallback = user->containerConfig(DockerContainer::Xray);
+        }
+        const auto *xray = fallback.getXrayProtocolConfig();
+        if (xray && xray->hasClientConfig()) {
+            namespace px = protocols::xray;
+            const auto settings = QJsonDocument::fromJson(xray->clientConfig->nativeConfig.toUtf8()).object();
+            const auto outbounds = settings.value(px::outbounds).toArray();
+            const auto outbound = outbounds.isEmpty() ? QJsonObject() : outbounds.first().toObject();
+            const auto stream = outbound.value(px::streamSettings).toObject();
+            const auto network = stream.value(px::network).toString();
+            if (outbound.value(px::protocol).toString() == QLatin1String(px::protocolVless)
+                && (network == QLatin1String(px::networkTcp) || network == QLatin1String(px::transportRaw))
+                && stream.value(px::security).toString() == QLatin1String(px::securityReality)) {
+                vpnConfiguration.insert(QStringLiteral("tp1TcpFallback"),
+                        createConnectionConfiguration(dns, false, hostName, description, configVersion, fallback, DockerContainer::Xray));
+            }
+        }
+    }
+#endif
+
     return ErrorCode::NoError;
 }
 
@@ -297,6 +332,28 @@ QJsonObject ConnectionController::createConnectionConfiguration(const QPair<QStr
         const QString cascadePort = vpnConfigData.value(configKey::cascadePort).toString();
         if (!cascadePort.isEmpty()) {
             vpnConfigData[configKey::port] = cascadePort.toInt();
+        }
+
+        const auto *awg = containerConfig.getAwgProtocolConfig();
+        if (container == DockerContainer::Awg2 && awg && awg->isTp1()) {
+            const QHostAddress endpoint(vpnConfigData.value(configKey::hostName).toString());
+            int interfaceMtu = 0;
+#ifdef Q_OS_WIN
+            if (endpoint.protocol() == QAbstractSocket::IPv4Protocol) {
+                const int index = NetworkUtilities::AdapterIndexTo(endpoint);
+                if (index > 0) {
+                    interfaceMtu = QNetworkInterface::interfaceFromIndex(index).maximumTransmissionUnit();
+                }
+            }
+#endif
+            if (interfaceMtu <= 0) {
+                interfaceMtu = NetworkUtilities::getGatewayAndIface().second.maximumTransmissionUnit();
+            }
+            const auto family = endpoint.protocol();
+            const int mtu = AwgProtocolConfig::tp1TunnelMtu(interfaceMtu, vpnConfigData.value(configKey::mtu).toString().toInt(),
+                                                           family != QAbstractSocket::IPv4Protocol);
+            vpnConfigData[configKey::mtu] = QString::number(mtu);
+            AwgProtocolConfig::tuneTp1Session(vpnConfigData);
         }
     }
 

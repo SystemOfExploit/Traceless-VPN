@@ -306,6 +306,13 @@ namespace amnezia
             constexpr char defaultSpecialJunk4[] = "";
             constexpr char defaultSpecialJunk5[] = "";
             constexpr char defaultPadding[] = "12";
+            constexpr char tp1ContentPadding[] = "1-8";
+            constexpr char tp1JunkPacketCount[] = "4";
+            constexpr char tp1RekeyTimeout[] = "2-3";
+            constexpr char tp1MaxHandshakeAttempts[] = "30-40";
+            constexpr char tp1PersistentKeepAlive[] = "18-25";
+            constexpr char tp1HandshakeCamouflage[] = "<r 40>";
+            constexpr int tp1UdpAttemptMs = 8000;
 
             constexpr char awgV1_5[] = "1.5";
             constexpr char awgV2[] = "2";

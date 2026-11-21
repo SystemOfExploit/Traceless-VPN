@@ -18,11 +18,24 @@ function appExecutableFileName()
     }
 }
 
+function windowsUninstaller(directory)
+{
+    var uninstaller = directory + "/Traceless-Uninstall.exe";
+    return installer.fileExists(uninstaller) ? uninstaller : directory + "/maintenancetool.exe";
+}
+
 function appInstalled()
 {
     if (runningOnWindows()) {
-        appInstalledUninstallerPath = installer.value("RootDir") + "Program Files/AmneziaVPN/maintenancetool.exe";
-        appInstalledUninstallerPath_x86 = installer.value("RootDir") + "Program Files (x86)/AmneziaVPN/maintenancetool.exe";
+        var targetDir = installer.value("TargetDir");
+        var defaultDir = installer.value("RootDir") + "Program Files/" + appName();
+        var targetUninstaller = targetDir ? windowsUninstaller(targetDir) : "";
+        appInstalledUninstallerPath = targetUninstaller && installer.fileExists(targetUninstaller)
+            ? targetUninstaller : windowsUninstaller(defaultDir);
+        appInstalledUninstallerPath_x86 = windowsUninstaller(installer.value("RootDir") + "Program Files (x86)/" + appName());
+        if (appInstalledUninstallerPath === appInstalledUninstallerPath_x86) {
+            appInstalledUninstallerPath_x86 = "";
+        }
     } else if (runningOnMacOS()){
         appInstalledUninstallerPath = "/Applications/" + appName() + ".app/maintenancetool.app/Contents/MacOS/maintenancetool";
     } else if (runningOnLinux()){

@@ -27,8 +27,8 @@ PageType {
     property bool isSelfHostedConfig: true
 
     property string configExtension: ".vpn"
-    property string configCaption: qsTr("Save AmneziaVPN config")
-    property string configFileName: "amnezia_config"
+    property string configCaption: qsTr("Save Traceless config")
+    property string configFileName: "traceless_config"
 
     readonly property bool isQrCodeVisible: pageShareConnection.isSelfHostedConfig ? ExportController.qrCodesCount > 0
                                                                                    : SubscriptionUiController.qrCodesCount > 0
@@ -195,7 +195,7 @@ PageType {
 
                 horizontalAlignment: Text.AlignHCenter
                 color: AmneziaStyle.color.textTertiary
-                text: qsTr("To read the QR code in the Amnezia app, tap + in the main menu → 'QR code'")
+                text: qsTr("To scan this code in Traceless, tap + in the main menu and choose QR code.")
             }
 
             NotificationType {

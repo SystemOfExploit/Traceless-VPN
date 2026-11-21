@@ -126,7 +126,7 @@ PageType {
 
             PageController.showBusyIndicator(false)
 
-            PageController.goToShareConnectionPage(root.headerText, root.configContentHeaderText, "", ".vpn", "amnezia_config")
+            PageController.goToShareConnectionPage(root.headerText, root.configContentHeaderText, "", ".vpn", "traceless_config")
         }
     }
 }

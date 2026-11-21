@@ -16,7 +16,7 @@ set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES
     CACHE STRING "" FORCE)
 
 project(${PROJECT} VERSION ${AMNEZIAVPN_VERSION}
-        DESCRIPTION "AmneziaVPN"
+        DESCRIPTION "Traceless"
         HOMEPAGE_URL "https://amnezia.org/"
 )
 
@@ -76,10 +76,16 @@ if(APPLE AND NOT IOS)
 endif()
 
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/client/cmake/clientBrandingDefaults.cmake)
+
 add_subdirectory(client)
 
 if(NOT IOS AND NOT ANDROID AND NOT MACOS_NE)
     add_subdirectory(service)
+endif()
+
+if(WIN32)
+    add_subdirectory(deploy/tools/windows)
 endif()
 
 if ((LINUX AND NOT ANDROID) OR (APPLE AND NOT IOS AND NOT MACOS_NE) OR (WIN32))

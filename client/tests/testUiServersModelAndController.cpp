@@ -12,6 +12,7 @@
 #include "core/controllers/selfhosted/importController.h"
 #include "ui/models/serversModel.h"
 #include "ui/models/containersModel.h"
+#include "ui/models/protocolsModel.h"
 #include "core/utils/constants/configKeys.h"
 
 using namespace amnezia;
@@ -43,7 +44,7 @@ private:
     TestCoreController* m_coreController;
     SecureQSettings* m_settings;
 
-    QJsonObject createAwg2Config()
+    QJsonObject createAwg2Config(const QString &containerName = QStringLiteral("amnezia-awg"))
     {
         QJsonObject clientConfig;
         clientConfig[configKey::mtu] = protocols::awg::defaultMtu;
@@ -95,7 +96,7 @@ private:
         awgConfig[configKey::isThirdPartyConfig] = true;
 
         QJsonObject container;
-        container[configKey::container] = "amnezia-awg";
+        container[configKey::container] = containerName;
         container[configKey::awg] = awgConfig;
 
         QJsonArray containers;
@@ -103,7 +104,7 @@ private:
 
         QJsonObject config;
         config[configKey::containers] = containers;
-        config[configKey::defaultContainer] = "amnezia-awg";
+        config[configKey::defaultContainer] = containerName;
         config[configKey::description] = "AWG2 Test Server";
         config[configKey::hostName] = "test.example.com";
 
@@ -138,9 +139,32 @@ private slots:
 
     void init() {
         m_settings->clearSettings();
+        m_coreController->m_serversRepository->invalidateCache();
         if (m_coreController->m_serversModel) {
             m_coreController->m_serversModel->updateModel(QVector<ServerDescription>(), QString{});
         }
+    }
+
+    void testExistingAwg2UsesTp1Name()
+    {
+        const auto wireName = QStringLiteral("amnezia-awg2");
+        const auto config = createAwg2Config(wireName);
+        m_coreController->m_importCoreController->importConfig(config);
+
+        const auto *controller = m_coreController->m_serversUiController;
+        QCOMPARE(controller->getDefaultServerDefaultContainerName(), QStringLiteral("TP1"));
+        QVERIFY(controller->getDefaultServerDescriptionCollapsed().contains(QStringLiteral("TP1 |")));
+
+        auto *containers = m_coreController->m_containersModel;
+        const int row = ContainerUtils::allContainers().indexOf(DockerContainer::Awg2);
+        QCOMPARE(containers->data(row, ContainersModel::NameRole).toString(), QStringLiteral("TP1"));
+        QCOMPARE(containers->data(row, ContainersModel::ContainerStringRole).toString(), wireName);
+
+        const auto stored = ContainerConfig::fromJson(containers->data(row, ContainersModel::ConfigRole).toJsonObject());
+        ProtocolsModel protocols;
+        protocols.updateModel(stored);
+        QCOMPARE(protocols.data(protocols.index(0), ProtocolsModel::ProtocolNameRole).toString(), QStringLiteral("TP1"));
+        QCOMPARE(protocols.data(protocols.index(0), ProtocolsModel::ProtocolStringRole).toString(), QStringLiteral("awg"));
     }
 
     void testUiServersModelAndControllerRoles() {
@@ -192,7 +216,7 @@ private slots:
             QString hostName = "test.example.com";
             
             QString collapsedDescription = m_coreController->m_serversUiController->getDefaultServerDescriptionCollapsed();
-            QString expectedCollapsed = "AmneziaWG (version 2) | " + hostName;
+            QString expectedCollapsed = "AWG (version 2) | " + hostName;
             QVERIFY2(collapsedDescription == expectedCollapsed, 
                      QString("Collapsed description should be '%1', got '%2'").arg(expectedCollapsed, collapsedDescription).toUtf8().constData());
             
@@ -287,7 +311,7 @@ private slots:
         QString descNoDns = m_coreController->m_serversModel->data(
             m_coreController->m_serversModel->index(0, 0), ServersModel::ServerDescriptionRole).toString();
         QVERIFY2(descNoDns == "test.example.com",
-                 QString("Without Amnezia DNS expected 'test.example.com', got '%1'").arg(descNoDns).toUtf8().constData());
+                 QString("Without DNS service expected 'test.example.com', got '%1'").arg(descNoDns).toUtf8().constData());
 
         m_coreController->m_serversRepository->clearServers();
         if (m_coreController->m_serversRepository->serversCount() > 0) {
@@ -305,8 +329,8 @@ private slots:
 
         QString descWithDns = m_coreController->m_serversModel->data(
             m_coreController->m_serversModel->index(0, 0), ServersModel::ServerDescriptionRole).toString();
-        QVERIFY2(descWithDns == "Amnezia DNS | test.example.com",
-                 QString("With Amnezia DNS expected 'Amnezia DNS | test.example.com', got '%1'").arg(descWithDns).toUtf8().constData());
+        QVERIFY2(descWithDns == "DNS | test.example.com",
+                 QString("With DNS service expected 'DNS | test.example.com', got '%1'").arg(descWithDns).toUtf8().constData());
     }
 };
 

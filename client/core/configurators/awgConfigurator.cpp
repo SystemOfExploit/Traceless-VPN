@@ -43,19 +43,7 @@ ProtocolConfig AwgConfigurator::createConfig(const ServerCredentials &credential
     
     QString awgConfig = wgConfig->clientConfig->nativeConfig;
 
-    QMap<QString, QString> configMap;
-    auto configLines = awgConfig.split("\n");
-    for (auto &line : configLines) {
-        auto trimmedLine = line.trimmed();
-        if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
-            continue;
-        } else {
-            QStringList parts = trimmedLine.split(" = ");
-            if (parts.count() == 2) {
-                configMap.insert(parts[0].trimmed(), parts[1].trimmed());
-            }
-        }
-    }
+    const auto configMap = ProtocolUtils::parseWireGuardConfig(awgConfig);
 
     AwgProtocolConfig protocolConfig;
     if (serverConfig) {

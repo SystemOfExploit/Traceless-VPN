@@ -367,19 +367,8 @@ void CoreSignalHandlers::initServersModelUpdateHandler()
     connect(m_coreController->m_serversRepository, &SecureServersRepository::defaultServerChanged,
             m_coreController->m_serversUiController, &ServersUiController::onDefaultServerChanged);
 
-    connect(m_coreController->m_serversRepository, &SecureServersRepository::serverAdded, this,
-            [this](const QString &serverId) {
-                if (m_coreController->m_serversRepository->apiV2Config(serverId).has_value()) {
-                    m_coreController->m_apiNewsUiController->fetchNews(false);
-                }
-            });
-
-    connect(m_coreController->m_settingsUiController, &SettingsUiController::restoreBackupFinished, this, [this]() {
-        m_coreController->m_serversUiController->updateModel();
-        if (m_coreController->m_serversUiController->hasServersFromGatewayApi()) {
-            m_coreController->m_apiNewsUiController->fetchNews(false);
-        }
-    });
+    connect(m_coreController->m_settingsUiController, &SettingsUiController::restoreBackupFinished,
+            m_coreController->m_serversUiController, &ServersUiController::updateModel);
 }
 
 void CoreSignalHandlers::initClientManagementModelUpdateHandler()
@@ -543,7 +532,6 @@ void CoreSignalHandlers::initNotificationHandler()
     connect(m_coreController, &CoreController::translationsUpdated, m_coreController->m_notificationHandler, &NotificationHandler::onTranslationsUpdated);
 
     auto* trayHandler = qobject_cast<SystemTrayNotificationHandler*>(m_coreController->m_notificationHandler);
-    connect(m_coreController, &CoreController::websiteUrlChanged, trayHandler, &SystemTrayNotificationHandler::updateWebsiteUrl);
 #endif    
 }
 
