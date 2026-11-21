@@ -4,7 +4,7 @@ VPN-клиент для собственного сервера.
 
 ### [English](README.md) | [Русский](README_RU.md)
 
-![Главный экран](metadata/img-readme/home.png)
+![Главный экран](metadata/img-readme/home-screen.png)
 
 Traceless ставит VPN на сервер, который вы контролируете, и подключается к нему. Профиль — TP1: свои заголовки, отдельный PSK каждому клиенту и переход на TCP, если UDP не поднимается.
 

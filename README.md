@@ -4,7 +4,7 @@ Self-hosted VPN client for your own server.
 
 ### [English](README.md) | [Русский](README_RU.md)
 
-![Home](metadata/img-readme/home.png)
+![Home](metadata/img-readme/home-screen.png)
 
 Traceless installs a VPN on a server you control and connects to it. The profile is TP1: private headers, a preshared key for each client, and a TCP fallback when UDP does not come up.
 
