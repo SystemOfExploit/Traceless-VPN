@@ -4,7 +4,8 @@ Self-hosted VPN client for your own server.
 
 ### [English](README.md) | [Русский](README_RU.md)
 
-![Home](metadata/img-readme/home.png)
+![Home](<img width="382" height="712" alt="изображение" src="https://github.com/user-attachments/assets/bf4e5775-de33-4f17-8580-2e0eab61d8b8" />
+)
 
 Traceless installs a VPN on a server you control and connects to it. The profile is TP1: private headers, a preshared key for each client, and a TCP fallback when UDP does not come up.
 
@@ -33,7 +34,11 @@ Keys that are already issued stay valid. The header-protection key, H1–H4 rang
 
 ```mermaid
 flowchart LR
+<<<<<<< HEAD
   click[Connect] --> udp[TP1 over UDP]
+=======
+  click[Connect] --> udp[TP1]
+>>>>>>> fb4b04bafe110bd70bed1055fe9e5abd819126da
   udp -->|handshake within 8 s| up[Tunnel up]
   udp -->|UDP did not come up| reality[XRay REALITY over TCP]
   reality --> up
