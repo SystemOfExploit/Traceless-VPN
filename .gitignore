@@ -7,6 +7,8 @@ AmneziaVPN_*.exe
 deploy/build/*
 deploy/build_32/*
 deploy/build_64/*
+/bin/
+Traceless_*.exe
 winbuild*.bat
 .cache/
 .vscode/
