@@ -33,7 +33,7 @@ Keys that are already issued stay valid. The header-protection key, H1–H4 rang
 
 ```mermaid
 flowchart LR
-  click[Connect] --> udp[UDP AWG 3.1]
+  click[Connect] --> udp[TP1]
   udp -->|handshake within 8 s| up[Tunnel up]
   udp -->|UDP did not come up| reality[XRay REALITY over TCP]
   reality --> up
