@@ -4,7 +4,8 @@ Self-hosted VPN client for your own server.
 
 ### [English](README.md) | [Русский](README_RU.md)
 
-![Home](metadata/img-readme/home.png)
+![Home](<img width="382" height="712" alt="изображение" src="https://github.com/user-attachments/assets/bf4e5775-de33-4f17-8580-2e0eab61d8b8" />
+)
 
 Traceless installs a VPN on a server you control and connects to it. The main profile is TP1: AmneziaWG 3.1 with a private header profile, a per-client preshared key, and a TCP fallback when UDP does not come up.
 
