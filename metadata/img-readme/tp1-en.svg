@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" fill="none">
+  <rect width="1100" height="520" rx="28" fill="#101010"/>
+  <text x="48" y="64" fill="#FAFAFA" font-family="Inter, Segoe UI, sans-serif" font-size="28" font-weight="500">TP1</text>
+  <text x="48" y="98" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="16">Curve25519 and ChaCha20-Poly1305. Private headers, a key per client.</text>
+
+  <rect x="48" y="132" width="1004" height="280" rx="20" fill="#181818" stroke="#E4E4E4"/>
+  <g font-family="Inter, Segoe UI, sans-serif" font-size="16">
+    <text x="76" y="180" fill="#868686">Headers</text>
+    <text x="320" y="180" fill="#FAFAFA">Private ranges on each server</text>
+    <text x="76" y="224" fill="#868686">Signature</text>
+    <text x="320" y="224" fill="#FAFAFA">40 random bytes, new every time</text>
+    <text x="76" y="268" fill="#868686">PSK</text>
+    <text x="320" y="268" fill="#FAFAFA">A separate key for each client</text>
+    <text x="76" y="312" fill="#868686">Cookies</text>
+    <text x="320" y="312" fill="#FAFAFA">On, so handshake floods get dropped</text>
+    <text x="76" y="356" fill="#868686">If UDP is blocked</text>
+    <text x="320" y="356" fill="#FAFAFA">After 8 s, REALITY over TCP</text>
+  </g>
+
+  <rect x="48" y="432" width="1004" height="56" rx="18" fill="#181818" stroke="#3F3F3F"/>
+  <text x="76" y="466" fill="#A1A1A1" font-family="Inter, Segoe UI, sans-serif" font-size="15">Issued keys stay valid. Header protection, header ranges and the PSK are not rotated.</text>
+</svg>

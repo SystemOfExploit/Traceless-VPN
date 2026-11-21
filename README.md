@@ -6,26 +6,26 @@ Self-hosted VPN client for your own server.
 
 ![Home](metadata/img-readme/home.png)
 
-Traceless installs a VPN on a server you control and connects to it. The main profile is TP1: AmneziaWG 3.1 with a private header profile, a per-client preshared key, and a TCP fallback when UDP does not come up.
+Traceless installs a VPN on a server you control and connects to it. The profile is TP1: private headers, a preshared key for each client, and a TCP fallback when UDP does not come up.
 
 This project is based on [Amnezia VPN](https://github.com/amnezia-vpn/amnezia-client). Amnezia remains the upstream project. Traceless is distributed under the same [GNU GPL v3.0](LICENSE).
 
 ## TP1
 
-TP1 uses the same cipher as AWG: Curve25519 and ChaCha20-Poly1305. The difference is how the tunnel is hidden and how keys are issued.
+Curve25519 and ChaCha20-Poly1305. Each server gets its own header ranges, header protection is required, and every client gets its own preshared key.
 
-![TP1 and AWG](metadata/img-readme/tp1-vs-awg-en.svg)
+![TP1](metadata/img-readme/tp1-en.svg)
 
-| | AWG | TP1 |
-| --- | --- | --- |
-| Headers H1–H4 | Shared values 1, 2, 3, 4 | Private ranges per server |
-| Pre-handshake packet | A fixed public template | 40 random bytes, no stable fingerprint |
-| Header protection | Present on new 3.1 configs, absent on AWG 1.5/2 | Required |
-| PSK | One key for the whole server | A separate key for each client |
-| Cookies | Off in the 3.1 profile | On, so the server can drop handshake floods |
-| Length padding | 10–100 bytes | 1–8 bytes, so packets stay unfragmented |
-| Handshake retry | 3–7 s, 15–20 attempts | 2–3 s, 30–40 attempts |
-| When UDP fails | The tunnel does not come up | After 8 s, switch to XRay REALITY over TCP |
+| | TP1 |
+| --- | --- |
+| Headers H1–H4 | Private ranges per server |
+| Pre-handshake packet | 40 random bytes, no stable fingerprint |
+| Header protection | Required |
+| PSK | A separate key for each client |
+| Cookies | On, so the server can drop handshake floods |
+| Length padding | 1–8 bytes, so packets stay unfragmented |
+| Handshake retry | 2–3 s, 30–40 attempts |
+| When UDP fails | After 8 s, switch to XRay REALITY over TCP |
 
 Keys that are already issued stay valid. The header-protection key, H1–H4 ranges, S1–S4 padding and the PSK are not rotated.
 
@@ -33,7 +33,7 @@ Keys that are already issued stay valid. The header-protection key, H1–H4 rang
 
 ```mermaid
 flowchart LR
-  click[Connect] --> udp[UDP AWG 3.1]
+  click[Connect] --> udp[TP1 over UDP]
   udp -->|handshake within 8 s| up[Tunnel up]
   udp -->|UDP did not come up| reality[XRay REALITY over TCP]
   reality --> up
