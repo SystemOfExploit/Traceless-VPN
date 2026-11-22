@@ -1,6 +1,6 @@
 #include <QDebug>
 #include <QIcon>
-#include <QTimer>
+#include <QLocalSocket>
 #include <libssh/libssh.h>
 #include <openssl/ssl.h>
 
@@ -25,15 +25,11 @@ void anchorOpenSSL() {
 #endif
 
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(MACOS_NE)
-bool isAnotherInstanceRunning()
+bool activateRunningInstance()
 {
     QLocalSocket socket;
     socket.connectToServer(APP_INSTANCE_NAME);
-    if (socket.waitForConnected(500)) {
-        qWarning() << APPLICATION_NAME << "is already running";
-        return true;
-    }
-    return false;
+    return socket.waitForConnected(500);
 }
 #endif
 
@@ -53,6 +49,13 @@ int main(int argc, char *argv[])
 #endif
 
     AmneziaApplication app(argc, argv);
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(MACOS_NE)
+    if (activateRunningInstance()) {
+        return 0;
+    }
+    app.startLocalServer();
+#endif
+
     OsSignalHandler::setup();
 
     anchorOpenSSL();
@@ -61,14 +64,6 @@ int main(int argc, char *argv[])
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
         ssh_finalize();
     });
-
-#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS) && !defined(MACOS_NE)
-    if (isAnotherInstanceRunning()) {
-        QTimer::singleShot(1000, &app, [&]() { app.quit(); });
-        return app.exec();
-    }
-    app.startLocalServer();
-#endif
 
 // Allow to raise app window if secondary instance launched
 #ifdef Q_OS_WIN

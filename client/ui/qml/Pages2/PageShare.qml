@@ -72,7 +72,7 @@ PageType {
                 configCaption = qsTr("Save %1 config").arg(ContainersModel.getProcessedContainerName())
                 configExtension = ".conf"
                 configFileName = containerIndex === ContainerProps.containerFromString("amnezia-awg2")
-                                 ? "traceless_for_tp1" : "traceless_for_awg"
+                                 ? "traceless_for_tp2" : "traceless_for_awg"
                 break
             }
             case PageShare.ConfigType.Xray: {

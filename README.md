@@ -6,38 +6,30 @@ Self-hosted VPN client for your own server.
 
 ![Home](metadata/img-readme/home-screen.png)
 
-Traceless installs a VPN on a server you control and connects to it. The profile is TP1: private headers, a preshared key for each client, and a TCP fallback when UDP does not come up.
+Traceless installs a VPN on your server and manages the connection through the TP2 profile.
 
 This project is based on [Amnezia VPN](https://github.com/amnezia-vpn/amnezia-client). Amnezia remains the upstream project. Traceless is distributed under the same [GNU GPL v3.0](LICENSE).
 
-## TP1
+## TP2 and AmneziaWG
 
-Curve25519 and ChaCha20-Poly1305. Each server gets its own header ranges, header protection is required, and every client gets its own preshared key.
+TP2 is a Traceless profile based on AmneziaWG 3.1. It uses Curve25519 for key agreement and ChaCha20-Poly1305 for authenticated encryption. Traceless sets the profile parameters, issues keys, and manages the connection. [AmneziaWG 3.1 configuration](https://github.com/amnezia-vpn/amneziawg-go/blob/v3.1.20260814/README.md#configuration) · [WireGuard cryptography](https://www.wireguard.com/protocol/)
 
-![TP1](metadata/img-readme/tp1-en.svg)
+| Capability | AmneziaWG 3.1 | TP2 in Traceless |
+| --- | --- | --- |
+| Packet headers | Configurable H1–H4 ranges and optional header protection | Installation generates distinct ranges for each server. The profile requires header protection and checks ranges for overlap. |
+| Client keys | Supports a separate PSK for each peer | Traceless generates a separate PSK when it issues each client profile. |
+| Packet sizes | Supports configurable padding | Adds up to 8 bytes to data by default. The client calculates the tunnel MTU from the network interface MTU, whether the outer tunnel uses IPv4 or IPv6, and the TP2 overhead. |
+| Handshake | Configurable retry interval and attempt count | The standard profile uses a retry interval of 2–3 seconds and a MaxHandshakeAttempts setting of 12–16. Cookies are enabled. |
+| Fallback connection | The AmneziaWG tunnel uses UDP | Supported desktop builds of Traceless can fall back to a separate XRay REALITY connection over TCP. |
 
-| | TP1 |
-| --- | --- |
-| Headers H1–H4 | Private ranges per server |
-| Pre-handshake packet | 40 random bytes, no stable fingerprint |
-| Header protection | Required |
-| PSK | A separate key for each client |
-| Cookies | On, so the server can drop handshake floods |
-| Length padding | 1–8 bytes, so packets stay unfragmented |
-| Handshake retry | 2–3 s, 30–40 attempts |
-| When UDP fails | After 8 s, switch to XRay REALITY over TCP |
+**TCP fallback** requires an XRay REALITY profile on the same server and both Kill Switch modes to be off. With fallback available, the client gives the initial TP2 handshake up to 8 seconds over UDP before it starts switching.
 
-Keys that are already issued stay valid. The header-protection key, H1–H4 ranges, S1–S4 padding and the PSK are not rotated.
+### Upgrading from TP1
 
-![TP1 connection path](metadata/img-readme/tp1-path-en.svg)
+1. Open the server protocol settings in a profile with SSH access and select **Update protocol to TP2**.
+2. Compare the SSH fingerprint with your server's host key and confirm the update.
 
-```mermaid
-flowchart LR
-  click[Connect] --> udp[TP1 over UDP]
-  udp -->|handshake within 8 s| up[Tunnel up]
-  udp -->|UDP did not come up| reality[XRay REALITY over TCP]
-  reality --> up
-```
+The upgrade applies to the running interface on a standard TP1 server. It preserves the address, port, header parameters, and issued keys, so existing client profiles remain usable. If applying the update fails, Traceless attempts to restore the previous setting.
 
 ## Build
 

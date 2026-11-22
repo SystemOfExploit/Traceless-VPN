@@ -48,6 +48,11 @@ namespace amnezia
         ServerDataVolumeNotRemoved = 225,
         XrayKeyGenerationFailed = 226,
         XrayKeyMigrationNeedsConfirm = 227,
+        Tp2ConfigInvalid = 228,
+        Tp2UpgradeFailed = 229,
+        Tp2UpgradeRollbackFailed = 230,
+        Tp2HostKeyUnavailable = 231,
+        Tp2HostKeyMismatch = 232,
 
         // Ssh connection errors
         SshRequestDeniedError = 300,

@@ -467,6 +467,13 @@ endif()
 
 enable_testing()
 
+if(UNIX AND NOT ANDROID AND NOT IOS)
+    find_package(Python3 QUIET COMPONENTS Interpreter)
+    if(Python3_Interpreter_FOUND)
+        add_test(NAME Tp2UpgradeTest COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/testTp2Upgrade.py")
+    endif()
+endif()
+
 if(NOT ANDROID)
     add_test(NAME MultipleImportsTest              COMMAND test_multiple_imports)
     add_test(NAME ServerEditTest                   COMMAND test_server_edit)

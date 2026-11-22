@@ -206,12 +206,18 @@ ErrorCode ConnectionController::prepareConnection(const QString &serverId,
         return ErrorCode::InternalError;
     }
 
+    const auto *preparedAwg = containerConfigModel.getAwgProtocolConfig();
+    if (preparedAwg && !preparedAwg->serverConfig.tracelessProfile.isEmpty()
+        && (!preparedAwg->serverConfig.isTp2() || !preparedAwg->hasValidTp2ClientSettings())) {
+        return ErrorCode::Tp2ConfigInvalid;
+    }
+
     vpnConfiguration = createConnectionConfiguration(dns, isApiConfig, hostName, description, configVersion,
                                                      containerConfigModel, container);
 
 #ifdef AMNEZIA_DESKTOP
     const auto *awg = containerConfigModel.getAwgProtocolConfig();
-    if (container == DockerContainer::Awg2 && awg && awg->isTp1()
+    if (container == DockerContainer::Awg2 && awg && awg->isTraceless()
         && !m_appSettingsRepository->isKillSwitchEnabled() && !m_appSettingsRepository->isStrictKillSwitchEnabled()
         && isContainerSupported(DockerContainer::Xray)) {
         ContainerConfig fallback;
@@ -237,6 +243,12 @@ ErrorCode ConnectionController::prepareConnection(const QString &serverId,
         }
     }
 #endif
+
+    if (preparedAwg && preparedAwg->serverConfig.isTp2()
+        && vpnConfiguration.value(ProtocolUtils::key_proto_config_data(Proto::Awg)).toObject()
+                   .value(configKey::mtu).toString() == QLatin1String("0")) {
+        return ErrorCode::Tp2ConfigInvalid;
+    }
 
     return ErrorCode::NoError;
 }
@@ -335,8 +347,11 @@ QJsonObject ConnectionController::createConnectionConfiguration(const QPair<QStr
         }
 
         const auto *awg = containerConfig.getAwgProtocolConfig();
-        if (container == DockerContainer::Awg2 && awg && awg->isTp1()) {
-            const QHostAddress endpoint(vpnConfigData.value(configKey::hostName).toString());
+        if (container == DockerContainer::Awg2 && awg && awg->isTraceless()) {
+            const auto configuredHost = vpnConfigData.value(configKey::hostName).toString();
+            const QHostAddress endpoint(awg->serverConfig.isTp2()
+                                                ? NetworkUtilities::getIPAddress(configuredHost)
+                                                : configuredHost);
             int interfaceMtu = 0;
 #ifdef Q_OS_WIN
             if (endpoint.protocol() == QAbstractSocket::IPv4Protocol) {
@@ -350,10 +365,19 @@ QJsonObject ConnectionController::createConnectionConfiguration(const QPair<QStr
                 interfaceMtu = NetworkUtilities::getGatewayAndIface().second.maximumTransmissionUnit();
             }
             const auto family = endpoint.protocol();
-            const int mtu = AwgProtocolConfig::tp1TunnelMtu(interfaceMtu, vpnConfigData.value(configKey::mtu).toString().toInt(),
-                                                           family != QAbstractSocket::IPv4Protocol);
+            const int requestedMtu = vpnConfigData.value(configKey::mtu).toString().toInt();
+            const bool ipv6Endpoint = family != QAbstractSocket::IPv4Protocol;
+            int mtu;
+            if (awg->serverConfig.isTp2()) {
+                mtu = AwgProtocolConfig::tp2TunnelMtu(interfaceMtu, requestedMtu, ipv6Endpoint,
+                                                      vpnConfigData.value(configKey::transportPacketJunkSize).toString(),
+                                                      vpnConfigData.value(configKey::contentPaddingAddition).toString());
+                AwgProtocolConfig::tuneTp2Session(vpnConfigData);
+            } else {
+                mtu = AwgProtocolConfig::tp1TunnelMtu(interfaceMtu, requestedMtu, ipv6Endpoint);
+                AwgProtocolConfig::tuneTp1Session(vpnConfigData);
+            }
             vpnConfigData[configKey::mtu] = QString::number(mtu);
-            AwgProtocolConfig::tuneTp1Session(vpnConfigData);
         }
     }
 

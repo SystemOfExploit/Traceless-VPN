@@ -21,6 +21,48 @@ PageType {
     property bool isClearCacheVisible: !isUnsupportedContainer && ServersUiController.isProcessedServerHasWriteAccess() && !ContainersModel.isServiceContainer(ServersUiController.processedContainerIndex)
     property bool isOutdatedAwgContainer: ServersUiController.isProcessedContainerOutdatedAwg()
 
+    property string pendingUpgradeServerId
+    property string upgradedServerId
+
+    Connections {
+        target: InstallController
+
+        function onTp2HostKeyReady(serverId, containerIndex, fingerprint) {
+            if (root.pendingUpgradeServerId !== serverId) {
+                return
+            }
+            root.pendingUpgradeServerId = ""
+            PageController.showBusyIndicator(false)
+            if (serverId !== ServersUiController.processedServerId) {
+                return
+            }
+
+            Dialogs.askQuestion(
+                qsTr("Update protocol to TP2?"),
+                qsTr("Existing connection keys will remain valid. Verify this SSH fingerprint with your server before updating.\n\n%1").arg(fingerprint),
+                qsTr("Update"), qsTr("Cancel"),
+                function() {
+                    root.pendingUpgradeServerId = serverId
+                    PageController.showBusyIndicator(true)
+                    InstallController.upgradeTp2(serverId, containerIndex, fingerprint)
+                },
+                function() {}
+            )
+        }
+
+        function onTp2UpgradeFinished(serverId, success) {
+            if (root.pendingUpgradeServerId !== serverId) {
+                return
+            }
+            root.pendingUpgradeServerId = ""
+            PageController.showBusyIndicator(false)
+            if (success) {
+                root.upgradedServerId = serverId
+                PageController.showNotificationMessage(qsTr("Server upgraded to TP2"))
+            }
+        }
+    }
+
     ListViewType {
         id: listView
 
@@ -49,7 +91,7 @@ PageType {
                 visible: root.isOutdatedAwgContainer
 
                 variant: NotificationType.Warning
-                text: qsTr("AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP1 on the server to switch to the current profile.")
+                text: qsTr("AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP2 on the server to switch to the current profile.")
             }
         }
 
@@ -108,6 +150,27 @@ PageType {
             width: listView.width
 
             spacing: 0
+
+            ListItemType {
+                Layout.fillWidth: true
+                Layout.leftMargin: 16
+                Layout.rightMargin: 16
+
+                visible: root.upgradedServerId !== ServersUiController.processedServerId
+                         && ServersUiController.isProcessedServerHasWriteAccess()
+                         && InstallController.canUpgradeTp2(ServersUiController.processedServerId,
+                                                           ServersUiController.processedContainerIndex)
+                enabled: root.pendingUpgradeServerId === ""
+                text: qsTr("Update protocol to TP2")
+                trailingIconSource: "qrc:/images/controls/chevron-right.svg"
+
+                onClicked: {
+                    const serverId = ServersUiController.processedServerId
+                    root.pendingUpgradeServerId = serverId
+                    PageController.showBusyIndicator(true)
+                    InstallController.inspectTp2HostKey(serverId, ServersUiController.processedContainerIndex)
+                }
+            }
 
             ListItemType {
                 id: clearCacheButton

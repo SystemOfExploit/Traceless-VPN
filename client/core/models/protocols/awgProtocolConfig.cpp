@@ -1,9 +1,12 @@
 #include "awgProtocolConfig.h"
 
+#include <QRegularExpression>
+#include <array>
+#include <limits>
+
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QObject>
-#include <QSet>
 
 #include <algorithm>
 
@@ -65,6 +68,59 @@ namespace
     }
 } // namespace
 
+namespace
+{
+    struct NumericRange {
+        quint32 minimum;
+        quint32 maximum;
+    };
+
+    std::optional<NumericRange> parseNumericRange(const QString &value)
+    {
+        static const QRegularExpression pattern(QStringLiteral(R"(\A([0-9]+)(?:\s*-\s*([0-9]+))?\z)"));
+        const auto match = pattern.match(value.trimmed());
+        if (!match.hasMatch()) {
+            return std::nullopt;
+        }
+
+        bool lowOk, highOk = true;
+        const auto low = match.captured(1).toUInt(&lowOk);
+        const auto high = match.captured(2).isEmpty() ? low : match.captured(2).toUInt(&highOk);
+        if (!lowOk || !highOk || low > high) {
+            return std::nullopt;
+        }
+
+        return NumericRange{low, high};
+    }
+
+    bool validKey(const QString &value)
+    {
+        const auto decoded = QByteArray::fromBase64Encoding(value.toLatin1(), QByteArray::AbortOnBase64DecodingErrors);
+        return decoded && decoded.decoded.size() == 32 && decoded.decoded != QByteArray(32, '\0');
+    }
+
+    bool validTp2WireSettings(const QStringList &headers, const QStringList &paddings, const QString &headerKey,
+                              const QString &contentPadding, const QString &disableCookies)
+    {
+        if (!validKey(headerKey)
+            || AwgProtocolConfig::isToggleEnabled(disableCookies)
+            || !AwgProtocolConfig::hasValidHeaderRanges(headers[0], headers[1], headers[2], headers[3])) {
+            return false;
+        }
+
+        for (const auto &padding : paddings) {
+            const auto parsed = parseNumericRange(padding);
+            if (!parsed || parsed->minimum != parsed->maximum || parsed->minimum < 12
+                || parsed->maximum > std::numeric_limits<quint16>::max()) {
+                return false;
+            }
+        }
+
+        const auto paddingRange = parseNumericRange(contentPadding);
+        return contentPadding.isEmpty() || (paddingRange && paddingRange->maximum <= std::numeric_limits<quint16>::max());
+    }
+}
+
 QJsonObject AwgServerConfig::toJson() const
 {
     QJsonObject obj;
@@ -80,6 +136,9 @@ QJsonObject AwgServerConfig::toJson() const
     }
     if (!transportProto.isEmpty()) {
         obj[configKey::transportProto] = transportProto;
+    }
+    if (!tracelessProfile.isEmpty()) {
+        obj[QStringLiteral("tracelessProfile")] = tracelessProfile;
     }
     if (!protocolVersion.isEmpty()) {
         obj[configKey::protocolVersion] = protocolVersion;
@@ -176,6 +235,7 @@ AwgServerConfig AwgServerConfig::fromJson(const QJsonObject& json)
     config.cascadePort = json.value(configKey::cascadePort).toString();
     config.transportProto = json.value(configKey::transportProto).toString();
     config.protocolVersion = json.value(configKey::protocolVersion).toString();
+    config.tracelessProfile = json.value(QStringLiteral("tracelessProfile")).toString();
     config.subnetAddress = json.value(configKey::subnetAddress).toString();
     config.subnetCidr = json.value(configKey::subnetCidr).toString();
     
@@ -465,6 +525,25 @@ int AwgProtocolConfig::tp1TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endp
     return requestedMtu > 0 ? std::min(requestedMtu, budget) : budget;
 }
 
+int AwgProtocolConfig::tp2TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endpoint, const QString &s4,
+                                    const QString &contentPadding)
+{
+    const auto prefix = parseNumericRange(s4);
+    const auto addition = parseNumericRange(contentPadding);
+    if (!prefix || prefix->maximum > std::numeric_limits<quint16>::max()
+        || (addition && addition->maximum > std::numeric_limits<quint16>::max())) {
+        return 0;
+    }
+
+    constexpr int fallbackLinkMtu = 1380;
+    constexpr int minimumIpv4Mtu = 68;
+    const int encapsulation = (ipv6Endpoint ? 40 : 20) + 8 + AwgConstant::messageTransportSize
+            + static_cast<int>(prefix->maximum) + static_cast<int>(addition ? addition->maximum : 15);
+    const int budget = (linkMtu > 0 ? linkMtu : fallbackLinkMtu) - encapsulation;
+    const int mtu = requestedMtu > 0 ? std::min(requestedMtu, budget) : budget;
+    return mtu >= minimumIpv4Mtu ? mtu : 0;
+}
+
 void AwgProtocolConfig::tuneTp1Session(QJsonObject &client)
 {
     const auto text = [&client](QLatin1String key) {
@@ -502,9 +581,36 @@ void AwgProtocolConfig::tuneTp1Session(QJsonObject &client)
     }
 }
 
+void AwgProtocolConfig::tuneTp2Session(QJsonObject &client)
+{
+    if (client.value(configKey::maxHandshakeAttempts).toString().isEmpty()
+        || client.value(configKey::maxHandshakeAttempts).toString() == QLatin1String(protocols::awg::tp1MaxHandshakeAttempts)) {
+        client[configKey::maxHandshakeAttempts] = QLatin1String(protocols::awg::tp2MaxHandshakeAttempts);
+    }
+}
+
+bool AwgProtocolConfig::isTraceless() const
+{
+    return serverConfig.isTp2() || isTp1();
+}
+
+bool AwgProtocolConfig::hasValidTp2ClientSettings() const
+{
+    if (!clientConfig) {
+        return false;
+    }
+
+    const auto &client = *clientConfig;
+    return validKey(client.presharedKey) && validTp2WireSettings({client.initPacketMagicHeader, client.responsePacketMagicHeader,
+                                 client.underloadPacketMagicHeader, client.transportPacketMagicHeader},
+                                {client.initPacketJunkSize, client.responsePacketJunkSize,
+                                 client.cookieReplyPacketJunkSize, client.transportPacketJunkSize},
+                                client.headerProtectionKey, client.contentPaddingAddition, client.disableCookies);
+}
+
 bool AwgProtocolConfig::isTp1() const
 {
-    if (serverConfig.isThirdPartyConfig) {
+    if (serverConfig.isThirdPartyConfig || !serverConfig.tracelessProfile.isEmpty()) {
         return false;
     }
     return serverConfig.isTp1() || (clientConfig
@@ -571,24 +677,67 @@ bool AwgServerConfig::hasAwg3Params() const
 bool AwgServerConfig::isTp1() const
 {
     namespace awg = protocols::awg;
-    return !isThirdPartyConfig
+    return !isThirdPartyConfig && tracelessProfile.isEmpty()
            && transportPacketJunkSize == QLatin1String(awg::defaultPadding)
            && contentPaddingAddition == QLatin1String(awg::tp1ContentPadding)
            && !headerProtectionKey.isEmpty()
            && !AwgProtocolConfig::isToggleEnabled(disableCookies);
 }
 
-bool AwgProtocolConfig::isHeadersEqual(const QString &h1, const QString &h2, const QString &h3, const QString &h4)
+bool AwgServerConfig::isTp2() const
 {
-    QSet<QString> uniqueHeaders;
-    int filledHeaders = 0;
-    for (const QString &header : { h1, h2, h3, h4 }) {
-        if (!header.trimmed().isEmpty()) {
-            ++filledHeaders;
-            uniqueHeaders.insert(header);
+    return !isThirdPartyConfig && tracelessProfile == QLatin1String(protocols::awg::tp2Profile);
+}
+
+bool AwgServerConfig::isTraceless() const
+{
+    return isTp1() || isTp2();
+}
+
+bool AwgServerConfig::hasValidTp2Settings() const
+{
+    return validTp2WireSettings({initPacketMagicHeader, responsePacketMagicHeader,
+                                 underloadPacketMagicHeader, transportPacketMagicHeader},
+                                {initPacketJunkSize, responsePacketJunkSize,
+                                 cookieReplyPacketJunkSize, transportPacketJunkSize},
+                                headerProtectionKey, contentPaddingAddition, disableCookies);
+}
+
+bool AwgProtocolConfig::hasValidHeaderRanges(const QString &h1, const QString &h2, const QString &h3, const QString &h4)
+{
+    const std::array ranges{parseNumericRange(h1), parseNumericRange(h2), parseNumericRange(h3), parseNumericRange(h4)};
+    for (std::size_t i = 0; i < ranges.size(); ++i) {
+        if (!ranges[i]) {
+            return false;
+        }
+        for (std::size_t j = 0; j < i; ++j) {
+            if (ranges[i]->minimum <= ranges[j]->maximum && ranges[j]->minimum <= ranges[i]->maximum) {
+                return false;
+            }
         }
     }
-    return uniqueHeaders.size() != filledHeaders;
+    return true;
+}
+
+bool AwgProtocolConfig::isHeadersEqual(const QString &h1, const QString &h2, const QString &h3, const QString &h4)
+{
+    const QStringList headers{h1, h2, h3, h4};
+    for (qsizetype i = 0; i < headers.size(); ++i) {
+        if (headers[i].trimmed().isEmpty()) {
+            continue;
+        }
+        const auto first = parseNumericRange(headers[i]);
+        if (!first) {
+            return true;
+        }
+        for (qsizetype j = 0; j < i; ++j) {
+            const auto second = parseNumericRange(headers[j]);
+            if (second && first->minimum <= second->maximum && second->minimum <= first->maximum) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 bool AwgProtocolConfig::isPacketSizeEqual(int s1, int s2, int s3, int s4)

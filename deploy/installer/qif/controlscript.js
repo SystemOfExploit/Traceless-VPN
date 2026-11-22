@@ -246,6 +246,9 @@ function Controller () {
 
     if (runningOnWindows()) {
         installer.setValue("AllUsers", "true");
+        if (installer.isInstaller()) {
+            installer.setValue("ProductUUID", "{21a9e198-5a5c-4d02-97e7-202fbc3c80b1}");
+        }
     }
 
     if (installer.isInstaller()) {

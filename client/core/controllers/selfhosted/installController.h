@@ -41,6 +41,10 @@ public:
     // Updates client-local settings only: rewrites the stored container config for any self-hosted/native server. No SSH.
     ErrorCode updateClientConfig(const QString &serverId, DockerContainer container, ContainerConfig &newConfig);
 
+    bool canUpgradeTp2(const QString &serverId, DockerContainer container) const;
+    ErrorCode inspectTp2HostKey(const QString &serverId, DockerContainer container, QString &fingerprint) const;
+    ErrorCode upgradeTp2(const QString &serverId, DockerContainer container, const QString &expectedFingerprint);
+
     ErrorCode rebootServer(const QString &serverId);
     ErrorCode updateServerPackages(const QString &serverId);
     ErrorCode removeAllContainers(const QString &serverId);

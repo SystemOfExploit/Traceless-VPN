@@ -45,3 +45,9 @@ EOF
 
 # Every AWG parameter is optional - drop the lines whose value came out empty
 sed -i '/^[^=]*= *$/d' /opt/amnezia/awg/awg0.conf
+
+if [ "$TRACELESS_PROFILE" = TP2 ]; then
+    printf 'TP2\n' > /opt/amnezia/awg/traceless-profile
+else
+    rm -f /opt/amnezia/awg/traceless-profile
+fi

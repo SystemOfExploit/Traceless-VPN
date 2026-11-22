@@ -75,6 +75,7 @@ QString amnezia::scriptName(ProtocolScriptType type)
     case ProtocolScriptType::openvpn_template: return QLatin1String("template.ovpn");
     case ProtocolScriptType::wireguard_template: return QLatin1String("template.conf");
     case ProtocolScriptType::awg_template: return QLatin1String("template.conf");
+    case ProtocolScriptType::upgrade_tp2: return QLatin1String("upgrade_tp2.sh");
     default: return QString();
     }
 }
@@ -257,12 +258,13 @@ amnezia::ScriptVars amnezia::genAwgVars(const ContainerConfig &containerConfig)
         vars.append({ { "$SPECIAL_JUNK_4", config.specialJunk4 } });
         vars.append({ { "$SPECIAL_JUNK_5", config.specialJunk5 } });
 
-        const QString keepAlive = config.isTp1()
+        const QString keepAlive = config.isTraceless()
                 ? QString(protocols::awg::tp1PersistentKeepAlive)
                 : (config.hasAwg3Params() ? QString(protocols::awg::defaultPersistentKeepAlive)
                                           : QString(protocols::wireguard::defaultPersistentKeepAlive));
         vars.append({ { "$PERSISTENT_KEEPALIVE", keepAlive } });
 
+        vars.append({ { "$TRACELESS_PROFILE", config.isTp2() ? QString(protocols::awg::tp2Profile) : QString() } });
         vars.append({ { "$HEADER_PROTECTION_KEY", config.headerProtectionKey } });
         vars.append({ { "$CONTENT_PADDING_ADDITION", config.contentPaddingAddition } });
         vars.append({ { "$REKEY_AFTER_TIME", config.rekeyAfterTime } });

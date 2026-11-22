@@ -28,6 +28,8 @@ namespace libssh {
         Client() = default;
         ~Client() = default;
 
+        static ErrorCode inspectServerHostKey(const ServerCredentials &credentials, QString &fingerprint);
+        void pinServerHostKey(const QString &fingerprint);
         ErrorCode connectToHost(const ServerCredentials &credentials);
         void disconnectFromHost();
         ErrorCode executeCommand(const QString &data,
@@ -46,6 +48,7 @@ namespace libssh {
         ErrorCode fromFileErrorCode(QFileDevice::FileError fileError);
         static int callback(const char *prompt, char *buf, size_t len, int echo, int verify, void *userdata);
 
+        QString m_expectedServerHostKey;
         ssh_session m_session = nullptr;
         ssh_channel m_channel = nullptr;
         ssh_scp m_scpSession = nullptr;

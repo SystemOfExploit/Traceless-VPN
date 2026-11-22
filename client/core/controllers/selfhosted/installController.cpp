@@ -277,6 +277,11 @@ ErrorCode InstallController::setupContainer(const ServerCredentials &credentials
 ErrorCode InstallController::updateServerConfig(const QString &serverId, DockerContainer container, const ContainerConfig &oldConfig,
                                                 ContainerConfig &newConfig, bool acceptXrayKeyLoss)
 {
+    if (const auto *awg = newConfig.getAwgProtocolConfig();
+        awg && awg->serverConfig.isTp2() && !awg->serverConfig.hasValidTp2Settings()) {
+        return ErrorCode::Tp2ConfigInvalid;
+    }
+
     const bool serverSettingsChanged = isUpdateDockerContainerRequired(container, oldConfig, newConfig);
 
     auto adminConfig = m_serversRepository->selfHostedAdminConfig(serverId);
@@ -385,8 +390,96 @@ ErrorCode InstallController::updateServerConfig(const QString &serverId, DockerC
     return errorCode;
 }
 
+bool InstallController::canUpgradeTp2(const QString &serverId, DockerContainer container) const
+{
+    if (container != DockerContainer::Awg2) {
+        return false;
+    }
+    const auto admin = m_serversRepository->selfHostedAdminConfig(serverId);
+    if (!admin || !admin->credentials().isValid()) {
+        return false;
+    }
+    const auto config = admin->containerConfig(container);
+    const auto *awg = config.getAwgProtocolConfig();
+    return awg && awg->serverConfig.isTp1();
+}
+
+ErrorCode InstallController::inspectTp2HostKey(const QString &serverId, DockerContainer container, QString &fingerprint) const
+{
+    if (!canUpgradeTp2(serverId, container)) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+
+    const auto admin = m_serversRepository->selfHostedAdminConfig(serverId);
+    return admin ? libssh::Client::inspectServerHostKey(admin->credentials(), fingerprint) : ErrorCode::Tp2UpgradeFailed;
+}
+
+ErrorCode InstallController::upgradeTp2(const QString &serverId, DockerContainer container, const QString &expectedFingerprint)
+{
+    if (!canUpgradeTp2(serverId, container) || expectedFingerprint.isEmpty()) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+
+    const auto admin = m_serversRepository->selfHostedAdminConfig(serverId);
+    if (!admin) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+
+    const auto config = admin->containerConfig(container);
+    const auto *awg = config.getAwgProtocolConfig();
+    if (!awg || !awg->serverConfig.hasValidTp2Settings()
+        || (awg->clientConfig && !awg->hasValidTp2ClientSettings())) {
+        return ErrorCode::Tp2ConfigInvalid;
+    }
+
+    const auto script = amnezia::scriptData(ProtocolScriptType::upgrade_tp2, container);
+    if (script.isEmpty()) {
+        return ErrorCode::InternalError;
+    }
+
+    QString output;
+    SshSession session;
+    session.pinServerHostKey(expectedFingerprint);
+    const auto collectOutput = [&output](const QString &data, libssh::Client &) {
+        output += data;
+        return ErrorCode::NoError;
+    };
+    const auto error = session.runContainerScript(admin->credentials(), container, script, collectOutput);
+    const auto lines = output.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    if (lines.contains(QStringLiteral("TP2_ROLLBACK_FAILED"))) {
+        return ErrorCode::Tp2UpgradeRollbackFailed;
+    }
+    if (error != ErrorCode::NoError) {
+        return error;
+    }
+    if (!lines.contains(QStringLiteral("TP2_UPGRADED"))) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+
+    auto currentAdmin = m_serversRepository->selfHostedAdminConfig(serverId);
+    if (!currentAdmin) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+    auto currentConfig = currentAdmin->containerConfig(container);
+    auto *currentAwg = currentConfig.getAwgProtocolConfig();
+    if (!currentAwg || !currentAwg->serverConfig.hasValidTp2Settings()) {
+        return ErrorCode::Tp2UpgradeFailed;
+    }
+
+    currentAwg->serverConfig.tracelessProfile = protocols::awg::tp2Profile;
+    currentAwg->serverConfig.maxHandshakeAttempts = protocols::awg::tp2MaxHandshakeAttempts;
+    currentAdmin->updateContainerConfig(container, currentConfig);
+    m_serversRepository->editServer(serverId, currentAdmin->toJson(), serverConfigUtils::ConfigType::SelfHostedAdmin);
+    return ErrorCode::NoError;
+}
+
 ErrorCode InstallController::updateClientConfig(const QString &serverId, DockerContainer container, ContainerConfig &newConfig)
 {
+    if (const auto *awg = newConfig.getAwgProtocolConfig();
+        awg && awg->serverConfig.isTp2() && awg->clientConfig && !awg->hasValidTp2ClientSettings()) {
+        return ErrorCode::Tp2ConfigInvalid;
+    }
+
     switch (m_serversRepository->serverKind(serverId)) {
     case serverConfigUtils::ConfigType::SelfHostedAdmin: {
         auto config = m_serversRepository->selfHostedAdminConfig(serverId);
@@ -1438,8 +1531,8 @@ ErrorCode InstallController::installContainer(const ServerCredentials &credentia
     config = generateConfig(container, port, transportProto);
     if (container == DockerContainer::Awg2) {
         const auto *awgConfig = config.getAwgProtocolConfig();
-        if (!awgConfig || awgConfig->serverConfig.headerProtectionKey.isEmpty()) {
-            return ErrorCode::InternalError;
+        if (!awgConfig || !awgConfig->serverConfig.hasValidTp2Settings()) {
+            return ErrorCode::Tp2ConfigInvalid;
         }
     }
     if (container == DockerContainer::TProxy) {

@@ -313,6 +313,8 @@ namespace amnezia
             constexpr char tp1PersistentKeepAlive[] = "18-25";
             constexpr char tp1HandshakeCamouflage[] = "<r 40>";
             constexpr int tp1UdpAttemptMs = 8000;
+            constexpr char tp2Profile[] = "TP2";
+            constexpr char tp2MaxHandshakeAttempts[] = "12-16";
 
             constexpr char awgV1_5[] = "1.5";
             constexpr char awgV2[] = "2";

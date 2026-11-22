@@ -5,6 +5,7 @@
         <file>awg/run_container.sh</file>
         <file>awg/start.sh</file>
         <file>awg/template.conf</file>
+        <file>awg/upgrade_tp2.sh</file>
         <file>awg_legacy/configure_container.sh</file>
         <file>awg_legacy/Dockerfile</file>
         <file>awg_legacy/run_container.sh</file>

@@ -46,6 +46,11 @@ SshSession::~SshSession()
     m_sshClient.disconnectFromHost();
 }
 
+void SshSession::pinServerHostKey(const QString &fingerprint)
+{
+    m_sshClient.pinServerHostKey(fingerprint);
+}
+
 ErrorCode SshSession::runScript(const ServerCredentials &credentials, QString script,
                                 const std::function<ErrorCode(const QString &, libssh::Client &)> &cbReadStdOut,
                                 const std::function<ErrorCode(const QString &, libssh::Client &)> &cbReadStdErr)

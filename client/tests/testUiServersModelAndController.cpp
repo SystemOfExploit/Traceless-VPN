@@ -152,18 +152,18 @@ private slots:
         m_coreController->m_importCoreController->importConfig(config);
 
         const auto *controller = m_coreController->m_serversUiController;
-        QCOMPARE(controller->getDefaultServerDefaultContainerName(), QStringLiteral("TP1"));
-        QVERIFY(controller->getDefaultServerDescriptionCollapsed().contains(QStringLiteral("TP1 |")));
+        QCOMPARE(controller->getDefaultServerDefaultContainerName(), QStringLiteral("TP2"));
+        QVERIFY(controller->getDefaultServerDescriptionCollapsed().contains(QStringLiteral("TP2 |")));
 
         auto *containers = m_coreController->m_containersModel;
         const int row = ContainerUtils::allContainers().indexOf(DockerContainer::Awg2);
-        QCOMPARE(containers->data(row, ContainersModel::NameRole).toString(), QStringLiteral("TP1"));
+        QCOMPARE(containers->data(row, ContainersModel::NameRole).toString(), QStringLiteral("TP2"));
         QCOMPARE(containers->data(row, ContainersModel::ContainerStringRole).toString(), wireName);
 
         const auto stored = ContainerConfig::fromJson(containers->data(row, ContainersModel::ConfigRole).toJsonObject());
         ProtocolsModel protocols;
         protocols.updateModel(stored);
-        QCOMPARE(protocols.data(protocols.index(0), ProtocolsModel::ProtocolNameRole).toString(), QStringLiteral("TP1"));
+        QCOMPARE(protocols.data(protocols.index(0), ProtocolsModel::ProtocolNameRole).toString(), QStringLiteral("TP2"));
         QCOMPARE(protocols.data(protocols.index(0), ProtocolsModel::ProtocolStringRole).toString(), QStringLiteral("awg"));
     }
 

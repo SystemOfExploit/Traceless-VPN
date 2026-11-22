@@ -45,7 +45,8 @@ ContainerConfig AwgInstaller::generateConfig(DockerContainer container, int port
             server.junkPacketMinSize = QString::number(16);
             server.contentPaddingAddition = protocols::awg::tp1ContentPadding;
             server.rekeyTimeout = protocols::awg::tp1RekeyTimeout;
-            server.maxHandshakeAttempts = protocols::awg::tp1MaxHandshakeAttempts;
+            server.maxHandshakeAttempts = protocols::awg::tp2MaxHandshakeAttempts;
+            server.tracelessProfile = protocols::awg::tp2Profile;
             server.specialJunk1 = protocols::awg::tp1HandshakeCamouflage;
             server.randomTrailers.clear();
             server.disableCookies.clear();
@@ -141,6 +142,17 @@ ErrorCode AwgInstaller::extractConfigFromContainer(DockerContainer container, co
         awgConfig->serverConfig.disableCookies = serverConfigMap.value(configKey::disableCookies);
 
         awgConfig->serverConfig.protocolVersion = awgConfig->serverProtocolVersion();
+        if (container == DockerContainer::Awg2) {
+            ErrorCode profileError = ErrorCode::NoError;
+            const auto profile = sshSession->getTextFileFromContainer(container, credentials,
+                                                                     QStringLiteral("/opt/amnezia/awg/traceless-profile"), profileError);
+            if (profileError == ErrorCode::NoError && profile.trimmed() == protocols::awg::tp2Profile) {
+                if (!awgConfig->serverConfig.hasValidTp2Settings()) {
+                    return ErrorCode::Tp2ConfigInvalid;
+                }
+                awgConfig->serverConfig.tracelessProfile = protocols::awg::tp2Profile;
+            }
+        }
     }
 
     return ErrorCode::NoError;

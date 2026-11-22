@@ -23,6 +23,7 @@ struct AwgServerConfig {
     QString cascadePort;
     QString transportProto;
     QString protocolVersion;
+    QString tracelessProfile;
     QString subnetAddress;
     QString subnetCidr;
     QString junkPacketCount;
@@ -58,6 +59,9 @@ struct AwgServerConfig {
     bool hasEqualServerSettings(const AwgServerConfig& other) const;
     bool hasAwg3Params() const;
     bool isTp1() const;
+    bool isTp2() const;
+    bool isTraceless() const;
+    bool hasValidTp2Settings() const;
 };
 
 struct AwgClientConfig {
@@ -119,13 +123,18 @@ struct AwgProtocolConfig {
     static QString protocolVersionString(const QString &version);
     static bool isToggleEnabled(const QString &value);
     static int tp1TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endpoint);
+    static int tp2TunnelMtu(int linkMtu, int requestedMtu, bool ipv6Endpoint, const QString &s4, const QString &contentPadding);
     static void tuneTp1Session(QJsonObject &client);
+    static void tuneTp2Session(QJsonObject &client);
     bool isTp1() const;
+    bool isTraceless() const;
+    bool hasValidTp2ClientSettings() const;
 
     bool hasClientConfig() const;
     void setClientConfig(const AwgClientConfig& config);
     void clearClientConfig();
     
+    static bool hasValidHeaderRanges(const QString &h1, const QString &h2, const QString &h3, const QString &h4);
     static bool isHeadersEqual(const QString &h1, const QString &h2, const QString &h3, const QString &h4);
     static bool isPacketSizeEqual(int s1, int s2, int s3, int s4);
 };

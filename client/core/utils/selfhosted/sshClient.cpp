@@ -1,5 +1,7 @@
 #include "sshClient.h"
 
+#include <QScopeGuard>
+
 #include <QEventLoop>
 #include <QtConcurrent>
 
@@ -19,6 +21,64 @@ namespace libssh {
         auto passphrase = m_passphraseCallback();
         passphrase.toStdString().copy(buf, passphrase.size() + 1);
         return 0;
+    }
+
+    namespace
+    {
+        QString serverHostFingerprint(ssh_session session)
+        {
+            ssh_key key = nullptr;
+            if (ssh_get_server_publickey(session, &key) != SSH_OK) {
+                return {};
+            }
+            const auto freeKey = qScopeGuard([&] { ssh_key_free(key); });
+            unsigned char *hash = nullptr;
+            size_t size = 0;
+            if (ssh_get_publickey_hash(key, SSH_PUBLICKEY_HASH_SHA256, &hash, &size) != SSH_OK) {
+                return {};
+            }
+            const auto freeHash = qScopeGuard([&] { ssh_clean_pubkey_hash(&hash); });
+            if (size != 32) {
+                return {};
+            }
+            const auto fingerprint = QByteArray(reinterpret_cast<const char *>(hash), 32).toBase64(QByteArray::OmitTrailingEquals);
+            return QStringLiteral("SHA256:") + QString::fromLatin1(fingerprint);
+        }
+    }
+
+    ErrorCode Client::inspectServerHostKey(const ServerCredentials &credentials, QString &fingerprint)
+    {
+        fingerprint.clear();
+        const auto session = ssh_new();
+        if (!session) {
+            return ErrorCode::InternalError;
+        }
+
+        const auto cleanup = qScopeGuard([&] {
+            ssh_disconnect(session);
+            ssh_free(session);
+        });
+        const auto hostname = credentials.hostName.toUtf8();
+        const long timeout = 12;
+        if (ssh_options_set(session, SSH_OPTIONS_HOST, hostname.constData()) != SSH_OK
+            || ssh_options_set(session, SSH_OPTIONS_PORT, &credentials.port) != SSH_OK
+            || ssh_options_set(session, SSH_OPTIONS_TIMEOUT, &timeout) != SSH_OK
+            || ssh_connect(session) != SSH_OK) {
+            return ErrorCode::Tp2HostKeyUnavailable;
+        }
+
+        const auto knownState = ssh_session_is_known_server(session);
+        if (knownState == SSH_KNOWN_HOSTS_CHANGED || knownState == SSH_KNOWN_HOSTS_OTHER) {
+            return ErrorCode::Tp2HostKeyMismatch;
+        }
+        fingerprint = serverHostFingerprint(session);
+        return fingerprint.isEmpty() ? ErrorCode::Tp2HostKeyUnavailable : ErrorCode::NoError;
+    }
+
+    void Client::pinServerHostKey(const QString &fingerprint)
+    {
+        disconnectFromHost();
+        m_expectedServerHostKey = fingerprint;
     }
 
     ErrorCode Client::connectToHost(const ServerCredentials &credentials)
@@ -47,6 +107,10 @@ namespace libssh {
             ssh_options_set(m_session, SSH_OPTIONS_PORT, &port);
             ssh_options_set(m_session, SSH_OPTIONS_USER, hostUsername.c_str());
             ssh_options_set(m_session, SSH_OPTIONS_LOG_VERBOSITY, &logVerbosity);
+            if (!m_expectedServerHostKey.isEmpty()) {
+                const long timeout = 12;
+                ssh_options_set(m_session, SSH_OPTIONS_TIMEOUT, &timeout);
+            }
 
             QFutureWatcher<int> watcher;
             QFuture<int> future = QtConcurrent::run([this]() {
@@ -62,6 +126,11 @@ namespace libssh {
 
             if (connectionResult != SSH_OK) {
                 return fromLibsshErrorCode();
+            }
+
+            if (!m_expectedServerHostKey.isEmpty() && serverHostFingerprint(m_session) != m_expectedServerHostKey) {
+                disconnectFromHost();
+                return ErrorCode::Tp2HostKeyMismatch;
             }
 
             std::string authUsername = credentials.userName.toStdString();

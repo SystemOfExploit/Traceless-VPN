@@ -281,6 +281,61 @@ bool InstallUiController::buildContainerConfigFromModel(int containerIndex, int 
     return true;
 }
 
+bool InstallUiController::canUpgradeTp2(const QString &serverId, int containerIndex) const
+{
+    return m_installController->canUpgradeTp2(serverId, static_cast<DockerContainer>(containerIndex));
+}
+
+void InstallUiController::inspectTp2HostKey(const QString &serverId, int containerIndex)
+{
+    using Result = QPair<ErrorCode, QString>;
+    auto *watcher = new QFutureWatcher<Result>(this);
+    connect(watcher, &QFutureWatcher<Result>::finished, this, [this, watcher, serverId, containerIndex]() {
+        const auto result = watcher->result();
+        watcher->deleteLater();
+        if (result.first == ErrorCode::NoError) {
+            emit tp2HostKeyReady(serverId, containerIndex, result.second);
+        } else {
+            emit tp2UpgradeFinished(serverId, false);
+            emit installationErrorOccurred(result.first);
+        }
+    });
+
+    auto *controller = m_installController;
+    const auto container = static_cast<DockerContainer>(containerIndex);
+    watcher->setFuture(QtConcurrent::run([controller, serverId, container]() -> Result {
+        QString fingerprint;
+        const auto error = controller->inspectTp2HostKey(serverId, container, fingerprint);
+        return {error, fingerprint};
+    }));
+}
+
+void InstallUiController::upgradeTp2(const QString &serverId, int containerIndex, const QString &fingerprint)
+{
+    if (m_serverConfigUpdateInProgress) {
+        emit tp2UpgradeFinished(serverId, false);
+        return;
+    }
+
+    m_serverConfigUpdateInProgress = true;
+    const auto container = static_cast<DockerContainer>(containerIndex);
+    auto *watcher = new QFutureWatcher<ErrorCode>(this);
+    connect(watcher, &QFutureWatcher<ErrorCode>::finished, this, [this, watcher, serverId]() {
+        const auto error = watcher->result();
+        watcher->deleteLater();
+        m_serverConfigUpdateInProgress = false;
+        emit tp2UpgradeFinished(serverId, error == ErrorCode::NoError);
+        if (error != ErrorCode::NoError) {
+            emit installationErrorOccurred(error);
+        }
+    });
+
+    auto *controller = m_installController;
+    watcher->setFuture(QtConcurrent::run([controller, serverId, container, fingerprint]() {
+        return controller->upgradeTp2(serverId, container, fingerprint);
+    }));
+}
+
 void InstallUiController::updateClientConfig(const QString &serverId, int containerIndex, int protocolIndex, bool closePage)
 {
     DockerContainer container = static_cast<DockerContainer>(containerIndex);

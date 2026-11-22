@@ -181,7 +181,14 @@ WireguardConfigurator::ConnectionData WireguardConfigurator::prepareWireguardCon
         return connData;
     }
 
-    if (container == DockerContainer::Awg2 && awgServerConfig && awgServerConfig->isTp1()) {
+    if (container == DockerContainer::Awg2 && awgServerConfig
+        && !awgServerConfig->tracelessProfile.isEmpty()
+        && (!awgServerConfig->isTp2() || !awgServerConfig->hasValidTp2Settings())) {
+        errorCode = ErrorCode::Tp2ConfigInvalid;
+        return connData;
+    }
+
+    if (container == DockerContainer::Awg2 && awgServerConfig && awgServerConfig->isTraceless()) {
         connData.pskKey = generatePresharedKey();
         if (connData.pskKey.isEmpty()) {
             errorCode = ErrorCode::InternalError;
@@ -293,7 +300,7 @@ ProtocolConfig WireguardConfigurator::createConfig(const ServerCredentials &cred
     clientConfig.presharedKey = connData.pskKey;
     clientConfig.clientId = connData.clientPubKey;
     clientConfig.allowedIps = QStringList { "0.0.0.0/0", "::/0" };
-    if (awgServerConfig && awgServerConfig->isTp1()) {
+    if (awgServerConfig && awgServerConfig->isTraceless()) {
         clientConfig.persistentKeepAlive = protocols::awg::tp1PersistentKeepAlive;
     } else if (awgServerConfig && awgServerConfig->hasAwg3Params()) {
         clientConfig.persistentKeepAlive = protocols::awg::defaultPersistentKeepAlive;

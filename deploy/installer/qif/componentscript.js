@@ -114,6 +114,14 @@ Component.prototype.installationFinished = function()
         if (runningOnWindows()) {
             command = "@TargetDir@/" + appExecutableFileName()
 
+            if (installer.isInstaller()) {
+                var cleanup = installer.execute("@TargetDir@/Traceless-Service-Remove.exe",
+                                                ["--cleanup-install-entries", installer.value("ProductUUID")]);
+                if (Number(cleanup[1]) !== 0) {
+                    console.log("Traceless uninstall entry cleanup returned " + cleanup[1]);
+                }
+            }
+
             var status1 = installer.execute("net", ["start", serviceName()])
             console.log(("%1 started with status: %2 ").arg(serviceName()).arg(status1))
 

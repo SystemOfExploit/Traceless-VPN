@@ -70,6 +70,21 @@ QString errorString(ErrorCode code) {
                                    "The settings were not changed, so the existing configurations keep working. "
                                    "Check that the server is reachable and try again.");
         break;
+    case ErrorCode::Tp2ConfigInvalid:
+        errorMessage = QObject::tr("The TP2 profile has invalid keys, header ranges, padding or tunnel MTU.");
+        break;
+    case ErrorCode::Tp2UpgradeFailed:
+        errorMessage = QObject::tr("The server did not confirm the TP2 upgrade. Check the server and retry.");
+        break;
+    case ErrorCode::Tp2HostKeyUnavailable:
+        errorMessage = QObject::tr("Could not read the SSH host key for the TP2 upgrade.");
+        break;
+    case ErrorCode::Tp2HostKeyMismatch:
+        errorMessage = QObject::tr("The SSH host key changed. Verify the server identity before upgrading to TP2.");
+        break;
+    case ErrorCode::Tp2UpgradeRollbackFailed:
+        errorMessage = QObject::tr("TP2 could not verify the rollback. Check the AmneziaWG interface over SSH before retrying.");
+        break;
     case(ErrorCode::XrayKeyMigrationNeedsConfirm):
         errorMessage = QObject::tr("The old XRay container will not start, so its keys cannot be preserved. "
                                    "Applying these settings will recreate it with new keys, and all existing "

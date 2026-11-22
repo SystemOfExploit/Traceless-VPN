@@ -68,6 +68,9 @@ public slots:
 
     void updateServerConfig(const QString &serverId, int containerIndex, int protocolIndex, bool closePage = true,
                             bool acceptXrayKeyLoss = false);
+    bool canUpgradeTp2(const QString &serverId, int containerIndex) const;
+    void inspectTp2HostKey(const QString &serverId, int containerIndex);
+    void upgradeTp2(const QString &serverId, int containerIndex, const QString &fingerprint);
     void updateClientConfig(const QString &serverId, int containerIndex, int protocolIndex, bool closePage = true);
 
     void removeServer(const QString &serverId);
@@ -109,6 +112,8 @@ signals:
     void installContainerFinished(const QString &finishMessage, bool isServiceInstall);
     void installServerFinished(const QString &finishMessage);
 
+    void tp2HostKeyReady(const QString &serverId, int containerIndex, const QString &fingerprint);
+    void tp2UpgradeFinished(const QString &serverId, bool success);
     void updateContainerFinished(const QString &message, bool closePage);
 
     void scanServerFinished(bool isInstalledContainerFound);

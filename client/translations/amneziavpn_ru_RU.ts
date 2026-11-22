@@ -4966,6 +4966,30 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>PageSettingsServerProtocol</name>
     <message>
+        <source>Update protocol to TP2</source>
+        <translation>Обновить протокол до TP2</translation>
+    </message>
+    <message>
+        <source>Update protocol to TP2?</source>
+        <translation>Обновить протокол до TP2?</translation>
+    </message>
+    <message>
+        <source>Existing connection keys will remain valid. Verify this SSH fingerprint with your server before updating.
+
+%1</source>
+        <translation>Уже выданные ключи подключения останутся действительными. Перед обновлением сверьте отпечаток SSH с ключом вашего сервера.
+
+%1</translation>
+    </message>
+    <message>
+        <source>Server upgraded to TP2</source>
+        <translation>Протокол на сервере обновлён до TP2</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>Обновить</translation>
+    </message>
+    <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="39"/>
         <source> settings</source>
         <translation> настройки</translation>
@@ -4977,8 +5001,8 @@ Only one can be active at a time: VPN or local proxy</source>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="52"/>
-        <source>AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP1 on the server to switch to the current profile.</source>
-        <translation>AWG 2.0 устарел и не содержит последних улучшений безопасности, но продолжит работать. Для более надёжной защиты протокола рекомендуется перейти на TP1, установив новый контейнер на сервере</translation>
+        <source>AWG 2.0 is outdated and does not include the latest security improvements, but it will continue to work. Install TP2 on the server to switch to the current profile.</source>
+        <translation>AWG 2.0 устарел и не содержит последних улучшений безопасности, но продолжит работать. Для более надёжной защиты протокола рекомендуется перейти на TP2, установив новый контейнер на сервере</translation>
     </message>
     <message>
         <location filename="../ui/qml/Pages2/PageSettingsServerProtocol.qml" line="75"/>
@@ -6164,8 +6188,8 @@ Only one can be active at a time: VPN or local proxy</source>
 <context>
     <name>QObject</name>
     <message>
-        <source>AWG 3.1 over UDP. Install XRay with REALITY on this server for TCP fallback.</source>
-        <translation>AWG 3.1 по UDP. Для резерва TCP установите XRay с REALITY на этот же сервер.</translation>
+        <source>TP2 is the Traceless VPN protocol for UDP connections. It encrypts traffic, protects packet headers and uses a separate pre-shared key for each client.</source>
+        <translation>TP2 — VPN-протокол Traceless для подключения по UDP. Он шифрует трафик, защищает заголовки пакетов и использует отдельный PSK для каждого клиента.</translation>
     </message>
     <message>
         <location filename="../core/utils/errorStrings.cpp" line="11"/>
@@ -6825,8 +6849,20 @@ Features:
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="151"/>
-        <source>TP1 is the Traceless profile based on AWG 3.1. It uses UDP with header protection, per-server header ranges and bounded payload padding. TCP fallback on Windows uses a configured XRay REALITY profile on the same server.</source>
-        <translation>TP1 — профиль Traceless на базе AWG 3.1. Он использует UDP с защитой заголовков, отдельными диапазонами для каждого сервера и ограниченным дополнением пакетов. Для резерва TCP в Windows нужен профиль XRay REALITY на том же сервере.</translation>
+        <source>TP2 protects traffic between your device and your VPN server with ChaCha20-Poly1305. Each server has its own packet header ranges, and each client gets a separate pre-shared key.
+
+Features
+
+* Connects over UDP
+* Protects packet headers and adds limited padding to data packets
+* Supports TCP fallback on desktop when XRay REALITY is configured on the same server and both Kill Switch modes are off</source>
+        <translation>TP2 защищает трафик между устройством и VPN-сервером с помощью ChaCha20-Poly1305. У каждого сервера свои диапазоны заголовков пакетов, а у каждого клиента — отдельный предварительно согласованный ключ (PSK).
+
+Особенности
+
+* Подключается по UDP
+* Защищает заголовки и добавляет к пакетам данных небольшое число байтов
+* В настольном клиенте поддерживает резерв по TCP, если на том же сервере настроен XRay REALITY и оба режима Kill Switch выключены</translation>
     </message>
     <message>
         <location filename="../core/utils/containers/containerUtils.cpp" line="163"/>

@@ -29,6 +29,8 @@ public:
     QByteArray getTextFileFromContainer(DockerContainer container, const ServerCredentials &credentials, const QString &path,
                                         ErrorCode &errorCode);
 
+    void pinServerHostKey(const QString &fingerprint);
+
     static QString replaceVars(const QString &script, const Vars &vars);
 
     ErrorCode runScript(const ServerCredentials &credentials, QString script,

@@ -68,7 +68,7 @@ QMap<DockerContainer, QString> ContainerUtils::containerHumanNames()
              { DockerContainer::Cloak, "OpenVPN over Cloak" },
              { DockerContainer::WireGuard, "WireGuard" },
              { DockerContainer::Awg, "AWG" },
-             { DockerContainer::Awg2, "TP1" },
+             { DockerContainer::Awg2, "TP2" },
              { DockerContainer::Xray, "XRay" },
              { DockerContainer::Ipsec, QObject::tr("IPsec") },
              { DockerContainer::SSXray, "Shadowsocks"},
@@ -99,7 +99,8 @@ QMap<DockerContainer, QString> ContainerUtils::containerDescriptions()
                QObject::tr("AWG is a VPN protocol based on WireGuard. "
                            "It provides high connection speed and ensures stable operation even in the most challenging network conditions.") },
              { DockerContainer::Awg2,
-               QObject::tr("AWG 3.1 over UDP. Install XRay with REALITY on this server for TCP fallback.") },
+               QObject::tr("TP2 is the Traceless VPN protocol for UDP connections. It encrypts traffic, "
+                           "protects packet headers and uses a separate pre-shared key for each client.") },
              { DockerContainer::Xray,
                QObject::tr("XRay with REALITY masks VPN traffic as web traffic and protects against active probing. "
                            "It is highly resistant to detection and offers high speed.") },
@@ -147,9 +148,12 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
                       "* Easily detected by DPI systems (susceptible to blocking)\n"
                       "* Operates over UDP protocol") },
         { DockerContainer::Awg2,
-          QObject::tr("TP1 is the Traceless profile based on AWG 3.1. It uses UDP with header protection, "
-                      "per-server header ranges and bounded payload padding. TCP fallback on Windows uses "
-                      "a configured XRay REALITY profile on the same server.") },
+          QObject::tr("TP2 protects traffic between your device and your VPN server with ChaCha20-Poly1305. "
+                      "Each server has its own packet header ranges, and each client gets a separate pre-shared key.\n"
+                      "\nFeatures\n\n"
+                      "* Connects over UDP\n"
+                      "* Protects packet headers and adds limited padding to data packets\n"
+                      "* Supports TCP fallback on desktop when XRay REALITY is configured on the same server and both Kill Switch modes are off") },
         { DockerContainer::Xray,
           QObject::tr("REALITY is an innovative protocol developed by the creators of XRay, designed specifically to combat high levels of internet censorship. "
                       "REALITY identifies censorship systems during the TLS handshake, "

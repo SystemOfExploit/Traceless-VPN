@@ -39,7 +39,8 @@ enum ProtocolScriptType {
     container_startup,
     openvpn_template,
     wireguard_template,
-    awg_template
+    awg_template,
+    upgrade_tp2
 };
 
 enum ClientScriptType {

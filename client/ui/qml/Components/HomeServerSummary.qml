@@ -88,7 +88,7 @@ ColumnLayout {
         visible: root.outdatedWarningVisible
 
         variant: NotificationType.Warning
-        text: qsTr("AWG 2.0 is outdated and no longer supported. To upgrade, install TP1 on the server.")
+        text: qsTr("AWG 2.0 is outdated and no longer supported. To upgrade, install TP2 on the server.")
     }
 
     HomeInfoButton {

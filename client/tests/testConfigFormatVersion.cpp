@@ -8,6 +8,7 @@
 #include "utils/testCoreController.h"
 #include "core/configurators/wireguardConfigurator.h"
 #include "core/controllers/connectionController.h"
+#include "core/controllers/selfhosted/installController.h"
 #include "core/installers/awgInstaller.h"
 #include "core/installers/xrayInstaller.h"
 #include "core/models/api/apiV2ServerConfig.h"
@@ -100,18 +101,30 @@ private slots:
         QCOMPARE(options.value(QStringLiteral("Endpoint")), QStringLiteral("vpn.example:51820"));
     }
 
-    void testTp1UsesCompatibleAwgProfile()
+    void testTp2ProtocolDescriptions()
+    {
+        const auto protocol = DockerContainer::Awg2;
+        const auto description = ContainerUtils::containerDescriptions().value(protocol);
+        const auto detailedDescription = ContainerUtils::containerDetailedDescriptions().value(protocol);
+        QVERIFY(description.startsWith(QStringLiteral("TP2")));
+        QVERIFY(detailedDescription.startsWith(QStringLiteral("TP2")));
+        QVERIFY(detailedDescription.contains(QStringLiteral("ChaCha20-Poly1305")));
+        QVERIFY(detailedDescription.contains(QStringLiteral("XRay REALITY")));
+    }
+
+    void testTp2UsesCompatibleAwgProfile()
     {
         AwgInstaller installer;
         const ContainerConfig container = installer.generateConfig(DockerContainer::Awg2, 51820, TransportProto::Udp);
         const auto *config = container.getAwgProtocolConfig();
         QVERIFY(config);
         const auto &server = config->serverConfig;
-        QVERIFY(server.isTp1());
+        QVERIFY(server.isTp2());
+        QVERIFY(server.hasValidTp2Settings());
         QCOMPARE(config->serverProtocolVersion(), QStringLiteral("3.1"));
 
         const auto restored = AwgServerConfig::fromJson(server.toJson());
-        QVERIFY(restored.isTp1());
+        QVERIFY(restored.isTp2());
         QVERIFY(server.hasEqualServerSettings(restored));
 
         const QStringList headers = { server.initPacketMagicHeader, server.responsePacketMagicHeader,
@@ -131,7 +144,8 @@ private slots:
         QVERIFY(!server.headerProtectionKey.isEmpty());
         QVERIFY(vars.contains({ QStringLiteral("$JUNK_PACKET_COUNT"), QStringLiteral("4") }));
         QVERIFY(vars.contains({ QStringLiteral("$REKEY_TIMEOUT"), QStringLiteral("2-3") }));
-        QVERIFY(vars.contains({ QStringLiteral("$MAX_HANDSHAKE_ATTEMPTS"), QStringLiteral("30-40") }));
+        QVERIFY(vars.contains({ QStringLiteral("$MAX_HANDSHAKE_ATTEMPTS"), QStringLiteral("12-16") }));
+        QVERIFY(vars.contains({ QStringLiteral("$TRACELESS_PROFILE"), QStringLiteral("TP2") }));
         QVERIFY(vars.contains({ QStringLiteral("$PERSISTENT_KEEPALIVE"), QStringLiteral("18-25") }));
         QVERIFY(vars.contains({ QStringLiteral("$SPECIAL_JUNK_1"), QString(protocols::awg::tp1HandshakeCamouflage) }));
         QVERIFY(vars.contains({ QStringLiteral("$RANDOM_TRAILERS"), QString() }));
@@ -144,7 +158,7 @@ private slots:
         ContainersModel model;
         const auto allContainers = ContainerUtils::allContainers();
         QCOMPARE(model.data(allContainers.indexOf(DockerContainer::Awg2), ContainersModel::NameRole).toString(),
-                 QStringLiteral("TP1"));
+                 QStringLiteral("TP2"));
         QCOMPARE(model.data(allContainers.indexOf(DockerContainer::Xray), ContainersModel::NameRole).toString(),
                  QStringLiteral("XRay"));
 
@@ -159,7 +173,7 @@ private slots:
         imported.protocolConfig = clientOnly;
         model.updateModel({ { DockerContainer::Awg2, imported } });
         QCOMPARE(model.data(allContainers.indexOf(DockerContainer::Awg2), ContainersModel::NameRole).toString(),
-                 QStringLiteral("TP1"));
+                 QStringLiteral("TP2"));
     }
 
     void testTp1UsesIndependentKeys()
@@ -173,6 +187,67 @@ private slots:
         QCOMPARE(QByteArray::fromBase64(peer.clientPrivKey.toLatin1()).size(), 32);
         QCOMPARE(QByteArray::fromBase64(peer.clientPubKey.toLatin1()).size(), 32);
         QVERIFY(peer.clientPrivKey != peer.clientPubKey);
+    }
+
+    void testTp2ValidationAndPadding()
+    {
+        AwgInstaller installer;
+        auto container = installer.generateConfig(DockerContainer::Awg2, 51820, TransportProto::Udp);
+        auto &server = container.getAwgProtocolConfig()->serverConfig;
+        server.contentPaddingAddition = QStringLiteral("2-16");
+        QVERIFY(server.isTp2());
+        QVERIFY(server.isTraceless());
+        QVERIFY(server.hasValidTp2Settings());
+        QVERIFY(!server.isTp1());
+        server.transportPacketJunkSize = QStringLiteral("11");
+        QVERIFY(!server.hasValidTp2Settings());
+        server.transportPacketJunkSize = QStringLiteral("12");
+        server.headerProtectionKey = QStringLiteral("invalid");
+        QVERIFY(!server.hasValidTp2Settings());
+
+        QVERIFY(AwgProtocolConfig::hasValidHeaderRanges("5-12", "13", "20-44", "4294967295"));
+        QVERIFY(!AwgProtocolConfig::hasValidHeaderRanges("5-12", "12-18", "20-44", "77"));
+        QVERIFY(!AwgProtocolConfig::hasValidHeaderRanges("5-12", "13", "44-20", "77"));
+        QVERIFY(!AwgProtocolConfig::hasValidHeaderRanges("5-12", "13", "20-44", "4294967296"));
+    }
+
+    void testTp2UpgradeIsAdminOnly()
+    {
+        AwgInstaller installer;
+        auto legacy = installer.generateConfig(DockerContainer::Awg2, 51820, TransportProto::Udp);
+        legacy.getAwgProtocolConfig()->serverConfig.tracelessProfile.clear();
+        legacy.getAwgProtocolConfig()->serverConfig.maxHandshakeAttempts = protocols::awg::tp1MaxHandshakeAttempts;
+
+        SelfHostedAdminServerConfig admin;
+        admin.hostName = QStringLiteral("192.0.2.17");
+        admin.userName = QStringLiteral("root");
+        admin.password = QStringLiteral("fixture");
+        admin.port = 22;
+        admin.defaultContainer = DockerContainer::Awg2;
+        admin.updateContainerConfig(DockerContainer::Awg2, legacy);
+
+        auto *repository = m_coreController->m_serversRepository;
+        auto *controller = m_coreController->m_installController;
+        const auto adminId = repository->addServer({}, admin.toJson(), serverConfigUtils::ConfigType::SelfHostedAdmin);
+        QVERIFY(controller->canUpgradeTp2(adminId, DockerContainer::Awg2));
+
+        QJsonObject userConfig = admin.toJson();
+        userConfig.remove(configKey::userName);
+        userConfig.remove(configKey::password);
+        userConfig.remove(configKey::port);
+        const auto userId = repository->addServer({}, userConfig, serverConfigUtils::ConfigType::SelfHostedUser);
+        QCOMPARE(repository->serverKind(userId), serverConfigUtils::ConfigType::SelfHostedUser);
+        QVERIFY(!controller->canUpgradeTp2(userId, DockerContainer::Awg2));
+        QCOMPARE(controller->upgradeTp2(userId, DockerContainer::Awg2, QStringLiteral("SHA256:fixture")), ErrorCode::Tp2UpgradeFailed);
+    }
+
+    void testTp2MtuBudget()
+    {
+        QCOMPARE(AwgProtocolConfig::tp2TunnelMtu(1500, 0, false, "12", "1-8"), 1420);
+        QCOMPARE(AwgProtocolConfig::tp2TunnelMtu(1280, 0, true, "12", "1-8"), 1180);
+        QCOMPARE(AwgProtocolConfig::tp2TunnelMtu(1500, 0, true, "16", "2-16"), 1388);
+        QCOMPARE(AwgProtocolConfig::tp2TunnelMtu(1500, 1300, true, "16", "2-16"), 1300);
+        QCOMPARE(AwgProtocolConfig::tp2TunnelMtu(128, 0, true, "12", "1-8"), 0);
     }
 
     void testTp1MtuBudget()
@@ -227,6 +302,8 @@ private slots:
         AwgInstaller awgInstaller;
         XrayInstaller xrayInstaller;
         ContainerConfig awg = awgInstaller.generateConfig(DockerContainer::Awg2, 51820, TransportProto::Udp);
+        awg.getAwgProtocolConfig()->serverConfig.tracelessProfile.clear();
+        awg.getAwgProtocolConfig()->serverConfig.maxHandshakeAttempts = protocols::awg::tp1MaxHandshakeAttempts;
         ContainerConfig xray = xrayInstaller.generateConfig(DockerContainer::Xray, 443, TransportProto::Tcp);
         auto *xrayConfig = xray.getXrayProtocolConfig();
         QVERIFY(xrayConfig);

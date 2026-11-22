@@ -298,11 +298,12 @@ void AmneziaApplication::startLocalServer() {
     server->listen(serverName);
 
     QObject::connect(server, &QLocalServer::newConnection, this, [server, this]() {
-        if (server) {
-            QLocalSocket *clientConnection = server->nextPendingConnection();
+        while (auto *clientConnection = server->nextPendingConnection()) {
             clientConnection->deleteLater();
         }
-        emit m_coreController->pageController()->raiseMainWindow(); //TODO
+        if (m_coreController) {
+            emit m_coreController->pageController()->raiseMainWindow();
+        }
     });
 }
 #endif
