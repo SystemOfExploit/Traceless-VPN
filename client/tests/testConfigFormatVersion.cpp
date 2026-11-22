@@ -8,6 +8,7 @@
 #include "utils/testCoreController.h"
 #include "core/configurators/wireguardConfigurator.h"
 #include "core/controllers/connectionController.h"
+#include "core/controllers/settingsController.h"
 #include "core/controllers/selfhosted/installController.h"
 #include "core/installers/awgInstaller.h"
 #include "core/installers/xrayInstaller.h"
@@ -80,6 +81,12 @@ private slots:
     {
         m_settings->clearSettings();
         m_coreController->m_serversRepository->invalidateCache();
+    }
+
+    void testAboutVersionMatchesBuild()
+    {
+        const auto version = m_coreController->m_settingsController->getAppVersion();
+        QCOMPARE(version.section(QLatin1Char(' '), 0, 0), QStringLiteral(EXPECTED_APP_VERSION));
     }
 
     void testAwgConfigParsingPreservesPaddingAndKeys()

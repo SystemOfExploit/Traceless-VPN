@@ -52,7 +52,10 @@ target_link_libraries(test_common PUBLIC
     ${LIBS}
 )
 
-target_compile_definitions(test_common PUBLIC AMNEZIA_BUILD_TESTS)
+target_compile_definitions(test_common
+    PUBLIC AMNEZIA_BUILD_TESTS
+    PRIVATE APP_VERSION="${CMAKE_PROJECT_VERSION}"
+)
 
 target_include_directories(test_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -151,6 +154,7 @@ if(NOT ANDROID)
         Qt6::Test
         test_common
     )
+    target_compile_definitions(test_config_format_version PRIVATE EXPECTED_APP_VERSION="${CMAKE_PROJECT_VERSION}")
 
     add_executable(test_xray_serialization
         testXraySerialization.cpp

@@ -67,6 +67,7 @@ target_include_directories(${PROJECT} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 target_compile_definitions(${PROJECT} PRIVATE
+    APP_VERSION="${CMAKE_PROJECT_VERSION}"
     CLIENT_KEYCHAIN_NAME_STR=\"${CLIENT_KEYCHAIN_NAME}\"
 )
 
